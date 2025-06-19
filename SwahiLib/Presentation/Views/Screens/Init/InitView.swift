@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Step2View: View {
+struct InitView: View {
     @StateObject private var viewModel: SelectionViewModel = {
         DiContainer.shared.resolve(SelectionViewModel.self)
     }()

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-final class SelectionViewModel: ObservableObject {
+final class InitViewModel: ObservableObject {
     @Published var books: [Selectable<Book>] = []
     @Published var songs: [Song] = []
     @Published var uiState: ViewUiState = .idle
@@ -70,8 +70,7 @@ final class SelectionViewModel: ObservableObject {
             self.bookRepo.saveBooksLocally(selectedBooks())
             
             await MainActor.run {
-                self.prefsRepo.isDataSelected = true
-                self.prefsRepo.selectedBooks = selectedBooksIds()
+                self.prefsRepo.isDataLoaded = true
                 self.uiState = .saved
             }
         }

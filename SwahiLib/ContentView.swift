@@ -22,11 +22,7 @@ struct ContentView: View {
                 if prefsRepo.isDataLoaded {
                     HomeView()
                 } else {
-                    if prefsRepo.isDataSelected {
-                        Step2View()
-                    } else {
-                        Step1View()
-                    }
+                    InitView()
                 }
             } else {
                 SplashView()
