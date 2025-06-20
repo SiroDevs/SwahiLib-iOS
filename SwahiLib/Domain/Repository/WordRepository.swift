@@ -8,9 +8,9 @@
 import Foundation
 
 protocol WordRepositoryProtocol {
-    func fetchRemoteWords(for bookId: String) async throws -> WordResponse
-    func fetchLocalWords() -> [Word]
-    func saveWordsLocally(_ words: [Word])
+    func fetchRemoteData() async throws -> Word
+    func fetchLocalData() -> [Word]
+    func saveData(_ words: [Word])
     func updateWord(_ word: Word)
 }
 
@@ -27,16 +27,16 @@ class WordRepository: WordRepositoryProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteWords(for booksIds: String) async throws -> WordResponse {
-        return try await apiService.fetch(endpoint: .wordsByBook(booksIds))
+    func fetchRemoteData() async throws -> Word {
+        return try await apiService.fetch(endpoint: 'words')
     }
     
-    func fetchLocalWords() -> [Word] {
+    func fetchLocalData() -> [Word] {
         let words = wordData.fetchWords()
         return words.sorted { $0.id < $1.id }
     }
     
-    func saveWordsLocally(_ words: [Word]) {
+    func saveData(_ words: [Word]) {
         wordData.saveWords(words)
     }
 }
