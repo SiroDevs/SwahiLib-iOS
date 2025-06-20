@@ -9,12 +9,9 @@ import CoreData
 
 class WordDataManager {
     private let coreDataManager: CoreDataManager
-    private let bookDataManager: BookDataManager
     
-    init(coreDataManager: CoreDataManager = CoreDataManager.shared,
-         bookDataManager: BookDataManager) {
+    init(coreDataManager: CoreDataManager = CoreDataManager.shared) {
         self.coreDataManager = coreDataManager
-        self.bookDataManager = bookDataManager
     }
     
     // Access to the view context
@@ -28,7 +25,7 @@ class WordDataManager {
             do {
                 for word in words {
                     let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.wordId)
+                    fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -41,16 +38,17 @@ class WordDataManager {
                     }
 
                     // Safely set values
-                    cdWord.wordId = Int32(word.wordId)
-                    cdWord.book = Int32(word.book)
-                    cdWord.wordNo = Int32(word.wordNo)
+                    cdWord.id = Int32(word.id)
+                    cdWord.rid = Int32(word.rid)
                     cdWord.title = word.title
-                    cdWord.alias = word.alias
-                    cdWord.content = word.content
+                    cdWord.synonyms = word.synonyms
+                    cdWord.meaning = word.meaning
+                    cdWord.conjugation = word.conjugation
                     cdWord.views = Int32(word.views)
                     cdWord.likes = Int32(word.likes)
                     cdWord.liked = word.liked
-                    cdWord.created = word.created
+                    cdWord.createdAt = word.createdAt
+                    cdWord.updatedAt = word.updatedAt
                 }
 
                 try self.context.save()
@@ -67,16 +65,17 @@ class WordDataManager {
             let cdWords = try context.fetch(fetchRequest)
             return cdWords.map { cdWord in
                 return Word(
-                    book: Int(cdWord.book),
-                    wordId: Int(cdWord.wordId),
-                    wordNo: Int(cdWord.wordNo),
+                    id: Int(cdWord.id),
+                    rid: Int(cdWord.rid),
                     title: cdWord.title ?? "",
-                    alias: cdWord.alias ?? "",
-                    content: cdWord.content ?? "",
+                    synonyms: cdWord.synonyms ?? "",
+                    meaning: cdWord.meaning ?? "",
+                    conjugation: cdWord.conjugation ?? "",
                     views: Int(cdWord.views),
                     likes: Int(cdWord.likes),
                     liked: cdWord.liked,
-                    created: cdWord.created ?? "",
+                    createdAt: cdWord.createdAt ?? "",
+                    updatedAt: cdWord.updatedAt ?? "",
                 )
             }
         } catch {
@@ -96,16 +95,17 @@ class WordDataManager {
             guard let cdWord = results.first else { return nil }
             
             return Word(
-                book: Int(cdWord.book),
-                wordId: Int(cdWord.wordId),
-                wordNo: Int(cdWord.wordNo),
+                id: Int(cdWord.id),
+                rid: Int(cdWord.rid),
                 title: cdWord.title ?? "",
-                alias: cdWord.alias ?? "",
-                content: cdWord.content ?? "",
+                synonyms: cdWord.synonyms ?? "",
+                meaning: cdWord.meaning ?? "",
+                conjugation: cdWord.conjugation ?? "",
                 views: Int(cdWord.views),
                 likes: Int(cdWord.likes),
                 liked: cdWord.liked,
-                created: cdWord.created ?? "",
+                createdAt: cdWord.createdAt ?? "",
+                updatedAt: cdWord.updatedAt ?? "",
             )
         } catch {
             print("Failed to fetch word: \(error)")
@@ -116,19 +116,20 @@ class WordDataManager {
     func updateWord(_ word: Word) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.wordId)
+            fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.id)
             fetchRequest.fetchLimit = 1
             
             do {
                 if let cdWord = try self.context.fetch(fetchRequest).first {
                     cdWord.title = word.title
-                    cdWord.alias = word.alias
-                    cdWord.content = word.content
+                    cdWord.meaning = word.meaning
+                    cdWord.conjugation = word.conjugation
+                    cdWord.synonyms = word.synonyms
                     cdWord.liked = word.liked
                     
                     try self.context.save()
                 } else {
-                    print("Word with ID \(word.wordId) not found.")
+                    print("Word with ID \(word.id) not found.")
                 }
             } catch {
                 print("Failed to update word: \(error)")

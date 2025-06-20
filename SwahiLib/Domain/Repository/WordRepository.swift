@@ -33,7 +33,7 @@ class WordRepository: WordRepositoryProtocol {
     
     func fetchLocalWords() -> [Word] {
         let words = wordData.fetchWords()
-        return words.sorted { $0.wordId < $1.wordId }
+        return words.sorted { $0.id < $1.id }
     }
     
     func saveWordsLocally(_ words: [Word]) {
