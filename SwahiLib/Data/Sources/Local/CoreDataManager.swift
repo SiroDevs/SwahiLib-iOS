@@ -40,16 +40,12 @@ class CoreDataManager {
     func deleteAllData() {
         let context = viewContext
         
-        // Delete all songs
-        let songFetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CDSong")
-        let songDeleteRequest = NSBatchDeleteRequest(fetchRequest: songFetchRequest)
-        
-        // Delete all books
-        let bookFetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CDBook")
-        let bookDeleteRequest = NSBatchDeleteRequest(fetchRequest: bookFetchRequest)
+        // Delete all words
+        let wordFetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CDWord")
+        let wordDeleteRequest = NSBatchDeleteRequest(fetchRequest: wordFetchRequest)
         
         do {
-            try context.execute(songDeleteRequest)
+            try context.execute(wordDeleteRequest)
             try context.execute(bookDeleteRequest)
             try context.save()
         } catch {
