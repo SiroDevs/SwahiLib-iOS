@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		173314E42DC159DB00318DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 173314E32DC159DB00318DD8 /* Swinject */; };
-		173CEE432E06A9F400DB2FE1 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */; };
 		173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
 		173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */ = {isa = PBXBuildFile; fileRef = 173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */; };
 		173CEEC72E06AC9800DB2FE1 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 173CEEC62E06AC9800DB2FE1 /* PostgREST */; };
@@ -33,7 +32,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		173CEE422E06A9F400DB2FE1 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config.xcconfig.example; sourceTree = "<group>"; };
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,7 +109,6 @@
 			isa = PBXGroup;
 			children = (
 				173CEE442E06AA5200DB2FE1 /* .gitignore */,
-				173CEE422E06A9F400DB2FE1 /* Config.xcconfig */,
 				173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */,
 				175D13A92DC112BB00A6191A /* SwahiLib */,
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
@@ -259,7 +256,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */,
-				173CEE432E06A9F400DB2FE1 /* Config.xcconfig in Resources */,
 				173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,7 +316,6 @@
 /* Begin XCBuildConfiguration section */
 		175D13CB2DC112D400A6191A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -385,7 +380,6 @@
 		};
 		175D13CC2DC112D400A6191A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
