@@ -19,11 +19,11 @@ class WordRepository: WordRepositoryProtocol {
         wordData.updateWord(word)
     }
     
-    private let apiService: ApiServiceProtocol
+    private let supabase: SupabaseServiceProtocol
     private let wordData: WordDataManager
     
-    init(apiService: ApiServiceProtocol, wordData: WordDataManager) {
-        self.apiService = apiService
+    init(supabase: SupabaseServiceProtocol, wordData: WordDataManager) {
+        self.supabase = supabase
         self.wordData = wordData
     }
     

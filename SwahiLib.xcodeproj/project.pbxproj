@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		173314E42DC159DB00318DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 173314E32DC159DB00318DD8 /* Swinject */; };
+		173CEE432E06A9F400DB2FE1 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */; };
+		173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
+		173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */ = {isa = PBXBuildFile; fileRef = 173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */; };
+		173CEEC72E06AC9800DB2FE1 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 173CEEC62E06AC9800DB2FE1 /* PostgREST */; };
+		173CEEC92E06AC9800DB2FE1 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173CEEC82E06AC9800DB2FE1 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,14 +33,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		173CEE422E06A9F400DB2FE1 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config.xcconfig.example; sourceTree = "<group>"; };
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13B92DC112D300A6191A /* SwahiLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13C32DC112D300A6191A /* SwahiLibUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		173CEECB2E06ACC800DB2FE1 /* Exceptions for "SwahiLib" folder in "SwahiLib" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 175D13A62DC112BB00A6191A /* SwahiLib */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		175D13A92DC112BB00A6191A /* SwahiLib */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				173CEECB2E06ACC800DB2FE1 /* Exceptions for "SwahiLib" folder in "SwahiLib" target */,
+			);
 			path = SwahiLib;
 			sourceTree = "<group>";
 		};
@@ -56,7 +77,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				173CEEC72E06AC9800DB2FE1 /* PostgREST in Frameworks */,
 				173314E42DC159DB00318DD8 /* Swinject in Frameworks */,
+				173CEEC92E06AC9800DB2FE1 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +110,9 @@
 		175D139E2DC112BB00A6191A = {
 			isa = PBXGroup;
 			children = (
+				173CEE442E06AA5200DB2FE1 /* .gitignore */,
+				173CEE422E06A9F400DB2FE1 /* Config.xcconfig */,
+				173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */,
 				175D13A92DC112BB00A6191A /* SwahiLib */,
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
 				175D13C62DC112D400A6191A /* SwahiLibUITests */,
@@ -126,6 +152,8 @@
 			name = SwahiLib;
 			packageProductDependencies = (
 				173314E32DC159DB00318DD8 /* Swinject */,
+				173CEEC62E06AC9800DB2FE1 /* PostgREST */,
+				173CEEC82E06AC9800DB2FE1 /* Supabase */,
 			);
 			productName = SwahiLib;
 			productReference = 175D13A72DC112BB00A6191A /* SwahiLib.app */;
@@ -230,6 +258,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */,
+				173CEE432E06A9F400DB2FE1 /* Config.xcconfig in Resources */,
+				173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +320,7 @@
 /* Begin XCBuildConfiguration section */
 		175D13CB2DC112D400A6191A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -353,6 +385,7 @@
 		};
 		175D13CC2DC112D400A6191A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 173CEE422E06A9F400DB2FE1 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -413,11 +446,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 126;
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwahiLib/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -448,11 +483,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 126;
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwahiLib/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -615,6 +652,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
+		};
+		173CEEC62E06AC9800DB2FE1 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		173CEEC82E06AC9800DB2FE1 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

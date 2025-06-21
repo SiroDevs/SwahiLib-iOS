@@ -17,8 +17,8 @@ struct DependencyMap {
             CoreDataManager.shared
         }.inObjectScope(.container)
         
-        container.register(ApiServiceProtocol.self) { _ in
-            ApiService()
+        container.register(SupabaseServiceProtocol.self) { _ in
+            SupabaseService()
         }.inObjectScope(.container)
 
         container.register(AnalyticsServiceProtocol.self) { _ in
@@ -29,51 +29,67 @@ struct DependencyMap {
             Logger()
         }.inObjectScope(.container)
         
-        container.register(BookDataManager.self) { resolver in
-            BookDataManager(coreDataManager: resolver.resolve(CoreDataManager.self)!)
-        }.inObjectScope(.container)
-        
-        container.register(BookRepositoryProtocol.self) { resolver in
-            BookRepository(
-                apiService: resolver.resolve(ApiServiceProtocol.self)!,
-                bookData: resolver.resolve(BookDataManager.self)!
-            )
-        }.inObjectScope(.container)
-        
-        container.register(SongDataManager.self) { resolver in
-            SongDataManager(
+        container.register(HistoryDataManager.self) { resolver in
+            HistoryDataManager(
                 coreDataManager: resolver.resolve(CoreDataManager.self)!,
-                bookDataManager: resolver.resolve(BookDataManager.self)!
             )
         }.inObjectScope(.container)
         
-        container.register(SongRepositoryProtocol.self) { resolver in
-            SongRepository(
-                apiService: resolver.resolve(ApiServiceProtocol.self)!,
-                songData: resolver.resolve(SongDataManager.self)!
+        container.register(IdiomDataManager.self) { resolver in
+            IdiomDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
             )
         }.inObjectScope(.container)
         
-        container.register(SelectionViewModel.self) { resolver in
-            SelectionViewModel(
+        container.register(ProverbDataManager.self) { resolver in
+            ProverbDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(SayingDataManager.self) { resolver in
+            SayingDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(SearchDataManager.self) { resolver in
+            SearchDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(WordDataManager.self) { resolver in
+            WordDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(WordRepositoryProtocol.self) { resolver in
+            WordRepository(
+                apiService: resolver.resolve(SupabaseServiceProtocol.self)!,
+                wordData: resolver.resolve(WordDataManager.self)!
+            )
+        }.inObjectScope(.container)
+        
+        container.register(InitViewModel.self) { resolver in
+            InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
-                bookRepo: resolver.resolve(BookRepositoryProtocol.self)!,
-                songRepo: resolver.resolve(SongRepositoryProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(HomeViewModel.self) { resolver in
             HomeViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
-                bookRepo: resolver.resolve(BookRepositoryProtocol.self)!,
-                songRepo: resolver.resolve(SongRepositoryProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(PresenterViewModel.self) { resolver in
             PresenterViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
-                songRepo: resolver.resolve(SongRepositoryProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
     }

@@ -1,0 +1,51 @@
+//
+//  .gitignore
+//  SwahiLib
+//
+//  Created by Siro Daves on 21/06/2025.
+//
+
+# Xcode
+DerivedData/
+build/
+*.xcworkspace
+!default.xcworkspace # Optional if you use a shared workspace
+
+# User-specific files
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Package.resolved
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Archives
+*.xcarchive
+
+# Temporary files
+*.orig
+*.swp
+*.DS_Store
+
+# Xcode Preview
+*.canvas
+
+# Environment config (optional — see below)
+Config.xcconfig
