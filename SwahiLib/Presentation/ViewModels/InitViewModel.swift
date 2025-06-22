@@ -9,96 +9,82 @@ import Foundation
 import SwiftUI
 
 final class InitViewModel: ObservableObject {
-    @Published var books: [Selectable<Book>] = []
-    @Published var songs: [Song] = []
+    @Published var idioms: [Idiom] = []
+    @Published var proverbs: [Proverb] = []
+    @Published var sayings: [Saying] = []
+    @Published var words: [Word] = []
     @Published var uiState: ViewUiState = .idle
 
     private let prefsRepo: PrefsRepository
-    private let bookRepo: BookRepositoryProtocol
-    private let songRepo: SongRepositoryProtocol
+    private let idiomRepo: IdiomRepositoryProtocol
+    private let proverbRepo: ProverbRepositoryProtocol
+    private let sayingRepo: SayingRepositoryProtocol
+    private let wordRepo: WordRepositoryProtocol
 
     init(
         prefsRepo: PrefsRepository,
-        bookRepo: BookRepositoryProtocol,
-        songRepo: SongRepositoryProtocol
+        idiomRepo: IdiomRepositoryProtocol,
+        proverbRepo: ProverbRepositoryProtocol,
+        sayingRepo: SayingRepositoryProtocol,
+        wordRepo: WordRepositoryProtocol,
     ) {
         self.prefsRepo = prefsRepo
-        self.bookRepo = bookRepo
-        self.songRepo = songRepo
+        self.idiomRepo = idiomRepo
+        self.proverbRepo = proverbRepo
+        self.sayingRepo = sayingRepo
+        self.wordRepo = wordRepo
     }
     
-    func toggleSelection(for book: Book) {
-        guard let index = books.firstIndex(where: { $0.data.id == book.id }) else { return }
-        books[index].isSelected.toggle()
-    }
-
-    func selectedBooks() -> [Book] {
-        books.filter { $0.isSelected }.map { $0.data }
-    }
-
-    func selectedBooksIds() -> String {
-        books
-            .filter { $0.isSelected }
-            .map { "\($0.data.bookNo)" }
-            .joined(separator: ",")
-    }
-
-    func fetchBooks() {
-        uiState = .loading("Fetching books ...")
+    func fetchWords() {
+        uiState = .loading("Fetching data ...")
 
         Task {
             do {
-                let resp: BookResponse = try await bookRepo.fetchRemoteBooks()
-                let data = resp.data.map { Selectable(data: $0, isSelected: false) }
+                self.idioms = try await idiomRepo.fetchRemoteData()
+                self.proverbs = try await proverbRepo.fetchRemoteData()
+                self.sayings = try await sayingRepo.fetchRemoteData()
+                self.words = try await wordRepo.fetchRemoteData()
+                
                 await MainActor.run {
-                    self.books = data
                     self.uiState = .fetched
                 }
             } catch {
                 await MainActor.run {
-                    self.uiState = .error("Failed to fetch books: \(error)")
+                    self.uiState = .error("Failed to fetch data: \(error)")
                 }
             }
         }
     }
 
-    func saveBooks() {
-        uiState = .saving("Saving books ...")
-        print("Selected books: \(selectedBooks())")
+    func saveProverbs() {
+        self.uiState = .saving("Saving proverbs ...")
                 
         Task {
-            self.bookRepo.saveBooksLocally(selectedBooks())
+            self.proverbRepo.saveData(proverbs)
             
             await MainActor.run {
-                self.prefsRepo.isDataLoaded = true
                 self.uiState = .saved
             }
         }
     }
     
-    func fetchSongs() {
-        uiState = .loading("Fetching songs ...")
-
+    func saveSayings() {
+        self.uiState = .saving("Saving sayings ...")
+                
         Task {
-            do {
-                let resp: SongResponse = try await songRepo.fetchRemoteSongs(for: prefsRepo.selectedBooks)
-                await MainActor.run {
-                    self.songs = resp.data
-                    self.uiState = .fetched
-                }
-            } catch {
-                await MainActor.run {
-                    self.uiState = .error("Failed to fetch songs: \(error)")
-                }
+            self.sayingRepo.saveData(sayings)
+            
+            await MainActor.run {
+                self.uiState = .saved
             }
         }
     }
-
-    func saveSongs() {
-        self.uiState = .saving("Saving songs ...")
+    
+    func saveWords() {
+        self.uiState = .saving("Saving words ...")
                 
         Task {
-            self.songRepo.saveSongsLocally(songs)
+            self.wordRepo.saveData(words)
             
             await MainActor.run {
                 self.prefsRepo.isDataLoaded = true
