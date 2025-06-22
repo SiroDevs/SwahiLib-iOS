@@ -20,7 +20,7 @@ class SearchDataManager {
     }
     
     // Save records to Core Data
-    func saveSearchs(_ searchs: [Search]) {
+    func saveSearches(_ searchs: [Search]) {
         context.perform {
             do {
                 for search in searchs {
@@ -45,14 +45,14 @@ class SearchDataManager {
 
                 try self.context.save()
             } catch {
-                print("Failed to save searchs: \(error)")
+                print("Failed to save searches: \(error)")
             }
         }
     }
     
     // Fetch all searchs or searchs for a specific book
-    func fetchSearchs() -> [Search] {
-        let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()        
+    func fetchSearches() -> [Search] {
+        let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
         do {
             let cdSearchs = try context.fetch(fetchRequest)
             return cdSearchs.map { cdSearch in
@@ -63,7 +63,7 @@ class SearchDataManager {
                 )
             }
         } catch {
-            print("Failed to fetch searchs: \(error)")
+            print("Failed to fetch searches: \(error)")
             return []
         }
     }

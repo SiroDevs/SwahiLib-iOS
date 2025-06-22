@@ -46,7 +46,7 @@ class HistoryDataManager {
 
                 try self.context.save()
             } catch {
-                print("Failed to save historys: \(error)")
+                print("Failed to save histories: \(error)")
             }
         }
     }
@@ -65,7 +65,7 @@ class HistoryDataManager {
                 )
             }
         } catch {
-            print("Failed to fetch historys: \(error)")
+            print("Failed to fetch histories: \(error)")
             return []
         }
     }

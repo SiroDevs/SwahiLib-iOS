@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WordRepositoryProtocol {
-    func fetchRemoteData() async throws -> Word
+    func fetchRemoteData() async throws -> [Word]
     func fetchLocalData() -> [Word]
     func saveData(_ words: [Word])
     func updateWord(_ word: Word)
@@ -27,8 +27,8 @@ class WordRepository: WordRepositoryProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteData() async throws -> Word {
-        return try await apiService.fetch(endpoint: 'words')
+    func fetchRemoteData() async throws -> [Word] {
+        return try await supabase.client.from("words").select().execute().value
     }
     
     func fetchLocalData() -> [Word] {
