@@ -65,9 +65,30 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
+        container.register(IdiomRepositoryProtocol.self) { resolver in
+            IdiomRepository(
+                supabase: resolver.resolve(SupabaseServiceProtocol.self)!,
+                idiomData: resolver.resolve(IdiomDataManager.self)!
+            )
+        }.inObjectScope(.container)
+        
+        container.register(ProverbRepositoryProtocol.self) { resolver in
+            ProverbRepository(
+                supabase: resolver.resolve(SupabaseServiceProtocol.self)!,
+                proverbData: resolver.resolve(ProverbDataManager.self)!
+            )
+        }.inObjectScope(.container)
+        
+        container.register(SayingRepositoryProtocol.self) { resolver in
+            SayingRepository(
+                supabase: resolver.resolve(SupabaseServiceProtocol.self)!,
+                sayingData: resolver.resolve(SayingDataManager.self)!
+            )
+        }.inObjectScope(.container)
+        
         container.register(WordRepositoryProtocol.self) { resolver in
             WordRepository(
-                apiService: resolver.resolve(SupabaseServiceProtocol.self)!,
+                supabase: resolver.resolve(SupabaseServiceProtocol.self)!,
                 wordData: resolver.resolve(WordDataManager.self)!
             )
         }.inObjectScope(.container)
