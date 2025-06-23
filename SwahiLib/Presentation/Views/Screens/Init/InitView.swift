@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUI
 
 struct InitView: View {
     @StateObject private var viewModel: InitViewModel = {
@@ -13,10 +14,15 @@ struct InitView: View {
     }()
     
     @State private var navigateToNextScreen = false
+    @State private var hasFetched = false
 
     var body: some View {
         Group {
-            navigateToNextScreen ? AnyView(HomeView()) : AnyView(mainContent)
+            if navigateToNextScreen {
+                HomeView()
+            } else {
+                mainContent
+            }
         }
     }
     
@@ -24,37 +30,50 @@ struct InitView: View {
         VStack {
             stateContent
         }
-        .task({viewModel.fetchData()})
+        .onAppear {
+            // Ensure fetchData is only called once
+            if !hasFetched {
+                viewModel.fetchData()
+                hasFetched = true
+            }
+        }
         .onChange(of: viewModel.uiState, perform: handleStateChange)
     }
     
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-            case .loading(let msg):
-                LoadingView(title: msg ?? "Inapakia Data ...")
-                
-            case .saving(let msg):
-                LoadingView(title: msg ?? "Inahifadhi Data ...")
-                
-            case .saved:
-                LoadingView()
-                
-            case .error(let msg):
-                ErrorView(message: msg) {
-                    Task { viewModel.fetchData() }
-                }
-                
-            default:
-                LoadingView()
+        case .loading:
+            LoadingView(title: "Inapakia data ...")
+            
+        case .saving:
+            VStack {
+                LoadingView(title: viewModel.status)
+                ProgressView(value: Double(viewModel.progress), total: 100)
+                    .padding(.top, 12)
+            }
+            
+        case .error(let msg):
+            ErrorView(message: msg) {
+                viewModel.fetchData()
+            }
+            
+        case .loaded:
+            EmptyView()
+            
+        default:
+            EmptyView()
         }
     }
     
-    private func handleStateChange(_ state: ViewUiState) {
-        if case .saved = state {
+    private func handleStateChange(_ state: UiState) {
+        switch state {
+        case .loaded:
+            viewModel.saveData()
+        case .saved:
             navigateToNextScreen = true
-        } else if case .fetched = state {
-            viewModel.saveSongs()
+        default:
+            break
         }
     }
 }

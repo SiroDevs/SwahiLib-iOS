@@ -57,7 +57,7 @@ struct HomeView: View {
         }
     }
     
-    private func handleStateChange(_ state: ViewUiState) {
+    private func handleStateChange(_ state: UiState) {
         if case .fetched = state {
             viewModel.filterSongs(book: viewModel.books[viewModel.selectedBook].bookId)
         }

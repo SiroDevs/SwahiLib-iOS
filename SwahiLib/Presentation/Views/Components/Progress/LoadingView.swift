@@ -6,25 +6,42 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct LoadingView: View {
-    var title: String = "Loading data ..."
-    var backgroundColor: Color = Color(.systemBackground).opacity(0.9)
+    let title: String
+    let fileName: String
+    var showProgress: Bool = false
+    var progressValue: Int = 0
 
     var body: some View {
-        ZStack {
-            backgroundColor
-                .ignoresSafeArea()
+        VStack(spacing: 24) {
+            LottieView(name: fileName)
+                .frame(width: 250, height: 250)
 
-            VStack(spacing: 100) {
-                ProgressView()
-                    .scaleEffect(3)
-                    .tint(.primary1)
-                Text(title)
-                    .font(.title3)
-                    .foregroundColor(.gray)
+            Text(title)
+                .font(.system(size: 25, weight: .bold))
+                .foregroundColor(Color("primaryDark1"))
+
+            if showProgress {
+                VStack(spacing: 8) {
+                    HStack {
+                        ProgressView(value: Double(progressValue) / 100)
+                            .progressViewStyle(LinearProgressViewStyle(tint: Color("primary")))
+                            .frame(height: 8)
+                        Spacer().frame(width: 8)
+                        Text("\(progressValue) %")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(Color("primaryDark2"))
+                    }
+                }
+                .padding(.horizontal)
             }
         }
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color("accent1"))
+        .ignoresSafeArea()
     }
 }
 
