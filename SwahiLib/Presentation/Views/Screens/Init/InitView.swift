@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct InitView: View {
-    @StateObject private var viewModel: SelectionViewModel = {
-        DiContainer.shared.resolve(SelectionViewModel.self)
+    @StateObject private var viewModel: InitViewModel = {
+        DiContainer.shared.resolve(InitViewModel.self)
     }()
     
     @State private var navigateToNextScreen = false
@@ -24,7 +24,7 @@ struct InitView: View {
         VStack {
             stateContent
         }
-        .task({viewModel.fetchSongs()})
+        .task({viewModel.fetchData()})
         .onChange(of: viewModel.uiState, perform: handleStateChange)
     }
     
@@ -32,17 +32,17 @@ struct InitView: View {
     private var stateContent: some View {
         switch viewModel.uiState {
             case .loading(let msg):
-                LoadingView(title: msg ?? "Loading ...")
+                LoadingView(title: msg ?? "Inapakia Data ...")
                 
             case .saving(let msg):
-                LoadingView(title: msg ?? "Saving ...")
+                LoadingView(title: msg ?? "Inahifadhi Data ...")
                 
             case .saved:
                 LoadingView()
                 
             case .error(let msg):
                 ErrorView(message: msg) {
-                    Task { viewModel.fetchSongs() }
+                    Task { viewModel.fetchData() }
                 }
                 
             default:
@@ -60,5 +60,5 @@ struct InitView: View {
 }
 
 #Preview {
-    Step2View()
+    InitView()
 }
