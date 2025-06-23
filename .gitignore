@@ -48,4 +48,4 @@ fastlane/test_output
 *.canvas
 
 # Environment config (optional — see below)
-Config.xcconfig
+SwahiLib/Secrets.plist

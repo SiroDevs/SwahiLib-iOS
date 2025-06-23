@@ -7,4 +7,5 @@
 
 struct AppAssets {
     static let mainIcon = "MainIcon"
+    static let emptyIcon = "EmptyIcon"
 }

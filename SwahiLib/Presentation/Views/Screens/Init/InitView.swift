@@ -30,13 +30,13 @@ struct InitView: View {
         VStack {
             stateContent
         }
-        .onAppear {
-            // Ensure fetchData is only called once
-            if !hasFetched {
-                viewModel.fetchData()
-                hasFetched = true
-            }
-        }
+//        .onAppear {
+//            // Ensure fetchData is only called once
+//            if !hasFetched {
+//                //viewModel.fetchData()
+//                //hasFetched = true
+//            }
+//        }
         .onChange(of: viewModel.uiState, perform: handleStateChange)
     }
     
@@ -61,14 +61,14 @@ struct InitView: View {
             
         case .error(let msg):
             ErrorState(message: msg) {
-                viewModel.fetchData()
+                //viewModel.fetchData()
             }
             
         case .loaded:
-            EmptyView()
+            EmptyState()
             
         default:
-            EmptyView()
+            EmptyState()
         }
     }
     

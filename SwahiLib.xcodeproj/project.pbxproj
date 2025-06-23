@@ -11,7 +11,6 @@
 		173B62752E0977B200454071 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62742E0977B200454071 /* Lottie */; };
 		173B62782E0977DB00454071 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62772E0977DB00454071 /* Supabase */; };
 		173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
-		173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */ = {isa = PBXBuildFile; fileRef = 173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config.xcconfig.example; sourceTree = "<group>"; };
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13B92DC112D300A6191A /* SwahiLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13C32DC112D300A6191A /* SwahiLibUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +120,6 @@
 			isa = PBXGroup;
 			children = (
 				173CEE442E06AA5200DB2FE1 /* .gitignore */,
-				173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */,
 				175D13A92DC112BB00A6191A /* SwahiLib */,
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
 				175D13C62DC112D400A6191A /* SwahiLibUITests */,
@@ -270,7 +267,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */,
 				173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

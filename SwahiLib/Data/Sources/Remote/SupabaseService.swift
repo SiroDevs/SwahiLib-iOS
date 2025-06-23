@@ -16,11 +16,11 @@ final class SupabaseService: SupabaseServiceProtocol {
     let client: SupabaseClient
 
     init() {
-        let urlString = Bundle.main.supabaseUrl
-        let anonKey = Bundle.main.supabaseAnonKey
+        let urlString = SupabaseSecrets.url
+        let anonKey = SupabaseSecrets.anonKey
 
         guard let url = URL(string: urlString), !anonKey.isEmpty else {
-            fatalError("Invalid Supabase URL or anon key. Check Info.plist or .xcconfig.")
+            fatalError("Invalid Supabase URL or anon key. Check Secrets.plist.")
         }
 
         self.client = SupabaseClient(

@@ -16,23 +16,22 @@ struct LoadingState: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            LottieView(name: fileName)
-                .frame(width: 250, height: 250)
+            LottieView(name: fileName).frame(width: 200, height: 200)
 
             Text(title)
                 .font(.system(size: 25, weight: .bold))
-                .foregroundColor(Color("primaryDark1"))
+                .foregroundColor(.primaryDark2)
 
             if showProgress {
                 VStack(spacing: 8) {
                     HStack {
                         ProgressView(value: Double(progressValue) / 100)
-                            .progressViewStyle(LinearProgressViewStyle(tint: Color("primary")))
+                            .progressViewStyle(LinearProgressViewStyle(tint: .primary1))
                             .frame(height: 8)
                         Spacer().frame(width: 8)
                         Text("\(progressValue) %")
                             .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color("primaryDark2"))
+                            .foregroundColor(.primaryDark3)
                     }
                 }
                 .padding(.horizontal)
@@ -40,25 +39,8 @@ struct LoadingState: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("accent1"))
+        .background(.accent2)
         .ignoresSafeArea()
-    }
-}
-
-struct ErrorState: View {
-    let message: String
-    let retryAction: () -> Void
-    
-    var body: some View {
-        VStack {
-            Text(message)
-                .foregroundColor(.red)
-                .padding()
-            
-            Button("Retry", action: retryAction)
-                .buttonStyle(.borderedProminent)
-        }
-        .padding()
     }
 }
 
