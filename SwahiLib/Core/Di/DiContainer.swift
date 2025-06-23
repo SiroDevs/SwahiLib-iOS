@@ -36,7 +36,6 @@ final class DiContainer {
             { self.container.resolve(WordRepositoryProtocol.self) },
             { self.container.resolve(InitViewModel.self) },
             { self.container.resolve(HomeViewModel.self) },
-            { self.container.resolve(PresenterViewModel.self) },
         ]
 
         for resolve in dependencies {

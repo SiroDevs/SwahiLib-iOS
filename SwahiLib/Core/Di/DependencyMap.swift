@@ -96,6 +96,9 @@ struct DependencyMap {
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
+                idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
@@ -107,11 +110,5 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
-        container.register(PresenterViewModel.self) { resolver in
-            PresenterViewModel(
-                prefsRepo: resolver.resolve(PrefsRepository.self)!,
-                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
-            )
-        }.inObjectScope(.container)
     }
 }

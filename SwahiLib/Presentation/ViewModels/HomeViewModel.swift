@@ -9,46 +9,41 @@ import Foundation
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-    @Published var books: [Book] = []
-    @Published var songs: [Song] = []
-    @Published var likes: [Song] = []
-    @Published var filtered: [Song] = []
-    @Published var uiState: ViewUiState = .idle
-    @Published var selectedBook: Int = 0
+    @Published var allIdioms: [Idiom] = []
+    @Published var allProverbs: [Proverb] = []
+    @Published var allSayings: [Saying] = []
+    @Published var allWords: [Word] = []
+    @Published var filteredWords: [Word] = []
+    @Published var uiState: UiState = .idle
 
     private let prefsRepo: PrefsRepository
-    private let bookRepo: BookRepositoryProtocol
-    private let songRepo: SongRepositoryProtocol
+    private let wordRepo: WordRepositoryProtocol
 
     init(
         prefsRepo: PrefsRepository,
-        bookRepo: BookRepositoryProtocol,
-        songRepo: SongRepositoryProtocol
+        wordRepo: WordRepositoryProtocol
     ) {
         self.prefsRepo = prefsRepo
-        self.bookRepo = bookRepo
-        self.songRepo = songRepo
+        self.wordRepo = wordRepo
     }
     
     func fetchData() {
-        self.uiState = .loading("Fetching data ...")
+        self.uiState = .loading
 
         Task {
             await MainActor.run {
-                self.books = bookRepo.fetchLocalBooks()
-                self.songs = songRepo.fetchLocalSongs()
-                self.uiState = .fetched
+                self.allWords = wordRepo.fetchLocalData()
+                self.uiState = .loaded
             }
         }
     }
     
-    func filterSongs(book: Int) {
-        self.uiState = .filtering
+    func filterWords() {
+        self.uiState = .loading
 
         Task {
             await MainActor.run {
-                self.filtered = songs.filter { $0.book == book }
-                self.likes = songs.filter { $0.liked }
+                self.filteredWords = allWords
                 self.uiState = .filtered
             }
         }
@@ -56,9 +51,9 @@ final class HomeViewModel: ObservableObject {
     
     func searchSongs(searchText: String) {
         if searchText.isEmpty {
-            filtered = songs.filter { $0.book == books[selectedBook].bookNo }
+            filteredWords = allWords
         } else {
-            filtered = songs.filter {
+            filteredWords = allWords.filter {
                 $0.title.lowercased().contains(searchText.lowercased())
             }
         }

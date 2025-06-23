@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-@MainActor
 final class InitViewModel: ObservableObject {
     @Published var idioms: [Idiom] = []
     @Published var proverbs: [Proverb] = []

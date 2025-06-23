@@ -46,7 +46,6 @@ class CoreDataManager {
         
         do {
             try context.execute(wordDeleteRequest)
-            try context.execute(bookDeleteRequest)
             try context.save()
         } catch {
             print("Failed to delete all data: \(error)")

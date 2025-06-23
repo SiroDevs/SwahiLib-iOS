@@ -8,11 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		173314E42DC159DB00318DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 173314E32DC159DB00318DD8 /* Swinject */; };
-		173B626E2E09459E00454071 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 173B626D2E09459E00454071 /* Lottie */; };
+		173B62752E0977B200454071 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62742E0977B200454071 /* Lottie */; };
+		173B62782E0977DB00454071 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62772E0977DB00454071 /* Supabase */; };
 		173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
 		173CEEC52E06ABD500DB2FE1 /* Config.xcconfig.example in Resources */ = {isa = PBXBuildFile; fileRef = 173CEEC42E06ABD500DB2FE1 /* Config.xcconfig.example */; };
-		173CEEC72E06AC9800DB2FE1 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 173CEEC62E06AC9800DB2FE1 /* PostgREST */; };
-		173CEEC92E06AC9800DB2FE1 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173CEEC82E06AC9800DB2FE1 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +30,19 @@
 			remoteInfo = SwahiLib;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		173B62722E0946BD00454071 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -76,10 +88,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				173CEEC72E06AC9800DB2FE1 /* PostgREST in Frameworks */,
 				173314E42DC159DB00318DD8 /* Swinject in Frameworks */,
-				173CEEC92E06AC9800DB2FE1 /* Supabase in Frameworks */,
-				173B626E2E09459E00454071 /* Lottie in Frameworks */,
+				173B62752E0977B200454071 /* Lottie in Frameworks */,
+				173B62782E0977DB00454071 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +151,7 @@
 				175D13A32DC112BB00A6191A /* Sources */,
 				175D13A42DC112BB00A6191A /* Frameworks */,
 				175D13A52DC112BB00A6191A /* Resources */,
+				173B62722E0946BD00454071 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -151,9 +163,8 @@
 			name = SwahiLib;
 			packageProductDependencies = (
 				173314E32DC159DB00318DD8 /* Swinject */,
-				173CEEC62E06AC9800DB2FE1 /* PostgREST */,
-				173CEEC82E06AC9800DB2FE1 /* Supabase */,
-				173B626D2E09459E00454071 /* Lottie */,
+				173B62742E0977B200454071 /* Lottie */,
+				173B62772E0977DB00454071 /* Supabase */,
 			);
 			productName = SwahiLib;
 			productReference = 175D13A72DC112BB00A6191A /* SwahiLib.app */;
@@ -239,8 +250,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */,
-				173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-				173B61F02E0912FA00454071 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				173B62732E09774B00454071 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				173B62762E0977CB00454071 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 175D13A82DC112BB00A6191A /* Products */;
@@ -635,15 +646,15 @@
 				minimumVersion = 2.9.1;
 			};
 		};
-		173B61F02E0912FA00454071 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+		173B62732E09774B00454071 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.5.2;
 			};
 		};
-		173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+		173B62762E0977CB00454071 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
 			requirement = {
@@ -659,19 +670,14 @@
 			package = 1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
 		};
-		173B626D2E09459E00454071 /* Lottie */ = {
+		173B62742E0977B200454071 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 173B61F02E0912FA00454071 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = 173B62732E09774B00454071 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		173CEEC62E06AC9800DB2FE1 /* PostgREST */ = {
+		173B62772E0977DB00454071 /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		173CEEC82E06AC9800DB2FE1 /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 173CEE3B2E05E7D200DB2FE1 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			package = 173B62762E0977CB00454071 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */

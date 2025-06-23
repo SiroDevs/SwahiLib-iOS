@@ -44,17 +44,23 @@ struct InitView: View {
     private var stateContent: some View {
         switch viewModel.uiState {
         case .loading:
-            LoadingView(title: "Inapakia data ...")
+            LoadingState(
+                title: "Inapakia data ...",
+                fileName: "opener-loading",
+            )
             
         case .saving:
             VStack {
-                LoadingView(title: viewModel.status)
+                LoadingState(
+                    title: viewModel.status,
+                    fileName: "opener-loading",
+                )
                 ProgressView(value: Double(viewModel.progress), total: 100)
                     .padding(.top, 12)
             }
             
         case .error(let msg):
-            ErrorView(message: msg) {
+            ErrorState(message: msg) {
                 viewModel.fetchData()
             }
             

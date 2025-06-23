@@ -22,61 +22,34 @@ struct HomeView: View {
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-            case .loading(let msg):
-                LoadingView(title: msg!)
-            case .filtering:
+            case .loading:
+//                LoadingView(title: msg!)
                 ProgressView()
                     .scaleEffect(5)
                     .tint(.primary1)
             case .filtered:
                 NavigationStack {
-                    TabView {
-                        SongsView(
-                            viewModel: viewModel,
-                        )
-                            .tabItem {
-                                Label("Songs", systemImage: "magnifyingglass")
-                            }
-                            .background(.accent2)
-                        LikesView(viewModel: viewModel)
-                            .tabItem {
-                                Label("Likes", systemImage: "heart.fill")
-                            }
-                            .background(.accent2)
-                    }
+                    EmptyView()
                     .navigationTitle("SwahiLib")
                 }
                
             case .error(let msg):
-                ErrorView(message: msg) {
+                ErrorState(message: msg) {
                     Task { viewModel.fetchData() }
                 }
                 
             default:
-                LoadingView()
+                EmptyView()
+//                LoadingView()
         }
     }
     
     private func handleStateChange(_ state: UiState) {
-        if case .fetched = state {
-            viewModel.filterSongs(book: viewModel.books[viewModel.selectedBook].bookId)
-        }
+//        if case .fetched = state {
+//            viewModel.filterSongs(book: viewModel.books[viewModel.selectedBook].bookId)
+//        }
     }
     
-}
-
-struct LikesView: View {
-    @ObservedObject var viewModel: HomeViewModel
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 12) {
-                SongsListView(songs: viewModel.likes)
-            }
-            .background(.accent1)
-            .padding(.vertical)
-        }
-    }
 }
 
 #Preview {

@@ -8,7 +8,7 @@
 import SwiftUI
 import Lottie
 
-struct LoadingView: View {
+struct LoadingState: View {
     let title: String
     let fileName: String
     var showProgress: Bool = false
@@ -45,7 +45,7 @@ struct LoadingView: View {
     }
 }
 
-struct ErrorView: View {
+struct ErrorState: View {
     let message: String
     let retryAction: () -> Void
     
@@ -63,5 +63,8 @@ struct ErrorView: View {
 }
 
 #Preview {
-    LoadingView()
+    LoadingState(
+        title: "Inapakia data ...",
+        fileName: "opener-loading",
+    )
 }
