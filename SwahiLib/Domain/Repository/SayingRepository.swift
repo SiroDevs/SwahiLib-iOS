@@ -28,7 +28,19 @@ class SayingRepository: SayingRepositoryProtocol {
     }
     
     func fetchRemoteData() async throws -> [Saying] {
-        return try await supabase.client.from("sayings").select().execute().value
+        do {
+            let sayings: [Saying] = try await supabase.client
+                .from("sayings")
+                .select()
+                .execute()
+                .value
+            
+            print("✅ Sayings fetched: \(sayings.count)")
+            return sayings
+        } catch {
+            print("❌ Failed to fetch sayings: \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchLocalData() -> [Saying] {

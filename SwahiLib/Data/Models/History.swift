@@ -8,8 +8,8 @@
 import Foundation
 
 struct History: Identifiable, Codable {
-    var id: Int
+    var id: Int = 0
     let item: Int
-    let type: String
-    let createdAt: String
+    let type: String?
+    let createdAt: String?
 }

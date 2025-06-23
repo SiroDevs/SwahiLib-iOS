@@ -28,8 +28,21 @@ class IdiomRepository: IdiomRepositoryProtocol {
     }
     
     func fetchRemoteData() async throws -> [Idiom] {
-        return try await supabase.client.from("idioms").select().execute().value
+        do {
+            let idioms: [Idiom] = try await supabase.client
+                .from("idioms")
+                .select()
+                .execute()
+                .value
+            
+            print("✅ Idioms fetched: \(idioms.count)")
+            return idioms
+        } catch {
+            print("❌ Failed to fetch idioms: \(error.localizedDescription)")
+            throw error
+        }
     }
+
     
     func fetchLocalData() -> [Idiom] {
         let idioms = idiomData.fetchIdioms()

@@ -28,7 +28,19 @@ class WordRepository: WordRepositoryProtocol {
     }
     
     func fetchRemoteData() async throws -> [Word] {
-        return try await supabase.client.from("words").select().execute().value
+        do {
+            let words: [Word] = try await supabase.client
+                .from("words")
+                .select()
+                .execute()
+                .value
+            
+            print("✅ Words fetched: \(words.count)")
+            return words
+        } catch {
+            print("❌ Failed to fetch words: \(error.localizedDescription)")
+            throw error
+        }
     }
     
     func fetchLocalData() -> [Word] {

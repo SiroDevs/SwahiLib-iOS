@@ -43,15 +43,15 @@ final class InitViewModel: ObservableObject {
 
         Task {
             do {
-                let idiomsTask = Task { try await idiomRepo.fetchRemoteData() }
-                let proverbsTask = Task { try await proverbRepo.fetchRemoteData() }
-                let sayingsTask = Task { try await sayingRepo.fetchRemoteData() }
-                let wordsTask = Task { try await wordRepo.fetchRemoteData() }
+                async let idioms = idiomRepo.fetchRemoteData()
+//                async let proverbs = proverbRepo.fetchRemoteData()
+//                async let sayings = sayingRepo.fetchRemoteData()
+//                async let words = wordRepo.fetchRemoteData()
 
-                idioms = try await idiomsTask.value
-                proverbs = try await proverbsTask.value
-                sayings = try await sayingsTask.value
-                words = try await wordsTask.value
+                self.idioms = try await idioms
+//                self.proverbs = try await proverbs
+//                self.sayings = try await sayings
+//                self.words = try await words
 
                 uiState = .loaded
             } catch {

@@ -16,7 +16,7 @@ struct LoadingState: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            LottieView(name: fileName).frame(width: 200, height: 200)
+            LottieView(name: fileName).frame(width: 300, height: 300)
 
             Text(title)
                 .font(.system(size: 25, weight: .bold))
@@ -27,7 +27,7 @@ struct LoadingState: View {
                     HStack {
                         ProgressView(value: Double(progressValue) / 100)
                             .progressViewStyle(LinearProgressViewStyle(tint: .primary1))
-                            .frame(height: 8)
+                            .frame(height: 20)
                         Spacer().frame(width: 8)
                         Text("\(progressValue) %")
                             .font(.system(size: 20, weight: .bold))

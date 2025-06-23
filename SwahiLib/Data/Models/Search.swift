@@ -8,7 +8,7 @@
 import Foundation
 
 struct Search: Identifiable, Codable {
-    var id: Int
-    let title: String
-    let createdAt: String
+    var id: Int = 0
+    let title: String?
+    let createdAt: String?
 }

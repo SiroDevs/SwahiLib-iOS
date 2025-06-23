@@ -28,9 +28,21 @@ class ProverbRepository: ProverbRepositoryProtocol {
     }
     
     func fetchRemoteData() async throws -> [Proverb] {
-        return try await supabase.client.from("proverbs").select().execute().value
+        do {
+            let proverbs: [Proverb] = try await supabase.client
+                .from("proverbs")
+                .select()
+                .execute()
+                .value
+            
+            print("✅ Proverbs fetched: \(proverbs.count)")
+            return proverbs
+        } catch {
+            print("❌ Failed to fetch proverbs: \(error.localizedDescription)")
+            throw error
+        }
     }
-    
+
     func fetchLocalData() -> [Proverb] {
         let proverbs = proverbData.fetchProverbs()
         return proverbs.sorted { $0.id < $1.id }

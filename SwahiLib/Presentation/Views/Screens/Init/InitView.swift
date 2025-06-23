@@ -30,13 +30,12 @@ struct InitView: View {
         VStack {
             stateContent
         }
-//        .onAppear {
-//            // Ensure fetchData is only called once
-//            if !hasFetched {
-//                //viewModel.fetchData()
-//                //hasFetched = true
-//            }
-//        }
+        .onAppear {
+            if !hasFetched {
+                viewModel.fetchData()
+                hasFetched = true
+            }
+        }
         .onChange(of: viewModel.uiState, perform: handleStateChange)
     }
     
@@ -46,7 +45,7 @@ struct InitView: View {
         case .loading:
             LoadingState(
                 title: "Inapakia data ...",
-                fileName: "opener-loading",
+                fileName: "bar-loader",
             )
             
         case .saving:
@@ -54,6 +53,8 @@ struct InitView: View {
                 LoadingState(
                     title: viewModel.status,
                     fileName: "opener-loading",
+                    showProgress: true,
+                    progressValue: viewModel.progress,
                 )
                 ProgressView(value: Double(viewModel.progress), total: 100)
                     .padding(.top, 12)
@@ -61,7 +62,7 @@ struct InitView: View {
             
         case .error(let msg):
             ErrorState(message: msg) {
-                //viewModel.fetchData()
+                viewModel.fetchData()
             }
             
         case .loaded:

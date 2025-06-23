@@ -8,13 +8,24 @@
 import Foundation
 
 struct Idiom: Identifiable, Codable {
-    var id: Int
+    var id: Int = 0
     let rid: Int
-    let title: String
-    let meaning: String
+    let title: String?
+    let meaning: String?
     let views: Int
     let likes: Int
-    let liked: Bool
-    let createdAt: String
-    let updatedAt: String
+    var liked: Bool = false
+    let createdAt: String?
+    let updatedAt: String?
+    var identity: Int { rid }
+
+    enum CodingKeys: String, CodingKey {
+        case rid
+        case title
+        case meaning
+        case views
+        case likes
+        case createdAt
+        case updatedAt
+    }
 }
