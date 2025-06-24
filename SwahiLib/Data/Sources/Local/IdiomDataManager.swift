@@ -10,134 +10,110 @@ import CoreData
 class IdiomDataManager {
     private let coreDataManager: CoreDataManager
     
-    init(coreDataManager: CoreDataManager = CoreDataManager.shared) {
+    init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
     }
     
-    // Access to the view context
     private var context: NSManagedObjectContext {
-        return coreDataManager.viewContext
+        coreDataManager.viewContext
     }
-    
-    // Save records to Core Data
+
     func saveIdioms(_ idioms: [Idiom]) {
         context.perform {
             do {
                 for idiom in idioms {
-                    let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "id == %d", idiom.id)
-                    fetchRequest.fetchLimit = 1
-
-                    let existingRecords = try self.context.fetch(fetchRequest)
-                    let cdIdiom: CDIdiom
-
-                    if let existingRecord = existingRecords.first {
-                        cdIdiom = existingRecord
-                    } else {
-                        cdIdiom = CDIdiom(context: self.context)
-                    }
-
-                    // Safely set values
-                    cdIdiom.rid = Int32(idiom.rid)
-                    cdIdiom.title = idiom.title
-                    cdIdiom.meaning = idiom.meaning
-                    cdIdiom.views = Int32(idiom.views)
-                    cdIdiom.likes = Int32(idiom.likes)
-                    cdIdiom.liked = idiom.liked
-                    cdIdiom.createdAt = idiom.createdAt
-                    cdIdiom.updatedAt = idiom.updatedAt
+                    let cdIdiom = self.findOrCreateCDIdiom(by: idiom.id)
+                    self.mapIdiomToCDIdiom(idiom, cdIdiom)
                 }
-
                 try self.context.save()
             } catch {
-                print("Failed to save idioms: \(error)")
+                print("❌ Failed to save idioms: \(error)")
             }
         }
     }
-    
-    // Fetch all idioms
+
     func fetchIdioms() -> [Idiom] {
-        let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()        
+        let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
         do {
-            let cdIdioms = try context.fetch(fetchRequest)
-            return cdIdioms.map { cdIdiom in
-                return Idiom(
-                    rid: Int(cdIdiom.rid),
-                    title: cdIdiom.title ?? "",
-                    meaning: cdIdiom.meaning ?? "",
-                    views: Int(cdIdiom.views),
-                    likes: Int(cdIdiom.likes),
-                    liked: cdIdiom.liked,
-                    createdAt: cdIdiom.createdAt ?? "",
-                    updatedAt: cdIdiom.updatedAt ?? "",
-                )
-            }
+            return try context.fetch(request).map(self.mapCDIdiomToIdiom(_:))
         } catch {
-            print("Failed to fetch idioms: \(error)")
+            print("❌ Failed to fetch idioms: \(error)")
             return []
         }
     }
-    
-    // Fetch a single record by ID
+
     func fetchIdiom(withId id: Int) -> Idiom? {
-        let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-        fetchRequest.fetchLimit = 1
-        
-        do {
-            let results = try context.fetch(fetchRequest)
-            guard let cdIdiom = results.first else { return nil }
-            
-            return Idiom(
-                rid: Int(cdIdiom.rid),
-                title: cdIdiom.title ?? "",
-                meaning: cdIdiom.meaning ?? "",
-                views: Int(cdIdiom.views),
-                likes: Int(cdIdiom.likes),
-                liked: cdIdiom.liked,
-                createdAt: cdIdiom.createdAt ?? "",
-                updatedAt: cdIdiom.updatedAt ?? "",
-            )
-        } catch {
-            print("Failed to fetch idiom: \(error)")
-            return nil
-        }
+        fetchCDIdiom(by: id).map(mapCDIdiomToIdiom(_:))
     }
-    
+
     func updateIdiom(_ idiom: Idiom) {
         context.perform {
-            let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "id == %d", idiom.id)
-            fetchRequest.fetchLimit = 1
-            
+            guard let cdIdiom = self.fetchCDIdiom(by: idiom.id) else {
+                print("⚠️ Idiom with ID \(idiom.id) not found.")
+                return
+            }
+
+            cdIdiom.title = idiom.title
+            cdIdiom.meaning = idiom.meaning
+            cdIdiom.liked = idiom.liked
+
             do {
-                if let cdIdiom = try self.context.fetch(fetchRequest).first {
-                    cdIdiom.title = idiom.title
-                    cdIdiom.meaning = idiom.meaning
-                    cdIdiom.liked = idiom.liked
-                    
-                    try self.context.save()
-                } else {
-                    print("Idiom with ID \(idiom.id) not found.")
-                }
+                try self.context.save()
             } catch {
-                print("Failed to update idiom: \(error)")
+                print("❌ Failed to update idiom: \(error)")
             }
         }
     }
 
     func deleteIdiom(withId id: Int) {
-        let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-        
+        guard let idiomToDelete = fetchCDIdiom(by: id) else { return }
+
+        context.delete(idiomToDelete)
         do {
-            let results = try context.fetch(fetchRequest)
-            if let idiomToDelete = results.first {
-                context.delete(idiomToDelete)
-                try context.save()
-            }
+            try context.save()
         } catch {
-            print("Failed to delete idiom: \(error)")
+            print("❌ Failed to delete idiom: \(error)")
         }
+    }
+
+    private func fetchCDIdiom(by id: Int) -> CDIdiom? {
+        let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %d", id)
+        request.fetchLimit = 1
+        return try? context.fetch(request).first
+    }
+
+    private func findOrCreateCDIdiom(by id: Int) -> CDIdiom {
+        if let existing = fetchCDIdiom(by: id) {
+            return existing
+        } else {
+            let new = CDIdiom(context: context)
+            new.rid = Int32(id)
+            return new
+        }
+    }
+
+    private func mapCDIdiomToIdiom(_ cd: CDIdiom) -> Idiom {
+        Idiom(
+            rid: Int(cd.rid),
+            title: cd.title ?? "",
+            meaning: cd.meaning ?? "",
+            views: Int(cd.views),
+            likes: Int(cd.likes),
+            liked: cd.liked,
+            createdAt: cd.createdAt ?? "",
+            updatedAt: cd.updatedAt ?? ""
+        )
+    }
+
+    private func mapIdiomToCDIdiom(_ idiom: Idiom, _ cd: CDIdiom) {
+        cd.rid = Int32(idiom.rid)
+        cd.title = idiom.title
+        cd.meaning = idiom.meaning
+        cd.views = Int32(idiom.views)
+        cd.likes = Int32(idiom.likes)
+        cd.liked = idiom.liked
+        cd.createdAt = idiom.createdAt
+        cd.updatedAt = idiom.updatedAt
     }
 }

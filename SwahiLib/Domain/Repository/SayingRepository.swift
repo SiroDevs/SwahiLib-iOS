@@ -9,8 +9,8 @@ import Foundation
 
 protocol SayingRepositoryProtocol {
     func fetchRemoteData() async throws -> [SayingDTO]
+    func saveRemoteData(_ sayings: [SayingDTO])
     func fetchLocalData() -> [Saying]
-    func saveData(_ sayings: [Saying])
     func updateSaying(_ saying: Saying)
 }
 
@@ -43,12 +43,13 @@ class SayingRepository: SayingRepositoryProtocol {
         }
     }
     
+    func saveRemoteData(_ sayings: [SayingSayingDTO]) {
+        sayingData.saveSayings(sayings)
+    }
+    
     func fetchLocalData() -> [Saying] {
         let sayings = sayingData.fetchSayings()
         return sayings.sorted { $0.id < $1.id }
     }
     
-    func saveData(_ sayings: [Saying]) {
-        sayingData.saveSayings(sayings)
-    }
 }

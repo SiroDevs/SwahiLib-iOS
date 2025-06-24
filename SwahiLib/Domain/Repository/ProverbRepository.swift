@@ -9,8 +9,8 @@ import Foundation
 
 protocol ProverbRepositoryProtocol {
     func fetchRemoteData() async throws -> [ProverbDTO]
+    func saveRemoteData(_ proverbs: [ProverbDTO])
     func fetchLocalData() -> [Proverb]
-    func saveData(_ proverbs: [Proverb])
     func updateProverb(_ proverb: Proverb)
 }
 
@@ -42,13 +42,14 @@ class ProverbRepository: ProverbRepositoryProtocol {
             throw error
         }
     }
+    
+    func saveRemoteData(_ proverbs: [ProverbDTO]) {
+        proverbData.saveProverbs(proverbs)
+    }
 
     func fetchLocalData() -> [Proverb] {
         let proverbs = proverbData.fetchProverbs()
         return proverbs.sorted { $0.id < $1.id }
     }
     
-    func saveData(_ proverbs: [Proverb]) {
-        proverbData.saveProverbs(proverbs)
-    }
 }

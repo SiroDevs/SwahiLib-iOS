@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 
 final class InitViewModel: ObservableObject {
-    @Published var idioms: [Idiom] = []
-    @Published var proverbs: [Proverb] = []
-    @Published var sayings: [Saying] = []
-    @Published var words: [Word] = []
+    @Published var idioms: [IdiomDTO] = []
+    @Published var proverbs: [ProverbDTO] = []
+    @Published var sayings: [SayingDTO] = []
+    @Published var words: [WordDTO] = []
 
     @Published var uiState: UiState = .idle
     @Published var progress: Int = 0
@@ -43,10 +43,10 @@ final class InitViewModel: ObservableObject {
 
         Task {
             do {
-                let idiomsResp: [Idiom] = try await idiomRepo.fetchRemoteData()
-                let proverbsResp: [Proverb] = try await proverbRepo.fetchRemoteData()
-                let sayingsResp: [Saying] = try await sayingRepo.fetchRemoteData()
-                let wordsResp: [Word] = try await wordRepo.fetchRemoteData()
+                let idiomsResp: [IdiomDTO] = try await idiomRepo.fetchRemoteData()
+                let proverbsResp: [ProverbDTO] = try await proverbRepo.fetchRemoteData()
+                let sayingsResp: [SayingDTO] = try await sayingRepo.fetchRemoteData()
+                let wordsResp: [WordDTO] = try await wordRepo.fetchRemoteData()
 
                 await MainActor.run {
                     self.idioms = idiomsResp
@@ -88,7 +88,7 @@ final class InitViewModel: ObservableObject {
         }
 
         for (index, idiom) in idioms.enumerated() {
-            idiomRepo.saveData([idiom])
+            idiomRepo.saveRemoteData([idiom])
 
             let newProgress = progressPercent(current: index + 1, total: idioms.count)
             await MainActor.run {
@@ -104,7 +104,7 @@ final class InitViewModel: ObservableObject {
         }
 
         for (index, proverb) in proverbs.enumerated() {
-            proverbRepo.saveData([proverb])
+            proverbRepo.saveRemoteData([proverb])
 
             let newProgress = progressPercent(current: index + 1, total: proverbs.count)
             await MainActor.run {
@@ -120,7 +120,7 @@ final class InitViewModel: ObservableObject {
         }
 
         for (index, saying) in sayings.enumerated() {
-            sayingRepo.saveData([saying])
+            sayingRepo.saveRemoteData([saying])
 
             let newProgress = progressPercent(current: index + 1, total: sayings.count)
             await MainActor.run {
@@ -136,7 +136,7 @@ final class InitViewModel: ObservableObject {
         }
 
         for (index, word) in words.enumerated() {
-            wordRepo.saveData([word])
+            wordRepo.saveRemoteData([word])
 
             let newProgress = progressPercent(current: index + 1, total: words.count)
             await MainActor.run {
