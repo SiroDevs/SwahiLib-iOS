@@ -18,12 +18,12 @@ class ProverbDataManager {
         coreDataManager.viewContext
     }
 
-    func saveProverbs(_ proverbs: [Proverb]) {
+    func saveProverbs(_ dtos: [ProverbDTO]) {
         context.perform {
             do {
-                for proverb in proverbs {
-                    let cdProverb = self.findOrCreateCDProverb(by: proverb.id)
-                    self.mapProverbToCDProverb(proverb, cdProverb)
+                for dto in dtos {
+                    let cdProverb = self.findOrCreateCDProverb(by: dto.rid)
+                    self.mapDtoToCd(dto, cdProverb)
                 }
                 try self.context.save()
             } catch {
@@ -119,5 +119,18 @@ class ProverbDataManager {
         cd.liked = proverb.liked
         cd.createdAt = proverb.createdAt
         cd.updatedAt = proverb.updatedAt
+    }
+    
+    private func mapDtoToCd(_ dto: ProverbDTO, _ cd: CDProverb) {
+        cd.rid = Int32(dto.rid)
+        cd.title = dto.title
+        cd.synonyms = dto.synonyms
+        cd.meaning = dto.meaning
+        cd.conjugation = dto.conjugation
+        cd.views = Int32(dto.views ?? 0)
+        cd.likes = Int32(dto.likes ?? 0)
+        cd.liked = false
+        cd.createdAt = dto.createdAt
+        cd.updatedAt = dto.updatedAt
     }
 }

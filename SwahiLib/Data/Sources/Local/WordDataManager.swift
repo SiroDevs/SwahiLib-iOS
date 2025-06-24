@@ -18,12 +18,12 @@ class WordDataManager {
         coreDataManager.viewContext
     }
 
-    func saveWords(_ words: [Word]) {
+    func saveWords(_ dtos: [WordDTO]) {
         context.perform {
             do {
-                for word in words {
-                    let cdWord = self.findOrCreateCDWord(by: word.id)
-                    self.mapWordToCDWord(word, cdWord)
+                for dto in dtos {
+                    let cdWord = self.findOrCreateCDWord(by: dto.rid)
+                    self.mapDtoToCd(dto, cdWord)
                 }
                 try self.context.save()
             } catch {
@@ -119,5 +119,18 @@ class WordDataManager {
         cd.liked = word.liked
         cd.createdAt = word.createdAt
         cd.updatedAt = word.updatedAt
+    }
+    
+    private func mapDtoToCd(_ dto: WordDTO, _ cd: CDWord) {
+        cd.rid = Int32(dto.rid)
+        cd.title = dto.title
+        cd.synonyms = dto.synonyms
+        cd.meaning = dto.meaning
+        cd.conjugation = dto.conjugation
+        cd.views = Int32(dto.views ?? 0)
+        cd.likes = Int32(dto.likes ?? 0)
+        cd.liked = false
+        cd.createdAt = dto.createdAt
+        cd.updatedAt = dto.updatedAt
     }
 }

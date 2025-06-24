@@ -43,7 +43,7 @@ class SayingRepository: SayingRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ sayings: [SayingSayingDTO]) {
+    func saveRemoteData(_ sayings: [SayingDTO]) {
         sayingData.saveSayings(sayings)
     }
     

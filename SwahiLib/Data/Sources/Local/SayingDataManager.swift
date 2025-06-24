@@ -18,12 +18,12 @@ class SayingDataManager {
         coreDataManager.viewContext
     }
 
-    func saveSayings(_ sayings: [Saying]) {
+    func saveSayings(_ dtos: [SayingDTO]) {
         context.perform {
             do {
-                for saying in sayings {
-                    let cdSaying = self.findOrCreateCDSaying(by: saying.id)
-                    self.mapSayingToCDSaying(saying, cdSaying)
+                for dto in dtos {
+                    let cdSaying = self.findOrCreateCDSaying(by: dto.rid)
+                    self.mapDtoToCd(dto, cdSaying)
                 }
                 try self.context.save()
             } catch {
@@ -115,5 +115,16 @@ class SayingDataManager {
         cd.liked = saying.liked
         cd.createdAt = saying.createdAt
         cd.updatedAt = saying.updatedAt
+    }
+    
+    private func mapDtoToCd(_ dto: SayingDTO, _ cd: CDSaying) {
+        cd.rid = Int32(dto.rid)
+        cd.title = dto.title
+        cd.meaning = dto.meaning
+        cd.views = Int32(dto.views ?? 0)
+        cd.likes = Int32(dto.likes ?? 0)
+        cd.liked = false
+        cd.createdAt = dto.createdAt
+        cd.updatedAt = dto.updatedAt
     }
 }

@@ -18,12 +18,12 @@ class IdiomDataManager {
         coreDataManager.viewContext
     }
 
-    func saveIdioms(_ idioms: [Idiom]) {
+    func saveIdioms(_ dtos: [IdiomDTO]) {
         context.perform {
             do {
-                for idiom in idioms {
-                    let cdIdiom = self.findOrCreateCDIdiom(by: idiom.id)
-                    self.mapIdiomToCDIdiom(idiom, cdIdiom)
+                for dto in dtos {
+                    let cdIdiom = self.findOrCreateCDIdiom(by: dto.rid)
+                    self.mapDtoToCd(dto, cdIdiom)
                 }
                 try self.context.save()
             } catch {
@@ -115,5 +115,16 @@ class IdiomDataManager {
         cd.liked = idiom.liked
         cd.createdAt = idiom.createdAt
         cd.updatedAt = idiom.updatedAt
+    }
+    
+    private func mapDtoToCd(_ dto: IdiomDTO, _ cd: CDIdiom) {
+        cd.rid = Int32(dto.rid)
+        cd.title = dto.title
+        cd.meaning = dto.meaning
+        cd.views = Int32(dto.views ?? 0)
+        cd.likes = Int32(dto.likes ?? 0)
+        cd.liked = false
+        cd.createdAt = dto.createdAt
+        cd.updatedAt = dto.updatedAt
     }
 }
