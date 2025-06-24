@@ -25,7 +25,7 @@ class ProverbDataManager {
             do {
                 for proverb in proverbs {
                     let fetchRequest: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "proverbId == %d", proverb.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", proverb.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -56,7 +56,7 @@ class ProverbDataManager {
         }
     }
     
-    // Fetch all proverbs or proverbs for a specific book
+    // Fetch all proverbs
     func fetchProverbs() -> [Proverb] {
         let fetchRequest: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()        
         do {
@@ -85,7 +85,7 @@ class ProverbDataManager {
     // Fetch a single record by ID
     func fetchProverb(withId id: Int) -> Proverb? {
         let fetchRequest: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "proverbId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -114,7 +114,7 @@ class ProverbDataManager {
     func updateProverb(_ proverb: Proverb) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "proverbId == %d", proverb.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", proverb.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -137,7 +137,7 @@ class ProverbDataManager {
 
     func deleteProverb(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "proverbId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

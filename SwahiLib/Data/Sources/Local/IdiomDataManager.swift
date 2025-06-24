@@ -25,7 +25,7 @@ class IdiomDataManager {
             do {
                 for idiom in idioms {
                     let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "idiomId == %d", idiom.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", idiom.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -56,7 +56,7 @@ class IdiomDataManager {
         }
     }
     
-    // Fetch all idioms or idioms for a specific book
+    // Fetch all idioms
     func fetchIdioms() -> [Idiom] {
         let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()        
         do {
@@ -83,7 +83,7 @@ class IdiomDataManager {
     // Fetch a single record by ID
     func fetchIdiom(withId id: Int) -> Idiom? {
         let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "idiomId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -110,7 +110,7 @@ class IdiomDataManager {
     func updateIdiom(_ idiom: Idiom) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "idiomId == %d", idiom.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", idiom.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -131,7 +131,7 @@ class IdiomDataManager {
 
     func deleteIdiom(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "idiomId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

@@ -14,7 +14,7 @@ struct Saying: Identifiable, Codable {
     let meaning: String?
     let views: Int
     let likes: Int
-    let liked: Bool = false
+    var liked: Bool = false
     let createdAt: String?
     let updatedAt: String?
     var identity: Int { rid }

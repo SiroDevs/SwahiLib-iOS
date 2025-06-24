@@ -56,7 +56,7 @@ class SayingDataManager {
         }
     }
     
-    // Fetch all sayings or sayings for a specific book
+    // Fetch all sayings
     func fetchSayings() -> [Saying] {
         let fetchRequest: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()        
         do {
@@ -83,7 +83,7 @@ class SayingDataManager {
     // Fetch a single record by ID
     func fetchSaying(withId id: Int) -> Saying? {
         let fetchRequest: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "sayingId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -110,7 +110,7 @@ class SayingDataManager {
     func updateSaying(_ saying: Saying) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "sayingId == %d", saying.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", saying.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -131,7 +131,7 @@ class SayingDataManager {
 
     func deleteSaying(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "sayingId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

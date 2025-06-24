@@ -25,7 +25,7 @@ class WordDataManager {
             do {
                 for word in words {
                     let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", word.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -58,7 +58,7 @@ class WordDataManager {
         }
     }
     
-    // Fetch all words or words for a specific book
+    // Fetch all words
     func fetchWords() -> [Word] {
         let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()        
         do {
@@ -87,7 +87,7 @@ class WordDataManager {
     // Fetch a single record by ID
     func fetchWord(withId id: Int) -> Word? {
         let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "wordId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -116,7 +116,7 @@ class WordDataManager {
     func updateWord(_ word: Word) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "wordId == %d", word.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", word.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -139,7 +139,7 @@ class WordDataManager {
 
     func deleteWord(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "wordId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

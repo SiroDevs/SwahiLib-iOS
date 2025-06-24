@@ -25,7 +25,7 @@ class HistoryDataManager {
             do {
                 for history in histories {
                     let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "historyId == %d", history.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", history.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -73,7 +73,7 @@ class HistoryDataManager {
     // Fetch a single record by ID
     func fetchHistory(withId id: Int) -> History? {
         let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "historyId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -95,7 +95,7 @@ class HistoryDataManager {
     func updateHistory(_ history: History) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "historyId == %d", history.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", history.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -113,7 +113,7 @@ class HistoryDataManager {
 
     func deleteHistory(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "historyId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

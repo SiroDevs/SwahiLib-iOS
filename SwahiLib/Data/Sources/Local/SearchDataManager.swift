@@ -25,7 +25,7 @@ class SearchDataManager {
             do {
                 for search in searchs {
                     let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "searchId == %d", search.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", search.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
@@ -71,7 +71,7 @@ class SearchDataManager {
     // Fetch a single record by ID
     func fetchSearch(withId id: Int) -> Search? {
         let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "searchId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         fetchRequest.fetchLimit = 1
         
         do {
@@ -92,7 +92,7 @@ class SearchDataManager {
     func updateSearch(_ search: Search) {
         context.perform {
             let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "searchId == %d", search.id)
+            fetchRequest.predicate = NSPredicate(format: "id == %d", search.id)
             fetchRequest.fetchLimit = 1
             
             do {
@@ -111,7 +111,7 @@ class SearchDataManager {
 
     func deleteSearch(withId id: Int) {
         let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "searchId == %d", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
         
         do {
             let results = try context.fetch(fetchRequest)

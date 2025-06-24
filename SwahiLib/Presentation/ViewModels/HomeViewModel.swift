@@ -53,9 +53,9 @@ final class HomeViewModel: ObservableObject {
         if searchText.isEmpty {
             filteredWords = allWords
         } else {
-            filteredWords = allWords.filter {
-                $0.title.lowercased().contains(searchText.lowercased())
-            }
+//            filteredWords = allWords.filter {
+//                $0.title?.lowercased().contains(searchText.lowercased())!
+//            }
         }
     }
 
