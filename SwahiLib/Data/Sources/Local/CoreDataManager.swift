@@ -14,9 +14,15 @@ class CoreDataManager {
     
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "SwahiLib")
-        container.loadPersistentStores { _, error in
+        container.loadPersistentStores { description, error in
             if let error = error {
-                fatalError("Failed to load Core Data stack: \(error)")
+                fatalError("❌ Failed to load Core Data stack: \(error)")
+            }
+
+            if let dbPath = description.url?.path {
+                print("📦 Core Data SQLite DB path:\n\(dbPath)")
+            } else {
+                print("⚠️ Could not determine Core Data DB path")
             }
         }
         return container

@@ -25,7 +25,7 @@ class SayingDataManager {
             do {
                 for saying in sayings {
                     let fetchRequest: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "sayingId == %d", saying.id)
+                    fetchRequest.predicate = NSPredicate(format: "id == %d", saying.id)
                     fetchRequest.fetchLimit = 1
 
                     let existingRecords = try self.context.fetch(fetchRequest)
