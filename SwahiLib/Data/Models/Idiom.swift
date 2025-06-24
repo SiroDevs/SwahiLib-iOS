@@ -8,7 +8,7 @@
 import Foundation
 
 struct Idiom: Identifiable, Codable {
-    var id: Int = 0
+    var id: Int { rid }
     let rid: Int
     let title: String?
     let meaning: String?
@@ -17,15 +17,4 @@ struct Idiom: Identifiable, Codable {
     var liked: Bool = false
     let createdAt: String?
     let updatedAt: String?
-    var identity: Int { rid }
-
-    enum CodingKeys: String, CodingKey {
-        case rid
-        case title
-        case meaning
-        case views
-        case likes
-        case createdAt
-        case updatedAt
-    }
 }
