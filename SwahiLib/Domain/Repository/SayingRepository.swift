@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SayingRepositoryProtocol {
-    func fetchRemoteData() async throws -> [Saying]
+    func fetchRemoteData() async throws -> [SayingDTO]
     func fetchLocalData() -> [Saying]
     func saveData(_ sayings: [Saying])
     func updateSaying(_ saying: Saying)
@@ -27,9 +27,9 @@ class SayingRepository: SayingRepositoryProtocol {
         self.sayingData = sayingData
     }
     
-    func fetchRemoteData() async throws -> [Saying] {
+    func fetchRemoteData() async throws -> [SayingDTO] {
         do {
-            let sayings: [Saying] = try await supabase.client
+            let sayings: [SayingDTO] = try await supabase.client
                 .from("sayings")
                 .select()
                 .execute()

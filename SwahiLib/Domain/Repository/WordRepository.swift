@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WordRepositoryProtocol {
-    func fetchRemoteData() async throws -> [Word]
+    func fetchRemoteData() async throws -> [WordDTO]
     func fetchLocalData() -> [Word]
     func saveData(_ words: [Word])
     func updateWord(_ word: Word)
@@ -27,9 +27,9 @@ class WordRepository: WordRepositoryProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteData() async throws -> [Word] {
+    func fetchRemoteData() async throws -> [WordDTO] {
         do {
-            let words: [Word] = try await supabase.client
+            let words: [WordDTO] = try await supabase.client
                 .from("words")
                 .select()
                 .execute()

@@ -8,7 +8,6 @@
     </entity>
     <entity name="CDIdiom" representedClassName="CDIdiom" syncable="YES" codeGenerationType="class">
         <attribute name="createdAt" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="liked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="likes" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="meaning" optional="YES" attributeType="String"/>
@@ -20,7 +19,6 @@
     <entity name="CDProverb" representedClassName="CDProverb" syncable="YES" codeGenerationType="class">
         <attribute name="conjugation" optional="YES" attributeType="String"/>
         <attribute name="createdAt" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="liked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="likes" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="meaning" optional="YES" attributeType="String"/>
@@ -32,7 +30,6 @@
     </entity>
     <entity name="CDSaying" representedClassName="CDSaying" syncable="YES" codeGenerationType="class">
         <attribute name="createdAt" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="liked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="likes" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="meaning" optional="YES" attributeType="String"/>
@@ -49,7 +46,6 @@
     <entity name="CDWord" representedClassName="CDWord" syncable="YES" codeGenerationType="class">
         <attribute name="conjugation" optional="YES" attributeType="String"/>
         <attribute name="createdAt" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="liked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="likes" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="meaning" optional="YES" attributeType="String"/>

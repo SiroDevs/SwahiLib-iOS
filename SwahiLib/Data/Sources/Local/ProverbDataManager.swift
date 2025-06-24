@@ -38,7 +38,6 @@ class ProverbDataManager {
                     }
 
                     // Safely set values
-                    cdProverb.id = Int32(proverb.id)
                     cdProverb.rid = Int32(proverb.rid)
                     cdProverb.title = proverb.title
                     cdProverb.meaning = proverb.meaning
@@ -63,7 +62,6 @@ class ProverbDataManager {
             let cdProverbs = try context.fetch(fetchRequest)
             return cdProverbs.map { cdProverb in
                 return Proverb(
-                    id: Int(cdProverb.id),
                     rid: Int(cdProverb.rid),
                     title: cdProverb.title ?? "",
                     synonyms: cdProverb.synonyms ?? "",
@@ -93,7 +91,6 @@ class ProverbDataManager {
             guard let cdProverb = results.first else { return nil }
             
             return Proverb(
-                id: Int(cdProverb.id),
                 rid: Int(cdProverb.rid),
                 title: cdProverb.title ?? "",
                 synonyms: cdProverb.synonyms ?? "",

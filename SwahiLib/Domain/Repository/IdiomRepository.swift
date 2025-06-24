@@ -8,7 +8,7 @@
 import Foundation
 
 protocol IdiomRepositoryProtocol {
-    func fetchRemoteData() async throws -> [Idiom]
+    func fetchRemoteData() async throws -> [IdiomDTO]
     func fetchLocalData() -> [Idiom]
     func saveData(_ idioms: [Idiom])
     func updateIdiom(_ idiom: Idiom)
@@ -27,9 +27,9 @@ class IdiomRepository: IdiomRepositoryProtocol {
         self.idiomData = idiomData
     }
     
-    func fetchRemoteData() async throws -> [Idiom] {
+    func fetchRemoteData() async throws -> [IdiomDTO] {
         do {
-            let idioms: [Idiom] = try await supabase.client
+            let idioms: [IdiomDTO] = try await supabase.client
                 .from("idioms")
                 .select()
                 .execute()

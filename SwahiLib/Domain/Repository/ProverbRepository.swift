@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProverbRepositoryProtocol {
-    func fetchRemoteData() async throws -> [Proverb]
+    func fetchRemoteData() async throws -> [ProverbDTO]
     func fetchLocalData() -> [Proverb]
     func saveData(_ proverbs: [Proverb])
     func updateProverb(_ proverb: Proverb)
@@ -27,9 +27,9 @@ class ProverbRepository: ProverbRepositoryProtocol {
         self.proverbData = proverbData
     }
     
-    func fetchRemoteData() async throws -> [Proverb] {
+    func fetchRemoteData() async throws -> [ProverbDTO] {
         do {
-            let proverbs: [Proverb] = try await supabase.client
+            let proverbs: [ProverbDTO] = try await supabase.client
                 .from("proverbs")
                 .select()
                 .execute()

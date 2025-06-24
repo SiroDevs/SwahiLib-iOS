@@ -38,7 +38,6 @@ class WordDataManager {
                     }
 
                     // Safely set values
-                    cdWord.id = Int32(word.id)
                     cdWord.rid = Int32(word.rid)
                     cdWord.title = word.title
                     cdWord.synonyms = word.synonyms
@@ -65,7 +64,6 @@ class WordDataManager {
             let cdWords = try context.fetch(fetchRequest)
             return cdWords.map { cdWord in
                 return Word(
-                    id: Int(cdWord.id),
                     rid: Int(cdWord.rid),
                     title: cdWord.title ?? "",
                     synonyms: cdWord.synonyms ?? "",
@@ -95,7 +93,6 @@ class WordDataManager {
             guard let cdWord = results.first else { return nil }
             
             return Word(
-                id: Int(cdWord.id),
                 rid: Int(cdWord.rid),
                 title: cdWord.title ?? "",
                 synonyms: cdWord.synonyms ?? "",

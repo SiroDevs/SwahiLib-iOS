@@ -56,7 +56,9 @@ final class InitViewModel: ObservableObject {
                     self.uiState = .loaded
                 }
             } catch {
-                uiState = .error("Imefeli kupata data: \(error.localizedDescription)")
+                await MainActor.run {
+                    uiState = .error("Imefeli kupata data: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -73,7 +75,9 @@ final class InitViewModel: ObservableObject {
             }
 
             prefsRepo.isDataLoaded = true
-            uiState = .saved
+            await MainActor.run {
+                uiState = .saved
+            }
         }
     }
 

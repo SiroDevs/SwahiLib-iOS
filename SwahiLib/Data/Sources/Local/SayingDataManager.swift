@@ -38,7 +38,6 @@ class SayingDataManager {
                     }
 
                     // Safely set values
-                    cdSaying.id = Int32(saying.id)
                     cdSaying.rid = Int32(saying.rid)
                     cdSaying.title = saying.title
                     cdSaying.meaning = saying.meaning
@@ -63,7 +62,6 @@ class SayingDataManager {
             let cdSayings = try context.fetch(fetchRequest)
             return cdSayings.map { cdSaying in
                 return Saying(
-                    id: Int(cdSaying.id),
                     rid: Int(cdSaying.rid),
                     title: cdSaying.title ?? "",
                     meaning: cdSaying.meaning ?? "",
@@ -91,7 +89,6 @@ class SayingDataManager {
             guard let cdSaying = results.first else { return nil }
             
             return Saying(
-                id: Int(cdSaying.id),
                 rid: Int(cdSaying.rid),
                 title: cdSaying.title ?? "",
                 meaning: cdSaying.meaning ?? "",

@@ -38,7 +38,6 @@ class IdiomDataManager {
                     }
 
                     // Safely set values
-                    cdIdiom.id = Int32(idiom.id)
                     cdIdiom.rid = Int32(idiom.rid)
                     cdIdiom.title = idiom.title
                     cdIdiom.meaning = idiom.meaning
@@ -63,7 +62,6 @@ class IdiomDataManager {
             let cdIdioms = try context.fetch(fetchRequest)
             return cdIdioms.map { cdIdiom in
                 return Idiom(
-                    id: Int(cdIdiom.id),
                     rid: Int(cdIdiom.rid),
                     title: cdIdiom.title ?? "",
                     meaning: cdIdiom.meaning ?? "",
@@ -91,7 +89,6 @@ class IdiomDataManager {
             guard let cdIdiom = results.first else { return nil }
             
             return Idiom(
-                id: Int(cdIdiom.id),
                 rid: Int(cdIdiom.rid),
                 title: cdIdiom.title ?? "",
                 meaning: cdIdiom.meaning ?? "",
