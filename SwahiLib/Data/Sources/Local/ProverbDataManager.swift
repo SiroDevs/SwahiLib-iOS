@@ -65,20 +65,9 @@ class ProverbDataManager {
         }
     }
 
-    func deleteProverb(withId id: Int) {
-        guard let proverbToDelete = fetchCDProverb(by: id) else { return }
-
-        context.delete(proverbToDelete)
-        do {
-            try context.save()
-        } catch {
-            print("❌ Failed to delete proverb: \(error)")
-        }
-    }
-
     private func fetchCDProverb(by id: Int) -> CDProverb? {
         let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %d", id)
+        request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }

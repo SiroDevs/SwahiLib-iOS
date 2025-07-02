@@ -65,20 +65,9 @@ class WordDataManager {
         }
     }
 
-    func deleteWord(withId id: Int) {
-        guard let wordToDelete = fetchCDWord(by: id) else { return }
-
-        context.delete(wordToDelete)
-        do {
-            try context.save()
-        } catch {
-            print("❌ Failed to delete word: \(error)")
-        }
-    }
-
     private func fetchCDWord(by id: Int) -> CDWord? {
         let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %d", id)
+        request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }

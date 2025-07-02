@@ -46,7 +46,7 @@ class SayingRepository: SayingRepositoryProtocol {
     func saveRemoteData(_ sayings: [SayingDTO]) {
         sayingData.saveSayings(sayings)
     }
-    
+     
     func fetchLocalData() -> [Saying] {
         let sayings = sayingData.fetchSayings()
         return sayings.sorted { $0.id < $1.id }

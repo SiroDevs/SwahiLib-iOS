@@ -1,4 +1,4 @@
-/Users/sirodaves/Developer/iOS/Projects/SwahiLib-iOS/SwahiLib/Data/Sources/Remote/DTOs/IdiomDTO.swift//
+//
 //  ProverbDTO.swift
 //  SwahiLib
 //

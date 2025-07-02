@@ -65,20 +65,9 @@ class SayingDataManager {
         }
     }
 
-    func deleteSaying(withId id: Int) {
-        guard let sayingToDelete = fetchCDSaying(by: id) else { return }
-
-        context.delete(sayingToDelete)
-        do {
-            try context.save()
-        } catch {
-            print("❌ Failed to delete saying: \(error)")
-        }
-    }
-
     private func fetchCDSaying(by id: Int) -> CDSaying? {
         let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %d", id)
+        request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }

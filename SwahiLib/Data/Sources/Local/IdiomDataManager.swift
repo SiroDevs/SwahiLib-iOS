@@ -65,20 +65,9 @@ class IdiomDataManager {
         }
     }
 
-    func deleteIdiom(withId id: Int) {
-        guard let idiomToDelete = fetchCDIdiom(by: id) else { return }
-
-        context.delete(idiomToDelete)
-        do {
-            try context.save()
-        } catch {
-            print("❌ Failed to delete idiom: \(error)")
-        }
-    }
-
     private func fetchCDIdiom(by id: Int) -> CDIdiom? {
         let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %d", id)
+        request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }
