@@ -18,14 +18,15 @@ class SayingDataManager {
         coreDataManager.viewContext
     }
 
-    func saveSayings(_ dtos: [SayingDTO]) {
+    func saveSayings(_ sayings: [Saying]) {
         context.perform {
             do {
-                for dto in dtos {
-                    let cdSaying = self.findOrCreateCDSaying(by: dto.rid)
-                    self.mapDtoToCd(dto, cdSaying)
+                for saying in sayings {
+                    let cdSaying = self.findOrCreateCd(by: saying.rid)
+                    MapEntityToCd.mapToCd(saying, cdSaying)
                 }
                 try self.context.save()
+                print("✅ Sayings saved successfully")
             } catch {
                 print("❌ Failed to save sayings: \(error)")
             }
@@ -35,7 +36,7 @@ class SayingDataManager {
     func fetchSayings() -> [Saying] {
         let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
         do {
-            return try context.fetch(request).map(self.mapCDSayingToSaying(_:))
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
         } catch {
             print("❌ Failed to fetch sayings: \(error)")
             return []
@@ -43,12 +44,12 @@ class SayingDataManager {
     }
 
     func fetchSaying(withId id: Int) -> Saying? {
-        fetchCDSaying(by: id).map(mapCDSayingToSaying(_:))
+        fetchCd(by: id).map(MapCdToEntity.mapToEntity(_:))
     }
 
     func updateSaying(_ saying: Saying) {
         context.perform {
-            guard let cdSaying = self.fetchCDSaying(by: saying.id) else {
+            guard let cdSaying = self.fetchCd(by: saying.id) else {
                 print("⚠️ Saying with ID \(saying.id) not found.")
                 return
             }
@@ -65,55 +66,20 @@ class SayingDataManager {
         }
     }
 
-    private func fetchCDSaying(by id: Int) -> CDSaying? {
+    private func fetchCd(by id: Int) -> CDSaying? {
         let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
         request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }
 
-    private func findOrCreateCDSaying(by id: Int) -> CDSaying {
-        if let existing = fetchCDSaying(by: id) {
+    private func findOrCreateCd(by id: Int) -> CDSaying {
+        if let existing = fetchCd(by: id) {
             return existing
         } else {
             let new = CDSaying(context: context)
             new.rid = Int32(id)
             return new
         }
-    }
-
-    private func mapCDSayingToSaying(_ cd: CDSaying) -> Saying {
-        Saying(
-            rid: Int(cd.rid),
-            title: cd.title ?? "",
-            meaning: cd.meaning ?? "",
-            views: Int(cd.views),
-            likes: Int(cd.likes),
-            liked: cd.liked,
-            createdAt: cd.createdAt ?? "",
-            updatedAt: cd.updatedAt ?? ""
-        )
-    }
-
-    private func mapSayingToCDSaying(_ saying: Saying, _ cd: CDSaying) {
-        cd.rid = Int32(saying.rid)
-        cd.title = saying.title
-        cd.meaning = saying.meaning
-        cd.views = Int32(saying.views)
-        cd.likes = Int32(saying.likes)
-        cd.liked = saying.liked
-        cd.createdAt = saying.createdAt
-        cd.updatedAt = saying.updatedAt
-    }
-    
-    private func mapDtoToCd(_ dto: SayingDTO, _ cd: CDSaying) {
-        cd.rid = Int32(dto.rid)
-        cd.title = dto.title
-        cd.meaning = dto.meaning
-        cd.views = Int32(dto.views ?? 0)
-        cd.likes = Int32(dto.likes ?? 0)
-        cd.liked = false
-        cd.createdAt = dto.createdAt
-        cd.updatedAt = dto.updatedAt
     }
 }

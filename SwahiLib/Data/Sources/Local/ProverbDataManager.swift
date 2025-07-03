@@ -18,14 +18,15 @@ class ProverbDataManager {
         coreDataManager.viewContext
     }
 
-    func saveProverbs(_ dtos: [ProverbDTO]) {
+    func saveProverbs(_ proverbs: [Proverb]) {
         context.perform {
             do {
-                for dto in dtos {
-                    let cdProverb = self.findOrCreateCDProverb(by: dto.rid)
-                    self.mapDtoToCd(dto, cdProverb)
+                for proverb in proverbs {
+                    let cdProverb = self.findOrCreateCd(by: proverb.rid)
+                    MapEntityToCd.mapToCd(proverb, cdProverb)
                 }
                 try self.context.save()
+                print("✅ Proverbs saved successfully")
             } catch {
                 print("❌ Failed to save proverbs: \(error)")
             }
@@ -35,7 +36,7 @@ class ProverbDataManager {
     func fetchProverbs() -> [Proverb] {
         let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
         do {
-            return try context.fetch(request).map(self.mapCDProverbToProverb(_:))
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
         } catch {
             print("❌ Failed to fetch proverbs: \(error)")
             return []
@@ -43,12 +44,12 @@ class ProverbDataManager {
     }
 
     func fetchProverb(withId id: Int) -> Proverb? {
-        fetchCDProverb(by: id).map(mapCDProverbToProverb(_:))
+        fetchCd(by: id).map(MapCdToEntity.mapToEntity(_:))
     }
 
     func updateProverb(_ proverb: Proverb) {
         context.perform {
-            guard let cdProverb = self.fetchCDProverb(by: proverb.id) else {
+            guard let cdProverb = self.fetchCd(by: proverb.id) else {
                 print("⚠️ Proverb with ID \(proverb.id) not found.")
                 return
             }
@@ -65,61 +66,20 @@ class ProverbDataManager {
         }
     }
 
-    private func fetchCDProverb(by id: Int) -> CDProverb? {
+    private func fetchCd(by id: Int) -> CDProverb? {
         let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
         request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }
 
-    private func findOrCreateCDProverb(by id: Int) -> CDProverb {
-        if let existing = fetchCDProverb(by: id) {
+    private func findOrCreateCd(by id: Int) -> CDProverb {
+        if let existing = fetchCd(by: id) {
             return existing
         } else {
             let new = CDProverb(context: context)
             new.rid = Int32(id)
             return new
         }
-    }
-
-    private func mapCDProverbToProverb(_ cd: CDProverb) -> Proverb {
-        Proverb(
-            rid: Int(cd.rid),
-            title: cd.title ?? "",
-            synonyms: cd.synonyms ?? "",
-            meaning: cd.meaning ?? "",
-            conjugation: cd.conjugation ?? "",
-            views: Int(cd.views),
-            likes: Int(cd.likes),
-            liked: cd.liked,
-            createdAt: cd.createdAt ?? "",
-            updatedAt: cd.updatedAt ?? ""
-        )
-    }
-
-    private func mapProverbToCDProverb(_ proverb: Proverb, _ cd: CDProverb) {
-        cd.rid = Int32(proverb.rid)
-        cd.title = proverb.title
-        cd.synonyms = proverb.synonyms
-        cd.meaning = proverb.meaning
-        cd.conjugation = proverb.conjugation
-        cd.views = Int32(proverb.views)
-        cd.likes = Int32(proverb.likes)
-        cd.liked = proverb.liked
-        cd.createdAt = proverb.createdAt
-        cd.updatedAt = proverb.updatedAt
-    }
-    
-    private func mapDtoToCd(_ dto: ProverbDTO, _ cd: CDProverb) {
-        cd.rid = Int32(dto.rid)
-        cd.title = dto.title
-        cd.synonyms = dto.synonyms
-        cd.meaning = dto.meaning
-        cd.conjugation = dto.conjugation
-        cd.views = Int32(dto.views ?? 0)
-        cd.likes = Int32(dto.likes ?? 0)
-        cd.liked = false
-        cd.createdAt = dto.createdAt
-        cd.updatedAt = dto.updatedAt
     }
 }
