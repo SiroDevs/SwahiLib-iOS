@@ -18,12 +18,35 @@ class IdiomDataManager {
         coreDataManager.viewContext
     }
 
-    func saveIdioms(_ dtos: [IdiomDTO]) {
+    func saveIdioms(_ idioms: [Idiom]) {
         context.perform {
             do {
-                for dto in dtos {
-                    let cdIdiom = self.findOrCreateCDIdiom(by: dto.rid)
-                    self.mapDtoToCd(dto, cdIdiom)
+                for idiom in idioms {
+//                    let cdIdiom = self.findOrCreateCDIdiom(by: idiom.rid)
+//                    self.mapIdiomToCDIdiom(idiom, cdIdiom)
+                    
+                    let fetchRequest: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "rid == %d", idiom.rid)
+                    fetchRequest.fetchLimit = 1
+
+                    let existingRecords = try self.context.fetch(fetchRequest)
+                    let cdIdiom: CDIdiom
+
+                    if let existingRecord = existingRecords.first {
+                        cdIdiom = existingRecord
+                    } else {
+                        cdIdiom = CDIdiom(context: self.context)
+                    }
+
+                    // Safely set values
+                    cdIdiom.rid = Int32(idiom.rid)
+                    cdIdiom.title = idiom.title
+                    cdIdiom.meaning = idiom.meaning
+                    cdIdiom.views = Int32(idiom.views)
+                    cdIdiom.likes = Int32(idiom.likes)
+                    cdIdiom.liked = idiom.liked
+                    cdIdiom.createdAt = idiom.createdAt
+                    cdIdiom.updatedAt = idiom.updatedAt
                 }
                 try self.context.save()
             } catch {
