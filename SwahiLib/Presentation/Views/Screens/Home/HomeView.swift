@@ -23,10 +23,10 @@ struct HomeView: View {
     private var stateContent: some View {
         switch viewModel.uiState {
             case .loading:
-//                LoadingView(title: msg!)
-                ProgressView()
-                    .scaleEffect(5)
-                    .tint(.primary1)
+                LoadingState(
+                    title: "Inapakia data ...",
+                    fileName: "opener-loading",
+                )
             case .filtered:
                 NavigationStack {
                     EmptyView()
@@ -39,8 +39,10 @@ struct HomeView: View {
                 }
                 
             default:
-                EmptyView()
-//                LoadingView()
+                LoadingState(
+                    title: "Inapakia data ...",
+                    fileName: "opener-loading",
+                )
         }
     }
     

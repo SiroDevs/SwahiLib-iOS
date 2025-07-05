@@ -18,66 +18,66 @@ class WordDataManager {
         coreDataManager.viewContext
     }
 
-    func saveProverbs(_ proverbs: [Proverb]) {
+    func saveWords(_ words: [Word]) {
         context.perform {
             do {
-                for proverb in proverbs {
-                    let cdProverb = self.findOrCreateCd(by: proverb.rid)
-                    MapEntityToCd.mapToCd(proverb, cdProverb)
+                for word in words {
+                    let cdWord = self.findOrCreateCd(by: word.rid)
+                    MapEntityToCd.mapToCd(word, cdWord)
                 }
                 try self.context.save()
-                print("✅ Proverbs saved successfully")
+                print("✅ Words saved successfully")
             } catch {
-                print("❌ Failed to save proverbs: \(error)")
+                print("❌ Failed to save words: \(error)")
             }
         }
     }
 
-    func fetchProverbs() -> [Proverb] {
-        let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
+    func fetchWords() -> [Word] {
+        let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
         do {
             return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
         } catch {
-            print("❌ Failed to fetch proverbs: \(error)")
+            print("❌ Failed to fetch words: \(error)")
             return []
         }
     }
 
-    func fetchProverb(withId id: Int) -> Proverb? {
+    func fetchWord(withId id: Int) -> Word? {
         fetchCd(by: id).map(MapCdToEntity.mapToEntity(_:))
     }
 
-    func updateProverb(_ proverb: Proverb) {
+    func updateWord(_ word: Word) {
         context.perform {
-            guard let cdProverb = self.fetchCd(by: proverb.id) else {
-                print("⚠️ Proverb with ID \(proverb.id) not found.")
+            guard let cdWord = self.fetchCd(by: word.id) else {
+                print("⚠️ Word with ID \(word.id) not found.")
                 return
             }
 
-            cdProverb.title = proverb.title
-            cdProverb.meaning = proverb.meaning
-            cdProverb.liked = proverb.liked
+            cdWord.title = word.title
+            cdWord.meaning = word.meaning
+            cdWord.liked = word.liked
 
             do {
                 try self.context.save()
             } catch {
-                print("❌ Failed to update proverb: \(error)")
+                print("❌ Failed to update word: \(error)")
             }
         }
     }
 
-    private func fetchCd(by id: Int) -> CDProverb? {
-        let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
+    private func fetchCd(by id: Int) -> CDWord? {
+        let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
         request.predicate = NSPredicate(format: "rid == %d", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
     }
 
-    private func findOrCreateCd(by id: Int) -> CDProverb {
+    private func findOrCreateCd(by id: Int) -> CDWord {
         if let existing = fetchCd(by: id) {
             return existing
         } else {
-            let new = CDProverb(context: context)
+            let new = CDWord(context: context)
             new.rid = Int32(id)
             return new
         }

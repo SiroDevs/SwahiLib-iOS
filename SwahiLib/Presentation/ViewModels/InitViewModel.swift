@@ -10,9 +10,9 @@ import SwiftUI
 
 final class InitViewModel: ObservableObject {
     @Published var idioms: [Idiom] = []
-    @Published var proverbs: [ProverbDTO] = []
-    @Published var sayings: [SayingDTO] = []
-    @Published var words: [WordDTO] = []
+    @Published var proverbs: [Proverb] = []
+    @Published var sayings: [Saying] = []
+    @Published var words: [Word] = []
 
     @Published var uiState: UiState = .idle
     @Published var progress: Int = 0
@@ -44,15 +44,15 @@ final class InitViewModel: ObservableObject {
         Task {
             do {
                 let idiomsResp: [Idiom] = try await idiomRepo.fetchRemoteData()
-//                let proverbsResp: [ProverbDTO] = try await proverbRepo.fetchRemoteData()
-//                let sayingsResp: [SayingDTO] = try await sayingRepo.fetchRemoteData()
-//                let wordsResp: [WordDTO] = try await wordRepo.fetchRemoteData()
+                let proverbsResp: [Proverb] = try await proverbRepo.fetchRemoteData()
+                let sayingsResp: [Saying] = try await sayingRepo.fetchRemoteData()
+                let wordsResp: [Word] = try await wordRepo.fetchRemoteData()
 
                 await MainActor.run {
                     self.idioms = idiomsResp
-//                     self.proverbs = proverbsResp
-//                    self.sayings = sayingsResp
-//                    self.words = wordsResp
+                     self.proverbs = proverbsResp
+                    self.sayings = sayingsResp
+                    self.words = wordsResp
                     self.uiState = .loaded
                 }
             } catch {
@@ -71,7 +71,7 @@ final class InitViewModel: ObservableObject {
                 group.addTask { await self.saveIdioms() }
                 group.addTask { await self.saveProverbs() }
                 group.addTask { await self.saveSayings() }
-                //group.addTask { await self.saveWords() }
+                group.addTask { await self.saveWords() }
             }
 
             prefsRepo.isDataLoaded = true

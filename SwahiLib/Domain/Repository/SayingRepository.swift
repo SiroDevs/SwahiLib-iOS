@@ -8,8 +8,8 @@
 import Foundation
 
 protocol SayingRepositoryProtocol {
-    func fetchRemoteData() async throws -> [SayingDTO]
-    func saveRemoteData(_ sayings: [SayingDTO])
+    func fetchRemoteData() async throws -> [Saying]
+    func saveRemoteData(_ sayings: [Saying])
     func fetchLocalData() -> [Saying]
     func updateSaying(_ saying: Saying)
 }
@@ -27,14 +27,15 @@ class SayingRepository: SayingRepositoryProtocol {
         self.sayingData = sayingData
     }
     
-    func fetchRemoteData() async throws -> [SayingDTO] {
+    func fetchRemoteData() async throws -> [Saying] {
         do {
-            let sayings: [SayingDTO] = try await supabase.client
+            let sayingsDtos: [SayingDTO] = try await supabase.client
                 .from("sayings")
                 .select()
                 .execute()
                 .value
             
+            let sayings: [Saying] = sayingsDtos.map { MapDtoToEntity.mapToEntity($0) }
             print("✅ Sayings fetched: \(sayings.count)")
             return sayings
         } catch {
@@ -43,7 +44,7 @@ class SayingRepository: SayingRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ sayings: [SayingDTO]) {
+    func saveRemoteData(_ sayings: [Saying]) {
         sayingData.saveSayings(sayings)
     }
      
