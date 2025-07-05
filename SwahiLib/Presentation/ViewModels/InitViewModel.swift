@@ -16,7 +16,6 @@ final class InitViewModel: ObservableObject {
 
     @Published var uiState: UiState = .idle
     @Published var progress: Int = 0
-    @Published var status: String = ""
 
     private let prefsRepo: PrefsRepository
     private let idiomRepo: IdiomRepositoryProtocol
@@ -39,7 +38,7 @@ final class InitViewModel: ObservableObject {
     }
 
     func fetchData() {
-        uiState = .loading
+        uiState = .loading("Inapakia data ...")
 
         Task {
             do {
@@ -64,7 +63,7 @@ final class InitViewModel: ObservableObject {
     }
 
     func saveData() {
-        uiState = .saving
+        uiState = .saving("Inahifadhi data ...")
 
         Task {
             await withTaskGroup(of: Void.self) { group in
@@ -83,7 +82,7 @@ final class InitViewModel: ObservableObject {
 
     private func saveIdioms() async {
         await MainActor.run {
-            status = "Inahifadhi nahau \(idioms.count) ..."
+            uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
             progress = 0
         }
 
@@ -99,7 +98,7 @@ final class InitViewModel: ObservableObject {
 
     private func saveProverbs() async {
         await MainActor.run {
-            status = "Inahifadhi methali \(proverbs.count) ..."
+            uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
             progress = 0
         }
 
@@ -115,7 +114,7 @@ final class InitViewModel: ObservableObject {
 
     private func saveSayings() async {
         await MainActor.run {
-            status = "Inahifadhi misemo \(sayings.count) ..."
+            uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
             progress = 0
         }
 
@@ -131,7 +130,7 @@ final class InitViewModel: ObservableObject {
 
     private func saveWords() async {
         await MainActor.run {
-            status = "Inahifadhi maneno \(words.count) ..."
+            uiState = .saving("Inahifadhi maneno \(words.count) ...")
             progress = 0
         }
 

@@ -42,16 +42,16 @@ struct InitView: View {
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-        case .loading:
+        case .loading(let msg):
             LoadingState(
-                title: "Inapakia data ...",
+                title: msg ?? "Inapakia data ...",
                 fileName: "bar-loader",
             )
             
-        case .saving:
+        case .saving(let msg):
             VStack {
                 LoadingState(
-                    title: viewModel.status,
+                    title: msg ?? "Inahifadhi data ...",
                     fileName: "opener-loading",
                     showProgress: true,
                     progressValue: viewModel.progress,

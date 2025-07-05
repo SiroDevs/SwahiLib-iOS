@@ -48,10 +48,11 @@ struct HomeView: View {
     
     private func handleStateChange(_ state: UiState) {
         if case .loaded = state {
-            viewModel.filterData(tab: HomeTab.words, qry:"")
+            if viewModel.uiState != .filtering && viewModel.uiState != .filtered {
+                viewModel.filterData(tab: HomeTab.words, qry:"")
+            }
         }
     }
-    
 }
 
 #Preview {
