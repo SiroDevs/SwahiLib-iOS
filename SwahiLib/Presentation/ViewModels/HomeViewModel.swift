@@ -13,6 +13,9 @@ final class HomeViewModel: ObservableObject {
     @Published var allProverbs: [Proverb] = []
     @Published var allSayings: [Saying] = []
     @Published var allWords: [Word] = []
+    @Published var filteredIdioms: [Idiom] = []
+    @Published var filteredProverbs: [Proverb] = []
+    @Published var filteredSayings: [Saying] = []
     @Published var filteredWords: [Word] = []
     @Published var uiState: UiState = .idle
 
@@ -38,12 +41,24 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    func filterWords() {
-        self.uiState = .loading
+    func filterData(tab: HomeTab, qry: String) {
+        self.uiState = .filtering
 
         Task {
             await MainActor.run {
-                self.filteredWords = allWords
+                switch tab {
+                    case .idioms:
+                        self.filteredIdioms = allIdioms
+                        
+                    case .sayings:
+                        self.filteredSayings = allSayings
+                        
+                    case .proverbs:
+                        self.filteredProverbs = allProverbs
+                    
+                    case .words:
+                        self.filteredWords = allWords
+                }
                 self.uiState = .filtered
             }
         }

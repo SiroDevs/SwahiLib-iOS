@@ -41,15 +41,15 @@ struct HomeView: View {
             default:
                 LoadingState(
                     title: "Inapakia data ...",
-                    fileName: "opener-loading",
+                    fileName: "circle-loader",
                 )
         }
     }
     
     private func handleStateChange(_ state: UiState) {
-//        if case .fetched = state {
-//            viewModel.filterSongs(book: viewModel.books[viewModel.selectedBook].bookId)
-//        }
+        if case .loaded = state {
+            viewModel.filterData(tab: HomeTab.words, qry:"")
+        }
     }
     
 }

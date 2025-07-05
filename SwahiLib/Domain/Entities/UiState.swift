@@ -7,10 +7,14 @@
 
 enum UiState: Equatable {
     case idle
-    case loading
-    case loaded
+    case loading(String? = nil)
+    case saving(String? = nil)
+    case synced
+    case filtering
     case filtered
-    case saving
+    case fetched
     case saved
+    case loaded
+    case liked
     case error(String)
 }
