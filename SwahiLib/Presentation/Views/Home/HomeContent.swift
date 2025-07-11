@@ -16,47 +16,28 @@ struct HomeContent: View {
         NavigationStack {
             VStack(spacing: 1) {
                 TextField("Tafuta ...", text: $searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(10)
+                    .background(.accent1)
+                    .cornerRadius(8)
                     .padding(10)
                     .onChange(of: searchText) { newValue in
-                        viewModel.searchSongs(searchText: newValue)
+//                        viewModel.searchSongs(searchText: newValue)
                     }
 
-                CustomTabTitlesView(selectedTab: $selectedTab)
+
+                CustomTabTitlesView(selectedTab: selectedTab, onSelect: { book in
+                    
+                } )
                 
                 Spacer()
 //                SongsListView(songs: viewModel.filtered)
             }
-            .background(.accent1)
             .padding(.vertical)
+            .navigationTitle("SwahiLib - Kamusi ya Kiswahili")
         }
     }
 }
 
-//struct SongsListView: View {
-//    let songs: [Song]
-//
-//    var body: some View {
-//        ScrollView {
-//            LazyVStack(spacing: 0) {
-//                ForEach(Array(songs.enumerated()), id: \.element.id) { index, song in
-//                    NavigationLink {
-//                        PresenterView(song: song)
-//                    } label: {
-//                        SearchSongItem(
-//                            song: song,
-//                            height: 50,
-//                            isSelected: false,
-//                            isSearching: false
-//                        )
-//                    }
-//
-//                    if index < songs.count - 1 {
-//                        Divider()
-//                    }
-//                }
-//            }
-//        }
-//        .background(Color.white)
-//    }
-//}
+#Preview {
+    HomeView()
+}

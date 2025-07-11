@@ -106,6 +106,9 @@ struct DependencyMap {
         container.register(HomeViewModel.self) { resolver in
             HomeViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
+                idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)

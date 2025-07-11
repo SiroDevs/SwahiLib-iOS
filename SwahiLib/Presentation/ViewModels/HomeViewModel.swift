@@ -53,16 +53,17 @@ final class HomeViewModel: ObservableObject {
                 self.allProverbs = proverbRepo.fetchLocalData()
                 self.allSayings = sayingRepo.fetchLocalData()
                 self.allWords = wordRepo.fetchLocalData()
-                self.uiState = .loaded
             }
         }
+        self.filterData(tab: HomeTab.words, qry:"")
     }
     
     func filterData(tab: HomeTab, qry: String) {
+        print("Filtering data")
         Task {
             await MainActor.run {
-                print("Filtering data")
                 self.uiState = .filtering
+                
                 switch tab {
                     case .idioms:
                         print("Filtering idioms")

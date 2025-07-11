@@ -16,7 +16,6 @@ struct HomeView: View {
         stateContent
         .edgesIgnoringSafeArea(.bottom)
         .task { viewModel.fetchData() }
-        .onChange(of: viewModel.uiState, perform: handleStateChange)
     }
     
     @ViewBuilder
@@ -28,10 +27,9 @@ struct HomeView: View {
                     fileName: "opener-loading",
                 )
             case .filtered:
-                NavigationStack {
-                    EmptyView()
-                    .navigationTitle("SwahiLib")
-                }
+                HomeContent(
+                    viewModel: viewModel,
+                )
                
             case .error(let msg):
                 ErrorState(message: msg) {
@@ -45,16 +43,4 @@ struct HomeView: View {
                 )
         }
     }
-    
-    private func handleStateChange(_ state: UiState) {
-        if case .loaded = state {
-            if viewModel.uiState != .filtering && viewModel.uiState != .filtered {
-                viewModel.filterData(tab: HomeTab.words, qry:"")
-            }
-        }
-    }
-}
-
-#Preview {
-    HomeView()
 }

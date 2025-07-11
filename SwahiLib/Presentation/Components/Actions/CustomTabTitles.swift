@@ -8,36 +8,23 @@
 import SwiftUI
 
 struct CustomTabTitlesView: View {
-    @Binding var selectedTab: HomeTab
-
+    let selectedTab: HomeTab
+    let onSelect: (HomeTab) -> Void
+    
     var body: some View {
-        VStack(spacing: 0) {
-            Color(.lightGray)
-                .frame(height: 1)
-            VStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        Spacer().frame(width: 4)
-                        ForEach(HomeTab.allCases) { tab in
-                            TabItemView(
-                                text: tab.title,
-                                isSelected: tab == selectedTab,
-                                onClick: { selectedTab = tab }
-                            )
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack() {
+                ForEach(homeTabs) { tab in
+                    TabItemView(
+                        text: tab.title,
+                        isSelected: tab == selectedTab,
+                        onClick: { onSelect(tab)  }
+                    )
                 }
             }
-            .background(
-                RoundedRectangle(cornerRadius: 15, style: .continuous)
-                    .fill(Color.white)
-                    .clipShape(
-                        RoundedCornerShape(corners: [.bottomRight], radius: 15)
-                    )
-            )
         }
+        .padding(.leading, 10)
+        .frame(height: 40)
     }
 }
 
