@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomTabTitlesView: View {
+struct CustomTabTitles: View {
     let selectedTab: HomeTab
     let onSelect: (HomeTab) -> Void
     
@@ -15,7 +15,7 @@ struct CustomTabTitlesView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack() {
                 ForEach(homeTabs) { tab in
-                    TabItemView(
+                    TabItem(
                         text: tab.title,
                         isSelected: tab == selectedTab,
                         onClick: { onSelect(tab)  }
@@ -23,46 +23,39 @@ struct CustomTabTitlesView: View {
                 }
             }
         }
-        .padding(.leading, 10)
-        .frame(height: 40)
+        .frame(height: 35)
     }
 }
 
-struct RoundedCornerShape: Shape {
-    var corners: UIRectCorner
-    var radius: CGFloat
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
-    }
-}
-
-struct TabItemView: View {
+struct TabItem: View {
     let text: String
     let isSelected: Bool
     let onClick: () -> Void
 
     var body: some View {
         Text(text.uppercased())
-            .font(.body.bold())
-            .foregroundColor(isSelected ? .white : Color("Primary1"))
-            .padding(.horizontal, 15)
-            .padding(.vertical, 8)
+            .font(.system(size: 16, weight: .bold))
+            .foregroundColor(isSelected ? .white : .primary1)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(isSelected ? Color("Primary1") : Color.clear)
+                    .fill(isSelected ? .primary1 : Color.clear)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color("Primary1"), lineWidth: isSelected ? 0 : 1)
+                    .stroke(.primary1, lineWidth: isSelected ? 0 : 1)
             )
             .onTapGesture {
                 onClick()
             }
     }
+}
+
+#Preview {
+    TabItem(
+        text: "Methali",
+        isSelected: true,
+        onClick: {},
+    )
 }

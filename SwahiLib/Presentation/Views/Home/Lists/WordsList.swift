@@ -15,17 +15,14 @@ struct WordsList: View {
             LazyVStack(spacing: 0) {
                 ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
                     NavigationLink {
-//                        PresenterView(song: song)
+//                        PresenterView(song: word)
                     } label: {
-                        SearchSongItem(
-                            song: song,
-                            height: 50,
-                            isSelected: false,
-                            isSearching: false
+                        WordItem(
+                            word: word,
                         )
                     }
 
-                    if index < songs.count - 1 {
+                    if index < words.count - 1 {
                         Divider()
                     }
                 }

@@ -22,6 +22,7 @@ final class HomeViewModel: ObservableObject {
     @Published var filteredWords: [Word] = []
     
     @Published var uiState: UiState = .idle
+    @Published var homeTab: HomeTab = .words
 
     private let prefsRepo: PrefsRepository
     private let idiomRepo: IdiomRepositoryProtocol
@@ -55,16 +56,16 @@ final class HomeViewModel: ObservableObject {
                 self.allWords = wordRepo.fetchLocalData()
             }
         }
-        self.filterData(tab: HomeTab.words, qry:"")
+        self.filterData(query: "")
     }
     
-    func filterData(tab: HomeTab, qry: String) {
+    func filterData(query: String) {
         print("Filtering data")
         Task {
             await MainActor.run {
                 self.uiState = .filtering
                 
-                switch tab {
+                switch self.homeTab {
                     case .idioms:
                         print("Filtering idioms")
                         self.filteredIdioms = allIdioms
