@@ -49,6 +49,7 @@ struct SayingItem: View {
                     .padding(.bottom, 4)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)

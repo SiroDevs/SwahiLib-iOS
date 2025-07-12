@@ -41,20 +41,4 @@ class CoreDataManager {
             }
         }
     }
-    
-    // Remove all data from Core Data (helpful for testing or resetting)
-    func deleteAllData() {
-        let context = viewContext
-        
-        // Delete all words
-        let wordFetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CDWord")
-        let wordDeleteRequest = NSBatchDeleteRequest(fetchRequest: wordFetchRequest)
-        
-        do {
-            try context.execute(wordDeleteRequest)
-            try context.save()
-        } catch {
-            print("Failed to delete all data: \(error)")
-        }
-    }
 }

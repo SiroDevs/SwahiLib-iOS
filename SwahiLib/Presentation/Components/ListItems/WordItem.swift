@@ -72,6 +72,7 @@ struct WordItem: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
@@ -88,7 +89,7 @@ struct WordItem: View {
 
 #Preview {
     WordItem(
-        word: Word.sampleWords[0]
+        word: Word.sampleWords[3]
     )
     .padding()
 }

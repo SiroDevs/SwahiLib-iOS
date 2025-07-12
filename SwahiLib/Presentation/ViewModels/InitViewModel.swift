@@ -37,115 +37,83 @@ final class InitViewModel: ObservableObject {
         self.wordRepo = wordRepo
     }
 
-    func fetchData() {
-        uiState = .loading("Inapakia data ...")
-
+    func initializeDataIfNeeded() {
+        guard !prefsRepo.isDataLoaded else {
+            print("✅ Data already loaded, skipping initialization.")
+            return
+        }
         Task {
-            do {
-                let idiomsResp: [Idiom] = try await idiomRepo.fetchRemoteData()
-                let proverbsResp: [Proverb] = try await proverbRepo.fetchRemoteData()
-                let sayingsResp: [Saying] = try await sayingRepo.fetchRemoteData()
-                let wordsResp: [Word] = try await wordRepo.fetchRemoteData()
-
-                await MainActor.run {
-                    self.idioms = idiomsResp
-                     self.proverbs = proverbsResp
-                    self.sayings = sayingsResp
-                    self.words = wordsResp
-                    self.uiState = .loaded
-                }
-            } catch {
-                await MainActor.run {
-                    uiState = .error("Imefeli kupata data: \(error.localizedDescription)")
-                }
-            }
+            await fetchAndSaveData()
         }
     }
 
-    func saveData() {
-        uiState = .saving("Inahifadhi data ...")
+    @MainActor
+    private func fetchAndSaveData() async {
+        uiState = .loading("Inapakia data ...")
+        progress = 0
 
-        Task {
-            await withTaskGroup(of: Void.self) { group in
-                group.addTask { await self.saveIdioms() }
-                group.addTask { await self.saveProverbs() }
-                group.addTask { await self.saveSayings() }
-                group.addTask { await self.saveWords() }
-            }
+        do {
+            idioms = try await idiomRepo.fetchRemoteData()
+            proverbs = try await proverbRepo.fetchRemoteData()
+            sayings = try await sayingRepo.fetchRemoteData()
+            words = try await wordRepo.fetchRemoteData()
+
+            uiState = .saving("Inahifadhi data ...")
+            progress = 0
+
+            try await saveIdioms()
+            try await saveProverbs()
+            try await saveSayings()
+            try await saveWords()
 
             prefsRepo.isDataLoaded = true
-            await MainActor.run {
-                uiState = .saved
-            }
+            uiState = .saved
+            print("✅ Data fetched and saved successfully.")
+
+        } catch {
+            uiState = .error("Imefeli: \(error.localizedDescription)")
+            print("❌ Initialization failed: \(error)")
         }
     }
 
-    private func saveIdioms() async {
-        await MainActor.run {
-            uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
-            progress = 0
-        }
-
+    private func saveIdioms() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi nahau \(idioms.count) ...") }
         for (index, idiom) in idioms.enumerated() {
             idiomRepo.saveRemoteData([idiom])
-
-            let newProgress = progressPercent(current: index + 1, total: idioms.count)
-            await MainActor.run {
-                progress = newProgress
-            }
+            await updateProgress(current: index + 1, total: idioms.count)
         }
     }
 
-    private func saveProverbs() async {
-        await MainActor.run {
-            uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
-            progress = 0
-        }
-
+    private func saveProverbs() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi methali \(proverbs.count) ...") }
         for (index, proverb) in proverbs.enumerated() {
             proverbRepo.saveRemoteData([proverb])
-
-            let newProgress = progressPercent(current: index + 1, total: proverbs.count)
-            await MainActor.run {
-                progress = newProgress
-            }
+            await updateProgress(current: index + 1, total: proverbs.count)
         }
     }
 
-    private func saveSayings() async {
-        await MainActor.run {
-            uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
-            progress = 0
-        }
-
+    private func saveSayings() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi misemo \(sayings.count) ...") }
         for (index, saying) in sayings.enumerated() {
             sayingRepo.saveRemoteData([saying])
-
-            let newProgress = progressPercent(current: index + 1, total: sayings.count)
-            await MainActor.run {
-                progress = newProgress
-            }
+            await updateProgress(current: index + 1, total: sayings.count)
         }
     }
 
-    private func saveWords() async {
-        await MainActor.run {
-            uiState = .saving("Inahifadhi maneno \(words.count) ...")
-            progress = 0
-        }
-
+    private func saveWords() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi maneno \(words.count) ...") }
         for (index, word) in words.enumerated() {
             wordRepo.saveRemoteData([word])
-
-            let newProgress = progressPercent(current: index + 1, total: words.count)
-            await MainActor.run {
-                progress = newProgress
-            }
+            await updateProgress(current: index + 1, total: words.count)
         }
     }
 
-    private func progressPercent(current: Int, total: Int) -> Int {
-        guard total > 0 else { return 0 }
-        return Int((Double(current) / Double(total)) * 100)
+    @MainActor
+    private func updateProgress(current: Int, total: Int) {
+        guard total > 0 else { return }
+        let newProgress = Int((Double(current) / Double(total)) * 100)
+        if newProgress > progress {
+            progress = newProgress
+        }
     }
 }
