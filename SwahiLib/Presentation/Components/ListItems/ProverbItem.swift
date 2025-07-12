@@ -1,5 +1,5 @@
 //
-//  WordItem.swift
+//  ProverbItem.swift
 //  SwahiLib
 //
 //  Created by Siro Daves on 12/07/2025.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct WordItem: View {
-    var word: Word
+struct ProverbItem: View {
+    var proverb: Proverb
     var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
@@ -20,7 +20,7 @@ struct WordItem: View {
     }
 
     private var meaning: String {
-        let cleaned = cleanMeaning(word.meaning)
+        let cleaned = cleanMeaning(proverb.meaning)
         let contents = cleaned.split(separator: "|")
         let extra = contents.first?.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
 
@@ -36,7 +36,7 @@ struct WordItem: View {
     }
 
     private var synonyms: [String] {
-        (word.synonyms)
+        (proverb.synonyms)
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
@@ -44,7 +44,7 @@ struct WordItem: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(word.title)
+            Text(proverb.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
 
@@ -84,11 +84,4 @@ struct WordItem: View {
             onTap?()
         }
     }
-}
-
-#Preview {
-    WordItem(
-        word: Word.sampleWords[0]
-    )
-    .padding()
 }

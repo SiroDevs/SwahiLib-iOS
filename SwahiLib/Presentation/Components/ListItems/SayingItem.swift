@@ -1,5 +1,5 @@
 //
-//  WordItem.swift
+//  SayingItem.swift
 //  SwahiLib
 //
 //  Created by Siro Daves on 12/07/2025.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct WordItem: View {
-    var word: Word
+struct SayingItem: View {
+    var saying: Saying
     var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
@@ -20,7 +20,7 @@ struct WordItem: View {
     }
 
     private var meaning: String {
-        let cleaned = cleanMeaning(word.meaning)
+        let cleaned = cleanMeaning(saying.meaning)
         let contents = cleaned.split(separator: "|")
         let extra = contents.first?.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
 
@@ -35,16 +35,9 @@ struct WordItem: View {
         return result
     }
 
-    private var synonyms: [String] {
-        (word.synonyms)
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .filter { !$0.isEmpty }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(word.title)
+            Text(saying.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
 
@@ -53,23 +46,7 @@ struct WordItem: View {
                     .font(bodyTextStyle)
                     .lineLimit(2)
                     .truncationMode(.tail)
-                    .padding(.bottom, synonyms.isEmpty ? 0 : 4)
-            }
-
-            if !synonyms.isEmpty {
-                HStack(alignment: .center) {
-                    Text(synonyms.count == 1 ? "KISAWE:" : "VISAWE \(synonyms.count):")
-                        .font(bodyTextStyle.weight(.bold))
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(synonyms, id: \.self) { synonym in
-                                TagItem(tagText: synonym, height: 28)
-                                    .padding(.trailing, 6)
-                            }
-                        }
-                    }
-                }
+                    .padding(.bottom, 4)
             }
         }
         .padding()
@@ -84,11 +61,4 @@ struct WordItem: View {
             onTap?()
         }
     }
-}
-
-#Preview {
-    WordItem(
-        word: Word.sampleWords[0]
-    )
-    .padding()
 }
