@@ -56,10 +56,10 @@ final class HomeViewModel: ObservableObject {
                 self.allWords = wordRepo.fetchLocalData()
             }
         }
-        self.filterData(query: "")
+        self.filterData(qry: "")
     }
     
-    func filterData(query: String) {
+    func filterData(qry: String) {
         print("Filtering data")
         Task {
             await MainActor.run {

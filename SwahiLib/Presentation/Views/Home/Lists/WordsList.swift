@@ -14,13 +14,6 @@ struct WordsList: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
-//                    NavigationLink {
-////                        PresenterView(song: word)
-//                    } label: {
-//                        WordItem(
-//                            word: word,
-//                        )
-//                    }
                     WordItem(
                         word: word,
                     )

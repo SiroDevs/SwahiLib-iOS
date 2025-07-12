@@ -15,24 +15,19 @@ struct HomeContent: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 1) {
-                if isSearching {
-                    SearchBar(
-                        text: $searchText,
-                        onSearch: { query in
-                            viewModel.filterData(query: query)
-                        },
-                        onClear: {
-                            withAnimation {
-//                                isSearching = false
-                            }
-                        }
-                    )
-                    .padding(.bottom, 5)
-                }
-
+                SearchBar(
+                    text: $searchText,
+                    onSearch: { query in
+                        viewModel.filterData(qry: query)
+                    },
+                )
+                .padding(.bottom, 5)
                 CustomTabTitles(
                     selectedTab: viewModel.homeTab,
-                    onSelect: { book in }
+                    onSelect: { homeTab in
+                        viewModel.homeTab = homeTab
+                        viewModel.filterData(qry: "")
+                    }
                 )
                 .padding(.leading, 10)
                 
