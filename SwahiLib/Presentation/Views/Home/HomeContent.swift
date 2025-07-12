@@ -35,11 +35,17 @@ struct HomeContent: View {
                     onSelect: { book in }
                 )
                 .padding(.leading, 10)
-                WordsList(words: viewModel.filteredWords)
+                
                 switch viewModel.homeTab {
                     case .idioms:
+                        IdiomsList(idioms: viewModel.filteredIdioms)
+                    
                     case .proverbs:
+                        ProverbsList(proverbs: viewModel.filteredProverbs)
+                    
                     case .sayings:
+                        SayingsList(sayings: viewModel.filteredSayings)
+                    
                     case .words:
                         WordsList(words: viewModel.filteredWords)
                 }
@@ -61,42 +67,6 @@ struct HomeContent: View {
                     }
                 }
         }
-    }
-}
-
-struct SearchBar: View {
-    @Binding var text: String
-    var onSearch: (String) -> Void
-    var onClear: (() -> Void)? = nil
-
-    var body: some View {
-        HStack {
-            TextField("Tafuta ...", text: $text)
-                .padding(.horizontal)
-                .onChange(of: text) { newValue in
-                    onSearch(newValue)
-                }
-
-            Button(action: {
-                text = ""
-                onSearch("")
-                onClear?()
-            }) {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.primary1)
-                    .imageScale(.large)
-            }
-        }
-        .padding(10)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(.accent1)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(.primary1, lineWidth: 1)
-        )
-        .padding(.horizontal, 10)
     }
 }
 
