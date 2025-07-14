@@ -33,6 +33,19 @@ class SayingDataManager {
         }
     }
 
+    func saveSaying(_ saying: Saying) {
+        context.perform {
+            do {
+                let cdSaying = self.findOrCreateCd(by: saying.rid)
+                MapEntityToCd.mapToCd(saying, cdSaying)
+                try self.context.save()
+                print("✅ Saying: \(saying.title) saved successfully")
+            } catch {
+                print("❌ Failed to save saying: \(error)")
+            }
+        }
+    }
+
     func fetchSayings() -> [Saying] {
         let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
         do {

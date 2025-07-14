@@ -43,8 +43,8 @@ class IdiomRepository: IdiomRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ idioms: [Idiom]) {
-        idiomData.saveIdioms(idioms)
+    func saveRemoteData(_ idiom: Idiom) {
+        idiomData.saveIdiom(idiom)
     }
     
     func fetchLocalData() -> [Idiom] {

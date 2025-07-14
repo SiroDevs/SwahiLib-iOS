@@ -44,8 +44,8 @@ class WordRepository: WordRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ words: [Word]) {
-        wordData.saveWords(words)
+    func saveRemoteData(_ word: Word) {
+        wordData.saveWord(word)
     }
     
     func fetchLocalData() -> [Word] {

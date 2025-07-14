@@ -44,8 +44,8 @@ class ProverbRepository: ProverbRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ proverbs: [Proverb]) {
-        proverbData.saveProverbs(proverbs)
+    func saveRemoteData(_ proverb: Proverb) {
+        proverbData.saveProverb(proverb)
     }
 
     func fetchLocalData() -> [Proverb] {

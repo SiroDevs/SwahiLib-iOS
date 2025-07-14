@@ -37,46 +37,55 @@ final class InitViewModel: ObservableObject {
         self.wordRepo = wordRepo
     }
 
-    func initializeDataIfNeeded() {
+    func initializeData() {
         Task {
             await fetchAndSaveData()
         }
     }
 
-    @MainActor
-    private func fetchAndSaveData() async {
-        uiState = .loading("Inapakia data ...")
-        progress = 0
-
-        do {
-            idioms = try await idiomRepo.fetchRemoteData()
-            proverbs = try await proverbRepo.fetchRemoteData()
-            sayings = try await sayingRepo.fetchRemoteData()
-            words = try await wordRepo.fetchRemoteData()
-
-            uiState = .saving("Inahifadhi data ...")
+    func fetchAndSaveData() async {
+        Task {
+            uiState = .loading("Inapakia data ...")
             progress = 0
 
-            try await saveIdioms()
-            try await saveProverbs()
-            try await saveSayings()
-            try await saveWords()
+            do {
+                idioms = try await idiomRepo.fetchRemoteData()
+                proverbs = try await proverbRepo.fetchRemoteData()
+                sayings = try await sayingRepo.fetchRemoteData()
+                words = try await wordRepo.fetchRemoteData()
 
-            prefsRepo.isDataLoaded = true
-            uiState = .saved
-            print("✅ Data fetched and saved successfully.")
+                uiState = .saving("Inahifadhi data ...")
+                progress = 0
 
-        } catch {
-            uiState = .error("Imefeli: \(error.localizedDescription)")
-            print("❌ Initialization failed: \(error)")
+                try await saveIdioms()
+                try await saveProverbs()
+                try await saveSayings()
+                try await saveWords()
+
+                prefsRepo.isDataLoaded = true
+                uiState = .saved
+                print("✅ Data fetched and saved successfully.")
+
+            } catch {
+                uiState = .error("Imefeli: \(error.localizedDescription)")
+                print("❌ Initialization failed: \(error)")
+            }
         }
     }
 
-    private func saveIdioms() async throws {
+    private func saveIdiomsx() async throws {
         await MainActor.run { uiState = .saving("Inahifadhi nahau \(idioms.count) ...") }
         for (index, idiom) in idioms.enumerated() {
             idiomRepo.saveRemoteData([idiom])
             await updateProgress(current: index + 1, total: idioms.count)
+        }
+    }
+    
+    private func saveIdioms() {
+        self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
+                
+        Task {
+            self.idiomRepo.saveRemoteData(idioms)
         }
     }
 

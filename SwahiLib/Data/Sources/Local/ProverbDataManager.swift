@@ -33,6 +33,19 @@ class ProverbDataManager {
         }
     }
 
+    func saveProverb(_ proverb: Proverb) {
+        context.perform {
+            do {
+                let cdProverb = self.findOrCreateCd(by: proverb.rid)
+                MapEntityToCd.mapToCd(proverb, cdProverb)
+                try self.context.save()
+                print("✅ Proverb: \(proverb.title) saved successfully")
+            } catch {
+                print("❌ Failed to save proverb: \(error)")
+            }
+        }
+    }
+
     func fetchProverbs() -> [Proverb] {
         let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
         do {

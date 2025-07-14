@@ -44,8 +44,8 @@ class SayingRepository: SayingRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ sayings: [Saying]) {
-        sayingData.saveSayings(sayings)
+    func saveRemoteData(_ saying: Saying) {
+        sayingData.saveSaying(saying)
     }
      
     func fetchLocalData() -> [Saying] {

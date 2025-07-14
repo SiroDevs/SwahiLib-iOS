@@ -33,6 +33,19 @@ class WordDataManager {
         }
     }
 
+    func saveWord(_ word: Word) {
+        context.perform {
+            do {
+                let cdWord = self.findOrCreateCd(by: word.rid)
+                MapEntityToCd.mapToCd(word, cdWord)
+                try self.context.save()
+                print("✅ Word: \(word.title) saved successfully")
+            } catch {
+                print("❌ Failed to save word: \(error)")
+            }
+        }
+    }
+
     func fetchWords() -> [Word] {
         let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
         do {

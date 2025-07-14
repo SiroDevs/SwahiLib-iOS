@@ -33,6 +33,19 @@ class IdiomDataManager {
         }
     }
 
+    func saveIdiom(_ idiom: Idiom) {
+        context.perform {
+            do {
+                let cdIdiom = self.findOrCreateCd(by: idiom.rid)
+                MapEntityToCd.mapToCd(idiom, cdIdiom)
+                try self.context.save()
+                print("✅ Idiom: \(idiom.title) saved successfully")
+            } catch {
+                print("❌ Failed to save idiom: \(error)")
+            }
+        }
+    }
+
     func fetchIdioms() -> [Idiom] {
         let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
         do {

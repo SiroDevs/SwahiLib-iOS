@@ -29,7 +29,7 @@ struct InitView: View {
             stateContent
         }
         .onAppear {
-            viewModel.initializeDataIfNeeded()
+            viewModel.initializeData()
         }
         .onChange(of: viewModel.uiState) { state in
             handleStateChange(state)
@@ -59,7 +59,7 @@ struct InitView: View {
 
         case .error(let msg):
             ErrorState(message: msg) {
-                viewModel.initializeDataIfNeeded()
+                viewModel.initializeData()
             }
 
         case .saved:
