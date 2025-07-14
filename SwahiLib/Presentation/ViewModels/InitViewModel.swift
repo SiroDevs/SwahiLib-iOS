@@ -38,10 +38,6 @@ final class InitViewModel: ObservableObject {
     }
 
     func initializeDataIfNeeded() {
-        guard !prefsRepo.isDataLoaded else {
-            print("✅ Data already loaded, skipping initialization.")
-            return
-        }
         Task {
             await fetchAndSaveData()
         }

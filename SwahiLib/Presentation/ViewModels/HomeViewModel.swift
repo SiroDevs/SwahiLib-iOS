@@ -48,43 +48,50 @@ final class HomeViewModel: ObservableObject {
         print("Fetching data")
         self.uiState = .loading("Inapakia data ...")
 
-        Task {
-            await MainActor.run {
-                self.allIdioms = idiomRepo.fetchLocalData()
-                self.allProverbs = proverbRepo.fetchLocalData()
-                self.allSayings = sayingRepo.fetchLocalData()
-                self.allWords = wordRepo.fetchLocalData()
-            }
+        Task { @MainActor in
+            self.allIdioms = idiomRepo.fetchLocalData()
+            self.allProverbs = proverbRepo.fetchLocalData()
+            self.allSayings = sayingRepo.fetchLocalData()
+            self.allWords = wordRepo.fetchLocalData()
+            
+            // Initially display all data
+            self.filterData(qry: "")
+            self.uiState = .filtered
         }
-        self.filterData(qry: "")
     }
     
     func filterData(qry: String) {
-        print("Filtering data")
-        Task {
-            await MainActor.run {
-                self.uiState = .filtering
-                
-                switch self.homeTab {
-                    case .idioms:
-                        print("Filtering idioms")
-                        self.filteredIdioms = allIdioms
-                        
-                    case .sayings:
-                        print("Filtering sayings")
-                        self.filteredSayings = allSayings
-                        
-                    case .proverbs:
-                        print("Filtering proverbs")
-                        self.filteredProverbs = allProverbs
-                    
-                    case .words:
-                        print("Filtering words")
-                        self.filteredWords = allWords
-                }
-                self.uiState = .filtered
-            }
+        let trimmedQuery = qry.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        print("Filtering data with query: '\(trimmedQuery)'")
+        self.uiState = .filtering
+        
+        switch self.homeTab {
+        case .idioms:
+            self.filteredIdioms = trimmedQuery.isEmpty
+                ? allIdioms
+                : allIdioms.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
+            print("Filtered idioms: \(filteredIdioms.count)")
+            
+        case .sayings:
+            self.filteredSayings = trimmedQuery.isEmpty
+                ? allSayings
+                : allSayings.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
+            print("Filtered sayings: \(filteredSayings.count)")
+            
+        case .proverbs:
+            self.filteredProverbs = trimmedQuery.isEmpty
+                ? allProverbs
+                : allProverbs.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
+            print("Filtered proverbs: \(filteredProverbs.count)")
+            
+        case .words:
+            self.filteredWords = trimmedQuery.isEmpty
+                ? allWords
+                : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
+            print("Filtered words: \(filteredWords.count)")
         }
+        
+        self.uiState = .filtered
     }
-    
 }

@@ -77,7 +77,6 @@ struct InitView: View {
     }
 }
 
-
 #Preview {
     InitView()
 }
