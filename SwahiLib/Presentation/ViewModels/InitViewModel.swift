@@ -44,39 +44,36 @@ final class InitViewModel: ObservableObject {
     }
 
     func fetchAndSaveData() async {
-        Task {
-            uiState = .loading("Inapakia data ...")
+        uiState = .loading("Inapakia data ...")
+        progress = 0
+
+        do {
+            idioms = try await idiomRepo.fetchRemoteData()
+            proverbs = try await proverbRepo.fetchRemoteData()
+            sayings = try await sayingRepo.fetchRemoteData()
+            words = try await wordRepo.fetchRemoteData()
+
+            uiState = .saving("Inahifadhi data ...")
             progress = 0
 
-            do {
-                idioms = try await idiomRepo.fetchRemoteData()
-                proverbs = try await proverbRepo.fetchRemoteData()
-                sayings = try await sayingRepo.fetchRemoteData()
-                words = try await wordRepo.fetchRemoteData()
+            try await saveIdioms()
+            try await saveProverbs()
+            try await saveSayings()
+            try await saveWords()
 
-                uiState = .saving("Inahifadhi data ...")
-                progress = 0
+            prefsRepo.isDataLoaded = true
+            uiState = .saved
+            print("✅ Data fetched and saved successfully.")
 
-                try await saveIdioms()
-                try await saveProverbs()
-                try await saveSayings()
-                try await saveWords()
-
-                prefsRepo.isDataLoaded = true
-                uiState = .saved
-                print("✅ Data fetched and saved successfully.")
-
-            } catch {
-                uiState = .error("Imefeli: \(error.localizedDescription)")
-                print("❌ Initialization failed: \(error)")
-            }
+        } catch {
+            uiState = .error("Imefeli: \(error.localizedDescription)")
+            print("❌ Initialization failed: \(error)")
         }
     }
 
     private func saveIdioms() async throws {
+        await MainActor.run { self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...") }
         Task {
-            self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
-                
             for (index, idiom) in idioms.enumerated() {
                 self.idiomRepo.saveIdiom(idiom)
                 await updateProgress(current: index + 1, total: idioms.count)
@@ -85,8 +82,8 @@ final class InitViewModel: ObservableObject {
     }
 
     private func saveProverbs() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi methali \(proverbs.count) ...") }
         Task {
-            uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
             for (index, proverb) in proverbs.enumerated() {
                 proverbRepo.saveProverb(proverb)
                 await updateProgress(current: index + 1, total: proverbs.count)
@@ -95,8 +92,8 @@ final class InitViewModel: ObservableObject {
     }
 
     private func saveSayings() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi misemo \(sayings.count) ...") }
         Task {
-            uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
             for (index, saying) in sayings.enumerated() {
                 sayingRepo.saveSaying(saying)
                 await updateProgress(current: index + 1, total: sayings.count)
@@ -105,8 +102,8 @@ final class InitViewModel: ObservableObject {
     }
 
     private func saveWords() async throws {
+        await MainActor.run { uiState = .saving("Inahifadhi maneno \(words.count) ...") }
         Task {
-            uiState = .saving("Inahifadhi maneno \(words.count) ...")
             for (index, word) in words.enumerated() {
                 wordRepo.saveWord(word)
                 await updateProgress(current: index + 1, total: words.count)
