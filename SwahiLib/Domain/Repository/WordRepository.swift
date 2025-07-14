@@ -9,16 +9,12 @@ import Foundation
 
 protocol WordRepositoryProtocol {
     func fetchRemoteData() async throws -> [Word]
-    func saveRemoteData(_ words: [Word])
     func fetchLocalData() -> [Word]
+    func saveWord(_ word: Word)
     func updateWord(_ word: Word)
 }
 
 class WordRepository: WordRepositoryProtocol {
-    func updateWord(_ word: Word) {
-        wordData.updateWord(word)
-    }
-    
     private let supabase: SupabaseServiceProtocol
     private let wordData: WordDataManager
     
@@ -44,13 +40,17 @@ class WordRepository: WordRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ word: Word) {
-        wordData.saveWord(word)
-    }
-    
     func fetchLocalData() -> [Word] {
         let words = wordData.fetchWords()
         return words.sorted { $0.id < $1.id }
+    }
+    
+    func saveWord(_ word: Word) {
+        wordData.saveWord(word)
+    }
+    
+    func updateWord(_ word: Word) {
+        wordData.updateWord(word)
     }
     
 }

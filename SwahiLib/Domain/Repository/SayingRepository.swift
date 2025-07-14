@@ -9,16 +9,12 @@ import Foundation
 
 protocol SayingRepositoryProtocol {
     func fetchRemoteData() async throws -> [Saying]
-    func saveRemoteData(_ sayings: [Saying])
     func fetchLocalData() -> [Saying]
+    func saveSaying(_ saying: Saying)
     func updateSaying(_ saying: Saying)
 }
 
 class SayingRepository: SayingRepositoryProtocol {
-    func updateSaying(_ saying: Saying) {
-        sayingData.updateSaying(saying)
-    }
-    
     private let supabase: SupabaseServiceProtocol
     private let sayingData: SayingDataManager
     
@@ -44,13 +40,17 @@ class SayingRepository: SayingRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ saying: Saying) {
-        sayingData.saveSaying(saying)
-    }
-     
     func fetchLocalData() -> [Saying] {
         let sayings = sayingData.fetchSayings()
         return sayings.sorted { $0.id < $1.id }
+    }
+    
+    func saveSaying(_ saying: Saying) {
+        sayingData.saveSaying(saying)
+    }
+     
+    func updateSaying(_ saying: Saying) {
+        sayingData.updateSaying(saying)
     }
     
 }

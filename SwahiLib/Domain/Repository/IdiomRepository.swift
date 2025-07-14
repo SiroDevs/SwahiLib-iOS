@@ -9,16 +9,12 @@ import Foundation
 
 protocol IdiomRepositoryProtocol {
     func fetchRemoteData() async throws -> [Idiom]
-    func saveRemoteData(_ idioms: [Idiom])
     func fetchLocalData() -> [Idiom]
+    func saveIdiom(_ idiom: Idiom)
     func updateIdiom(_ idiom: Idiom)
 }
 
 class IdiomRepository: IdiomRepositoryProtocol {
-    func updateIdiom(_ idiom: Idiom) {
-        idiomData.updateIdiom(idiom)
-    }
-    
     private let supabase: SupabaseServiceProtocol
     private let idiomData: IdiomDataManager
     
@@ -43,13 +39,17 @@ class IdiomRepository: IdiomRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ idiom: Idiom) {
-        idiomData.saveIdiom(idiom)
-    }
-    
     func fetchLocalData() -> [Idiom] {
         let idioms = idiomData.fetchIdioms()
         return idioms.sorted { $0.id < $1.id }
+    }
+    
+    func saveIdiom(_ idiom: Idiom) {
+        idiomData.saveIdiom(idiom)
+    }
+    
+    func updateIdiom(_ idiom: Idiom) {
+        idiomData.updateIdiom(idiom)
     }
     
 }

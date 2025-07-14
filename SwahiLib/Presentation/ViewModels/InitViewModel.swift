@@ -73,43 +73,44 @@ final class InitViewModel: ObservableObject {
         }
     }
 
-    private func saveIdiomsx() async throws {
-        await MainActor.run { uiState = .saving("Inahifadhi nahau \(idioms.count) ...") }
-        for (index, idiom) in idioms.enumerated() {
-            idiomRepo.saveRemoteData([idiom])
-            await updateProgress(current: index + 1, total: idioms.count)
-        }
-    }
-    
-    private func saveIdioms() {
-        self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
-                
+    private func saveIdioms() async throws {
         Task {
-            self.idiomRepo.saveRemoteData(idioms)
+            self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
+                
+            for (index, idiom) in idioms.enumerated() {
+                self.idiomRepo.saveIdiom(idiom)
+                await updateProgress(current: index + 1, total: idioms.count)
+            }
         }
     }
 
     private func saveProverbs() async throws {
-        await MainActor.run { uiState = .saving("Inahifadhi methali \(proverbs.count) ...") }
-        for (index, proverb) in proverbs.enumerated() {
-            proverbRepo.saveRemoteData([proverb])
-            await updateProgress(current: index + 1, total: proverbs.count)
+        Task {
+            uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
+            for (index, proverb) in proverbs.enumerated() {
+                proverbRepo.saveProverb(proverb)
+                await updateProgress(current: index + 1, total: proverbs.count)
+            }
         }
     }
 
     private func saveSayings() async throws {
-        await MainActor.run { uiState = .saving("Inahifadhi misemo \(sayings.count) ...") }
-        for (index, saying) in sayings.enumerated() {
-            sayingRepo.saveRemoteData([saying])
-            await updateProgress(current: index + 1, total: sayings.count)
+        Task {
+            uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
+            for (index, saying) in sayings.enumerated() {
+                sayingRepo.saveSaying(saying)
+                await updateProgress(current: index + 1, total: sayings.count)
+            }
         }
     }
 
     private func saveWords() async throws {
-        await MainActor.run { uiState = .saving("Inahifadhi maneno \(words.count) ...") }
-        for (index, word) in words.enumerated() {
-            wordRepo.saveRemoteData([word])
-            await updateProgress(current: index + 1, total: words.count)
+        Task {
+            uiState = .saving("Inahifadhi maneno \(words.count) ...")
+            for (index, word) in words.enumerated() {
+                wordRepo.saveWord(word)
+                await updateProgress(current: index + 1, total: words.count)
+            }
         }
     }
 

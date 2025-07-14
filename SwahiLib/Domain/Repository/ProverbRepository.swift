@@ -9,16 +9,12 @@ import Foundation
 
 protocol ProverbRepositoryProtocol {
     func fetchRemoteData() async throws -> [Proverb]
-    func saveRemoteData(_ proverbs: [Proverb])
     func fetchLocalData() -> [Proverb]
+    func saveProverb(_ proverb: Proverb)
     func updateProverb(_ proverb: Proverb)
 }
 
 class ProverbRepository: ProverbRepositoryProtocol {
-    func updateProverb(_ proverb: Proverb) {
-        proverbData.updateProverb(proverb)
-    }
-    
     private let supabase: SupabaseServiceProtocol
     private let proverbData: ProverbDataManager
     
@@ -44,13 +40,16 @@ class ProverbRepository: ProverbRepositoryProtocol {
         }
     }
     
-    func saveRemoteData(_ proverb: Proverb) {
-        proverbData.saveProverb(proverb)
-    }
-
     func fetchLocalData() -> [Proverb] {
         let proverbs = proverbData.fetchProverbs()
         return proverbs.sorted { $0.id < $1.id }
     }
     
+    func saveProverb(_ proverb: Proverb) {
+        proverbData.saveProverb(proverb)
+    }
+
+    func updateProverb(_ proverb: Proverb) {
+        proverbData.updateProverb(proverb)
+    }
 }
