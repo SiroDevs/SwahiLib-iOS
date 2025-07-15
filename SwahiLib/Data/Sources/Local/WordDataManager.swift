@@ -39,7 +39,6 @@ class WordDataManager {
                 let cdWord = self.findOrCreateCd(by: word.rid)
                 MapEntityToCd.mapToCd(word, cdWord)
                 try self.context.save()
-                print("✅ Word: \(word.title) saved successfully")
             } catch {
                 print("❌ Failed to save word: \(error)")
             }

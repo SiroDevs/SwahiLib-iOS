@@ -76,7 +76,6 @@ final class InitViewModel: ObservableObject {
             }
 
             print("✅ Data fetched and saved successfully.")
-
         } catch {
             await MainActor.run {
                 self.uiState = .error("Imefeli: \(error.localizedDescription)")
@@ -87,6 +86,7 @@ final class InitViewModel: ObservableObject {
 
 
     private func saveIdioms() async throws {
+        print("Now saving idioms")
         await MainActor.run {
             self.progress = 0
             self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
@@ -98,9 +98,11 @@ final class InitViewModel: ObservableObject {
                 self.updateProgress(current: index + 1, total: idioms.count)
             }
         }
+        print("✅ Idioms saved successfully")
     }
 
     private func saveProverbs() async throws {
+        print("Now saving proverbs")
         await MainActor.run {
             self.progress = 0
             self.uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
@@ -112,9 +114,11 @@ final class InitViewModel: ObservableObject {
                 self.updateProgress(current: index + 1, total: proverbs.count)
             }
         }
+        print("✅ Proverbs saved successfully")
     }
 
     private func saveSayings() async throws {
+        print("Now saving sayings")
         await MainActor.run {
             self.progress = 0
             self.uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
@@ -126,9 +130,11 @@ final class InitViewModel: ObservableObject {
                 self.updateProgress(current: index + 1, total: sayings.count)
             }
         }
+        print("✅ Sayings saved successfully")
     }
 
     private func saveWords() async throws {
+        print("Now saving words")
         await MainActor.run {
             self.progress = 0
             self.uiState = .saving("Inahifadhi maneno \(words.count) ...")
@@ -140,6 +146,7 @@ final class InitViewModel: ObservableObject {
                 self.updateProgress(current: index + 1, total: words.count)
             }
         }
+        print("✅ Words saved successfully")
     }
 
     @MainActor

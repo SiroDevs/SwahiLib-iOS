@@ -39,7 +39,6 @@ class SayingDataManager {
                 let cdSaying = self.findOrCreateCd(by: saying.rid)
                 MapEntityToCd.mapToCd(saying, cdSaying)
                 try self.context.save()
-                print("✅ Saying: \(saying.title) saved successfully")
             } catch {
                 print("❌ Failed to save saying: \(error)")
             }

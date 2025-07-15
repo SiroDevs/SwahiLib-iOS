@@ -39,7 +39,6 @@ class IdiomDataManager {
                 let cdIdiom = self.findOrCreateCd(by: idiom.rid)
                 MapEntityToCd.mapToCd(idiom, cdIdiom)
                 try self.context.save()
-                print("✅ Idiom: \(idiom.title) saved successfully")
             } catch {
                 print("❌ Failed to save idiom: \(error)")
             }
