@@ -24,16 +24,38 @@ class WordRepository: WordRepositoryProtocol {
     }
     
     func fetchRemoteData() async throws -> [Word] {
+        var offset = 0
+        let pageSize = 2000
+        var allWords: [Word] = []
+        
         do {
-            let wordsDtos: [WordDTO] = try await supabase.client
-                .from("words")
-                .select()
-                .execute()
-                .value
-            
-            let words: [Word] = wordsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ Words fetched: \(words.count)")
-            return words
+            while true {
+                print("📥 Fetching words from \(offset) to \(offset + pageSize - 1)")
+
+                let wordDTOs: [WordDTO] = try await supabase.client
+                    .from("words")
+                    .select()
+                    .range(from: offset, to: offset + pageSize - 1)
+                    .execute()
+                    .value
+
+                if wordDTOs.isEmpty {
+                    break
+                }
+
+                let mappedBatch = wordDTOs.map { MapDtoToEntity.mapToEntity($0) }
+                allWords.append(contentsOf: mappedBatch)
+
+                if wordDTOs.count < pageSize {
+                    break // last batch
+                }
+
+                offset += pageSize
+            }
+
+            print("✅ Total words fetched: \(allWords.count)")
+            return allWords
+
         } catch {
             print("❌ Failed to fetch words: \(error.localizedDescription)")
             throw error
