@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17221C0C2E36B552006C8564 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 17221C042E36B552006C8564 /* Swinject */; };
+		17221C0D2E36B552006C8564 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 17221C062E36B552006C8564 /* Lottie */; };
+		17221C0E2E36B552006C8564 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 17221C082E36B552006C8564 /* Supabase */; };
+		17221C102E36B552006C8564 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
 		173314E42DC159DB00318DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 173314E32DC159DB00318DD8 /* Swinject */; };
 		173B62752E0977B200454071 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62742E0977B200454071 /* Lottie */; };
 		173B62782E0977DB00454071 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62772E0977DB00454071 /* Supabase */; };
@@ -31,6 +35,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		17221C112E36B552006C8564 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		173B62722E0946BD00454071 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,6 +58,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		17221C152E36B552006C8564 /* SwahiLib Stg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwahiLib Stg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		17221C172E36B552006C8564 /* SwahiLib copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SwahiLib copy-Info.plist"; path = "/Users/sirodaves/Developer/iOS/Projects/SwahiLib-iOS/SwahiLib copy-Info.plist"; sourceTree = "<absolute>"; };
 		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13B92DC112D300A6191A /* SwahiLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +67,84 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		17221C162E36B552006C8564 /* Exceptions for "SwahiLib" folder in "SwahiLib Stg" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				"Assets/bar-loader.json",
+				"Assets/circle-loader.json",
+				"Assets/loading-carga-refresh.json",
+				"Assets/opener-loading.json",
+				ContentView.swift,
+				Core/Constants/AppAssets.swift,
+				Core/Constants/AppConstants.swift,
+				Core/Di/DependencyMap.swift,
+				Core/Di/DiContainer.swift,
+				Core/Utils/Analytics.swift,
+				Core/Utils/AppUtils.swift,
+				Core/Utils/Logger.swift,
+				Data/Models/History.swift,
+				Data/Models/Idiom.swift,
+				Data/Models/Proverb.swift,
+				Data/Models/Saying.swift,
+				Data/Models/Search.swift,
+				Data/Models/Word.swift,
+				Data/Sample/SampleWords.swift,
+				Data/Sources/Local/CoreDataManager.swift,
+				Data/Sources/Local/HistoryDataManager.swift,
+				Data/Sources/Local/IdiomDataManager.swift,
+				Data/Sources/Local/ProverbDataManager.swift,
+				Data/Sources/Local/SayingDataManager.swift,
+				Data/Sources/Local/SearchDataManager.swift,
+				Data/Sources/Local/SwahiLib.xcdatamodeld,
+				Data/Sources/Local/WordDataManager.swift,
+				Data/Sources/Mappers/MapCdToEntity.swift,
+				Data/Sources/Mappers/MapDtoToEntity.swift,
+				Data/Sources/Mappers/MapEntityToCd.swift,
+				Data/Sources/Mappers/MapEntityToDto.swift,
+				Data/Sources/Remote/DTOs/IdiomDTO.swift,
+				Data/Sources/Remote/DTOs/ProverbDTO.swift,
+				Data/Sources/Remote/DTOs/SayingDTO.swift,
+				Data/Sources/Remote/DTOs/WordDTO.swift,
+				Data/Sources/Remote/SupabaseService.swift,
+				Domain/Entities/HomeTab.swift,
+				Domain/Entities/Selectable.swift,
+				Domain/Entities/UiState.swift,
+				Domain/Repository/IdiomRepository.swift,
+				Domain/Repository/PrefsRepository.swift,
+				Domain/Repository/ProverbRepository.swift,
+				Domain/Repository/SayingRepository.swift,
+				Domain/Repository/WordRepository.swift,
+				Info.plist,
+				Presentation/Components/Actions/CustomTabTitles.swift,
+				Presentation/Components/Actions/SearchBar.swift,
+				Presentation/Components/ListItems/IdiomItem.swift,
+				Presentation/Components/ListItems/ProverbItem.swift,
+				Presentation/Components/ListItems/SayingItem.swift,
+				Presentation/Components/ListItems/TagItem.swift,
+				Presentation/Components/ListItems/WordItem.swift,
+				Presentation/Components/Progress/EmptyState.swift,
+				Presentation/Components/Progress/ErrorState.swift,
+				Presentation/Components/Progress/LoadingState.swift,
+				Presentation/Components/Progress/LottieView.swift,
+				Presentation/Components/Progress/ShowToast.swift,
+				Presentation/Theme/ThemeData.swift,
+				Presentation/ViewModels/HomeViewModel.swift,
+				Presentation/ViewModels/InitViewModel.swift,
+				Presentation/Views/Home/HomeContent.swift,
+				Presentation/Views/Home/HomeView.swift,
+				Presentation/Views/Home/Lists/IdiomsList.swift,
+				Presentation/Views/Home/Lists/ProverbsList.swift,
+				Presentation/Views/Home/Lists/SayingsList.swift,
+				Presentation/Views/Home/Lists/WordsList.swift,
+				Presentation/Views/Init/InitView.swift,
+				Presentation/Views/Splash/SplashView.swift,
+				Secrets.plist,
+				Secrets.plist.example,
+				SwahiLibApp.swift,
+			);
+			target = 17221C032E36B552006C8564 /* SwahiLib Stg */;
+		};
 		173CEECB2E06ACC800DB2FE1 /* Exceptions for "SwahiLib" folder in "SwahiLib" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -65,6 +159,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				173CEECB2E06ACC800DB2FE1 /* Exceptions for "SwahiLib" folder in "SwahiLib" target */,
+				17221C162E36B552006C8564 /* Exceptions for "SwahiLib" folder in "SwahiLib Stg" target */,
 			);
 			path = SwahiLib;
 			sourceTree = "<group>";
@@ -82,6 +177,16 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		17221C0B2E36B552006C8564 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17221C0C2E36B552006C8564 /* Swinject in Frameworks */,
+				17221C0D2E36B552006C8564 /* Lottie in Frameworks */,
+				17221C0E2E36B552006C8564 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		175D13A42DC112BB00A6191A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,6 +229,7 @@
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
 				175D13C62DC112D400A6191A /* SwahiLibUITests */,
 				173314E22DC159DB00318DD8 /* Frameworks */,
+				17221C172E36B552006C8564 /* SwahiLib copy-Info.plist */,
 				175D13A82DC112BB00A6191A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -134,6 +240,7 @@
 				175D13A72DC112BB00A6191A /* SwahiLib.app */,
 				175D13B92DC112D300A6191A /* SwahiLibTests.xctest */,
 				175D13C32DC112D300A6191A /* SwahiLibUITests.xctest */,
+				17221C152E36B552006C8564 /* SwahiLib Stg.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +248,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		17221C032E36B552006C8564 /* SwahiLib Stg */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 17221C122E36B552006C8564 /* Build configuration list for PBXNativeTarget "SwahiLib Stg" */;
+			buildPhases = (
+				17221C0A2E36B552006C8564 /* Sources */,
+				17221C0B2E36B552006C8564 /* Frameworks */,
+				17221C0F2E36B552006C8564 /* Resources */,
+				17221C112E36B552006C8564 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				175D13A92DC112BB00A6191A /* SwahiLib */,
+			);
+			name = "SwahiLib Stg";
+			packageProductDependencies = (
+				17221C042E36B552006C8564 /* Swinject */,
+				17221C062E36B552006C8564 /* Lottie */,
+				17221C082E36B552006C8564 /* Supabase */,
+			);
+			productName = SwahiLib;
+			productReference = 17221C152E36B552006C8564 /* SwahiLib Stg.app */;
+			productType = "com.apple.product-type.application";
+		};
 		175D13A62DC112BB00A6191A /* SwahiLib */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 175D13CD2DC112D400A6191A /* Build configuration list for PBXNativeTarget "SwahiLib" */;
@@ -258,11 +391,20 @@
 				175D13A62DC112BB00A6191A /* SwahiLib */,
 				175D13B82DC112D300A6191A /* SwahiLibTests */,
 				175D13C22DC112D300A6191A /* SwahiLibUITests */,
+				17221C032E36B552006C8564 /* SwahiLib Stg */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		17221C0F2E36B552006C8564 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17221C102E36B552006C8564 /* .gitignore in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		175D13A52DC112BB00A6191A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -288,6 +430,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		17221C0A2E36B552006C8564 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		175D13A32DC112BB00A6191A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -325,6 +474,80 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		17221C132E36B552006C8564 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 128;
+				DEVELOPMENT_TEAM = Q7CNPE587D;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SwahiLib copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.128;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib.stg;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		17221C142E36B552006C8564 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 128;
+				DEVELOPMENT_TEAM = Q7CNPE587D;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SwahiLib copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.128;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib.stg;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		175D13CB2DC112D400A6191A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -453,7 +676,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -470,7 +693,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.127;
+				MARKETING_VERSION = 1.0.128;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -490,7 +713,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -507,7 +730,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.127;
+				MARKETING_VERSION = 1.0.128;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -595,6 +818,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		17221C122E36B552006C8564 /* Build configuration list for PBXNativeTarget "SwahiLib Stg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17221C132E36B552006C8564 /* Debug */,
+				17221C142E36B552006C8564 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		175D13A22DC112BB00A6191A /* Build configuration list for PBXProject "SwahiLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -634,6 +866,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		17221C052E36B552006C8564 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
+		17221C072E36B552006C8564 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+		17221C092E36B552006C8564 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 		1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject.git";
@@ -661,6 +917,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		17221C042E36B552006C8564 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17221C052E36B552006C8564 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		17221C062E36B552006C8564 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17221C072E36B552006C8564 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		17221C082E36B552006C8564 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17221C092E36B552006C8564 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
 		173314E32DC159DB00318DD8 /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
