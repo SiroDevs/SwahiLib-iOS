@@ -17,13 +17,18 @@ class ProverbViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Proverb] = []
 
-    private var cancellables = Set<AnyCancellable>()
-    private let proverbRepo: ProverbRepository
+    private let prefsRepo: PrefsRepository
+    private let idiomRepo: IdiomRepositoryProtocol
+    private let proverbRepo: ProverbRepositoryProtocol
+    private let sayingRepo: SayingRepositoryProtocol
+    private let wordRepo: WordRepositoryProtocol
 
-    init(proverbRepo: ProverbRepository) {
+    init(
+        proverbRepo: ProverbRepositoryProtocol
+    ) {
         self.proverbRepo = proverbRepo
     }
-
+    
     func loadProverb(_ proverb: Proverb) {
         uiState = .loading()
         isLiked = proverb.liked

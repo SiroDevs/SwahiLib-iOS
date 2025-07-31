@@ -17,13 +17,14 @@ class SayingViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Saying] = []
 
-    private var cancellables = Set<AnyCancellable>()
-    private let sayingRepo: SayingRepository
+    private let sayingRepo: SayingRepositoryProtocol
 
-    init(sayingRepo: SayingRepository) {
+    init(
+        sayingRepo: SayingRepositoryProtocol
+    ) {
         self.sayingRepo = sayingRepo
     }
-
+    
     func loadSaying(_ saying: Saying) {
         uiState = .loading()
         isLiked = saying.liked

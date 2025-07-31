@@ -12,18 +12,18 @@ import Combine
 class IdiomViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
-    @Published var conjugation: String = ""
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
     @Published var synonyms: [Idiom] = []
 
-    private var cancellables = Set<AnyCancellable>()
-    private let idiomRepo: IdiomRepository
+    private let idiomRepo: IdiomRepositoryProtocol
 
-    init(idiomRepo: IdiomRepository) {
+    init(
+        idiomRepo: IdiomRepositoryProtocol
+    ) {
         self.idiomRepo = idiomRepo
     }
-
+    
     func loadIdiom(_ idiom: Idiom) {
         uiState = .loading()
         isLiked = idiom.liked

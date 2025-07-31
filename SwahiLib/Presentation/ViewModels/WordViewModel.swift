@@ -17,13 +17,14 @@ class WordViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Word] = []
 
-    private var cancellables = Set<AnyCancellable>()
-    private let wordRepo: WordRepository
+    private let wordRepo: WordRepositoryProtocol
 
-    init(wordRepo: WordRepository) {
+    init(
+        wordRepo: WordRepositoryProtocol
+    ) {
         self.wordRepo = wordRepo
     }
-
+    
     func loadWord(_ word: Word) {
         uiState = .loading()
         isLiked = word.liked
