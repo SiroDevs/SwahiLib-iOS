@@ -75,4 +75,9 @@ class WordRepository: WordRepositoryProtocol {
         wordData.updateWord(word)
     }
     
+    func getWordsByTitles(titles: [String]) -> [Word] {
+        let words = wordData.getWordsByTitles(titles: titles)
+        return words.sorted { $0.id < $1.id }
+    }
+
 }

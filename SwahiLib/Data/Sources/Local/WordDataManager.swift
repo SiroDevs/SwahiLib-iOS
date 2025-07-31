@@ -17,7 +17,7 @@ class WordDataManager {
     private var context: NSManagedObjectContext {
         coreDataManager.viewContext
     }
-
+    
     func saveWords(_ words: [Word]) {
         context.perform {
             do {
@@ -32,7 +32,7 @@ class WordDataManager {
             }
         }
     }
-
+    
     func saveWord(_ word: Word) {
         context.perform {
             do {
@@ -44,9 +44,20 @@ class WordDataManager {
             }
         }
     }
-
+    
     func fetchWords() -> [Word] {
         let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
+        do {
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
+        } catch {
+            print("❌ Failed to fetch words: \(error)")
+            return []
+        }
+    }
+    
+    func getWordsByTitles(titles: [String]) -> [Word] {
+        let request: NSFetchRequest<CDWord> = CDWord.fetchRequest()
+        request.predicate = NSPredicate(format: "title IN %@", titles)
         do {
             return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
         } catch {
