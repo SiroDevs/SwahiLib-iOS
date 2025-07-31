@@ -36,15 +36,12 @@ class WordViewModel: ObservableObject {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
 
-        if !synonymTitles.isEmpty {
-            wordRepo.getWordsByTitles(titles: synonymTitles)
-                .sink(receiveCompletion: { _ in },
-                      receiveValue: { [weak self] words in
-                          self?.synonyms = words.sorted { ($0.title ?? "").lowercased() < ($1.title ?? "").lowercased() }
-                      })
-                .store(in: &cancellables)
-        } else {
-            synonyms = []
+        Task { @MainActor in
+            if !synonymTitles.isEmpty {
+                self.synonyms =  wordRepo.getWordsByTitles(titles: synonymTitles).sorted { ($0.title).lowercased() < ($1.title).lowercased() }
+            } else {
+                self.synonyms = []
+            }
         }
 
         uiState = .loaded

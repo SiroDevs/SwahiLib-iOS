@@ -53,4 +53,9 @@ class SayingRepository: SayingRepositoryProtocol {
         sayingData.updateSaying(saying)
     }
     
+    func getSayingsByTitles(titles: [String]) -> [Saying] {
+        let sayings = sayingData.getSayingsByTitles(titles: titles)
+        return sayings.sorted { $0.id < $1.id }
+    }
+
 }

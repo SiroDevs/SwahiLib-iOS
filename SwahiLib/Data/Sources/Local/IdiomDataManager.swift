@@ -54,6 +54,17 @@ class IdiomDataManager {
             return []
         }
     }
+    
+    func getIdiomsByTitles(titles: [String]) -> [Idiom] {
+        let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
+        request.predicate = NSPredicate(format: "title IN %@", titles)
+        do {
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
+        } catch {
+            print("❌ Failed to fetch idioms: \(error)")
+            return []
+        }
+    }
 
     func fetchIdiom(withId id: Int) -> Idiom? {
         fetchCd(by: id).map(MapCdToEntity.mapToEntity(_:))

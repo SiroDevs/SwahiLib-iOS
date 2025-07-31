@@ -54,6 +54,17 @@ class ProverbDataManager {
             return []
         }
     }
+    
+    func getProverbsByTitles(titles: [String]) -> [Proverb] {
+        let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
+        request.predicate = NSPredicate(format: "title IN %@", titles)
+        do {
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
+        } catch {
+            print("❌ Failed to fetch proverbs: \(error)")
+            return []
+        }
+    }
 
     func fetchProverb(withId id: Int) -> Proverb? {
         fetchCd(by: id).map(MapCdToEntity.mapToEntity(_:))
