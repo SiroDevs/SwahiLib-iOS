@@ -10,6 +10,7 @@ import Foundation
 protocol ProverbRepositoryProtocol {
     func fetchRemoteData() async throws -> [Proverb]
     func fetchLocalData() -> [Proverb]
+    func getProverbsByTitles(titles: [String]) -> [Proverb]
     func saveProverb(_ proverb: Proverb)
     func updateProverb(_ proverb: Proverb)
 }

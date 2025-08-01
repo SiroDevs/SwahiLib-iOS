@@ -14,9 +14,13 @@ struct WordsList: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
-                    WordItem(
-                        word: word,
-                    )
+                    NavigationLink {
+                        WordView(word: word)
+                    } label: {
+                        WordItem(
+                            word: word,
+                        )
+                    }
                 }
             }
         }

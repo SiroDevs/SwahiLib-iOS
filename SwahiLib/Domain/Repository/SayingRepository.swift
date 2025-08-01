@@ -10,6 +10,7 @@ import Foundation
 protocol SayingRepositoryProtocol {
     func fetchRemoteData() async throws -> [Saying]
     func fetchLocalData() -> [Saying]
+    func getSayingsByTitles(titles: [String]) -> [Saying]
     func saveSaying(_ saying: Saying)
     func updateSaying(_ saying: Saying)
 }

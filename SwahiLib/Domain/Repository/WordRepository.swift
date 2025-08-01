@@ -10,6 +10,7 @@ import Foundation
 protocol WordRepositoryProtocol {
     func fetchRemoteData() async throws -> [Word]
     func fetchLocalData() -> [Word]
+    func getWordsByTitles(titles: [String]) -> [Word]
     func saveWord(_ word: Word)
     func updateWord(_ word: Word)
 }

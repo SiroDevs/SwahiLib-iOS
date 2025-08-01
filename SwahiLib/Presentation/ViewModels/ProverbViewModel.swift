@@ -17,11 +17,7 @@ class ProverbViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Proverb] = []
 
-    private let prefsRepo: PrefsRepository
-    private let idiomRepo: IdiomRepositoryProtocol
     private let proverbRepo: ProverbRepositoryProtocol
-    private let sayingRepo: SayingRepositoryProtocol
-    private let wordRepo: WordRepositoryProtocol
 
     init(
         proverbRepo: ProverbRepositoryProtocol

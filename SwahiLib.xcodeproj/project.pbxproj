@@ -59,7 +59,6 @@
 
 /* Begin PBXFileReference section */
 		17221C152E36B552006C8564 /* SwahiLib Stg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwahiLib Stg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		17221C172E36B552006C8564 /* SwahiLib copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SwahiLib copy-Info.plist"; path = "/Users/sirodaves/Developer/iOS/Projects/SwahiLib-iOS/SwahiLib copy-Info.plist"; sourceTree = "<absolute>"; };
 		173CEE442E06AA5200DB2FE1 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13B92DC112D300A6191A /* SwahiLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,7 +232,6 @@
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
 				175D13C62DC112D400A6191A /* SwahiLibUITests */,
 				173314E22DC159DB00318DD8 /* Frameworks */,
-				17221C172E36B552006C8564 /* SwahiLib copy-Info.plist */,
 				175D13A82DC112BB00A6191A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -493,7 +491,6 @@
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "SwahiLib copy-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -514,7 +511,6 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwahiLib/Presentation/Views/Viewer/Word/SwahiLib Stg-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -533,7 +529,6 @@
 				DEVELOPMENT_TEAM = Q7CNPE587D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "SwahiLib copy-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SwahiLib;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -554,7 +549,6 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwahiLib/Presentation/Views/Viewer/Word/SwahiLib Stg-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
