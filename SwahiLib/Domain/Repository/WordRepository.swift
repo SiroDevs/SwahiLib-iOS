@@ -10,6 +10,7 @@ import Foundation
 protocol WordRepositoryProtocol {
     func fetchRemoteData() async throws -> [Word]
     func fetchLocalData() -> [Word]
+    func getWordsByTitles(titles: [String]) -> [Word]
     func saveWord(_ word: Word)
     func updateWord(_ word: Word)
 }
@@ -75,4 +76,9 @@ class WordRepository: WordRepositoryProtocol {
         wordData.updateWord(word)
     }
     
+    func getWordsByTitles(titles: [String]) -> [Word] {
+        let words = wordData.getWordsByTitles(titles: titles)
+        return words.sorted { $0.id < $1.id }
+    }
+
 }

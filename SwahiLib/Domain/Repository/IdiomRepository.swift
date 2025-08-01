@@ -10,6 +10,7 @@ import Foundation
 protocol IdiomRepositoryProtocol {
     func fetchRemoteData() async throws -> [Idiom]
     func fetchLocalData() -> [Idiom]
+    func getIdiomsByTitles(titles: [String]) -> [Idiom]
     func saveIdiom(_ idiom: Idiom)
     func updateIdiom(_ idiom: Idiom)
 }
@@ -52,4 +53,9 @@ class IdiomRepository: IdiomRepositoryProtocol {
         idiomData.updateIdiom(idiom)
     }
     
+    func getIdiomsByTitles(titles: [String]) -> [Idiom] {
+        let idioms = idiomData.getIdiomsByTitles(titles: titles)
+        return idioms.sorted { $0.id < $1.id }
+    }
+
 }

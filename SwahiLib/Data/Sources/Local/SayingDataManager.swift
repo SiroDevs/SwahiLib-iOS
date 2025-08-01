@@ -32,6 +32,17 @@ class SayingDataManager {
             }
         }
     }
+    
+    func getSayingsByTitles(titles: [String]) -> [Saying] {
+        let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
+        request.predicate = NSPredicate(format: "title IN %@", titles)
+        do {
+            return try context.fetch(request).map(MapCdToEntity.mapToEntity(_:))
+        } catch {
+            print("❌ Failed to fetch sayings: \(error)")
+            return []
+        }
+    }
 
     func saveSaying(_ saying: Saying) {
         context.perform {

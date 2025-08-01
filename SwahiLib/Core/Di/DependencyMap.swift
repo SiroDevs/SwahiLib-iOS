@@ -113,5 +113,29 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
+        container.register(IdiomViewModel.self) { resolver in
+            IdiomViewModel(
+                idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(ProverbViewModel.self) { resolver in
+            ProverbViewModel(
+                proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(SayingViewModel.self) { resolver in
+            SayingViewModel(
+                sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(WordViewModel.self) { resolver in
+            WordViewModel(
+                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
     }
 }
