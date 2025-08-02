@@ -1,5 +1,5 @@
 //
-//  WordView.swift
+//  ProverbView.swift
 //  SwahiLib
 //
 //  Created by Siro Daves on 01/08/2025.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct WordView: View {
-    @StateObject private var viewModel: WordViewModel = {
-        DiContainer.shared.resolve(WordViewModel.self)
+struct ProverbView: View {
+    @StateObject private var viewModel: ProverbViewModel = {
+        DiContainer.shared.resolve(ProverbViewModel.self)
     }()
     
-    let word: Word
+    let proverb: Proverb
     
     @State private var showToast = false
 
@@ -24,15 +24,15 @@ struct WordView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(word.title) added to your likes"
-                    : "\(word.title) removed from your likes"
+                    ? "\(proverb.title) added to your likes"
+                    : "\(proverb.title) removed from your likes"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
        }
-        .task({viewModel.loadWord(word)})
+        .task({viewModel.loadProverb(proverb)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
                 showToast = true
@@ -56,10 +56,10 @@ struct WordView: View {
             
             case .liked:
                 mainContent
-          
+            
             case .error(let msg):
                 ErrorState(message: msg) {
-                    viewModel.loadWord(word)
+                    viewModel.loadProverb(proverb)
                 }
                 
             default:
@@ -68,19 +68,13 @@ struct WordView: View {
     }
     
     private var mainContent: some View {
-        WordDetails(
+        ProverbDetails(
             viewModel: viewModel,
             title: viewModel.title,
             meanings: viewModel.meanings,
             synonyms: viewModel.synonyms,
             conjugation: viewModel.conjugation,
         )
-        .navigationTitle("Neno la Kiswahili", )
+        .navigationTitle("Methali ya Kiswahili", )
     }
-}
-
-#Preview{
-    WordView(
-        word: Word.sampleWords[0]
-    )
 }

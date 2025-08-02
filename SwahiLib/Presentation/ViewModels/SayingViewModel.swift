@@ -12,10 +12,8 @@ import Combine
 class SayingViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
-    @Published var conjugation: String = ""
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
-    @Published var synonyms: [Saying] = []
 
     private let sayingRepo: SayingRepositoryProtocol
 
@@ -29,7 +27,9 @@ class SayingViewModel: ObservableObject {
         uiState = .loading()
         isLiked = saying.liked
         title = saying.title
-        meanings = cleanMeaning(saying.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         uiState = .loaded
     }

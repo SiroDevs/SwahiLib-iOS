@@ -29,33 +29,9 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "175D13B82DC112D300A6191A"
-               BuildableName = "SwahiLibTests.xctest"
-               BlueprintName = "SwahiLibTests"
-               ReferencedContainer = "container:SwahiLib.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "175D13C22DC112D300A6191A"
-               BuildableName = "SwahiLibUITests.xctest"
-               BlueprintName = "SwahiLibUITests"
-               ReferencedContainer = "container:SwahiLib.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -68,21 +44,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "17221C032E36B552006C8564"
-            BuildableName = "SwahiLib Stg.app"
-            BlueprintName = "SwahiLib Stg"
-            ReferencedContainer = "container:SwahiLib.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
             BlueprintIdentifier = "175D13A62DC112BB00A6191A"
             BuildableName = "SwahiLib.app"
             BlueprintName = "SwahiLib"
             ReferencedContainer = "container:SwahiLib.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

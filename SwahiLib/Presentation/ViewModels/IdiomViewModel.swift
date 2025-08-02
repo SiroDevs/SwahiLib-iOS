@@ -14,7 +14,6 @@ class IdiomViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
-    @Published var synonyms: [Idiom] = []
 
     private let idiomRepo: IdiomRepositoryProtocol
 
@@ -28,7 +27,9 @@ class IdiomViewModel: ObservableObject {
         uiState = .loading()
         isLiked = idiom.liked
         title = idiom.title
-        meanings = cleanMeaning(idiom.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         uiState = .loaded
     }

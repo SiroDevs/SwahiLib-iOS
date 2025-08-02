@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ProverbItem: View {
     var proverb: Proverb
-    var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
         .system(size: 22, weight: .bold)
@@ -47,18 +46,23 @@ struct ProverbItem: View {
             Text(proverb.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .truncationMode(.tail)
+                    .foregroundColor(.black)
                     .padding(.bottom, synonyms.isEmpty ? 0 : 4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
             }
 
             if !synonyms.isEmpty {
                 HStack(alignment: .center) {
                     Text(synonyms.count == 1 ? "KISAWE:" : "VISAWE \(synonyms.count):")
+                        .foregroundColor(.black)
                         .font(bodyTextStyle.weight(.bold))
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -81,8 +85,5 @@ struct ProverbItem: View {
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .onTapGesture {
-            onTap?()
-        }
     }
 }

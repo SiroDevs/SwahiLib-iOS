@@ -30,7 +30,9 @@ class WordViewModel: ObservableObject {
         isLiked = word.liked
         title = word.title
         conjugation = word.conjugation
-        meanings = cleanMeaning(word.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         let synonymTitles = (word.synonyms)
             .split(separator: ",")

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct IdiomItem: View {
     var idiom: Idiom
-    var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
         .system(size: 22, weight: .bold)
@@ -40,13 +39,17 @@ struct IdiomItem: View {
             Text(idiom.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .truncationMode(.tail)
                     .padding(.bottom, 4)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,8 +61,5 @@ struct IdiomItem: View {
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .onTapGesture {
-            onTap?()
-        }
     }
 }

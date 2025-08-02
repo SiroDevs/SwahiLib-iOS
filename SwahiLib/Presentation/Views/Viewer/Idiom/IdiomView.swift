@@ -1,5 +1,5 @@
 //
-//  WordView.swift
+//  IdiomView.swift
 //  SwahiLib
 //
 //  Created by Siro Daves on 01/08/2025.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct WordView: View {
-    @StateObject private var viewModel: WordViewModel = {
-        DiContainer.shared.resolve(WordViewModel.self)
+struct IdiomView: View {
+    @StateObject private var viewModel: IdiomViewModel = {
+        DiContainer.shared.resolve(IdiomViewModel.self)
     }()
     
-    let word: Word
+    let idiom: Idiom
     
     @State private var showToast = false
 
@@ -24,15 +24,15 @@ struct WordView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(word.title) added to your likes"
-                    : "\(word.title) removed from your likes"
+                    ? "\(idiom.title) added to your likes"
+                    : "\(idiom.title) removed from your likes"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
        }
-        .task({viewModel.loadWord(word)})
+        .task({viewModel.loadIdiom(idiom)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
                 showToast = true
@@ -56,10 +56,10 @@ struct WordView: View {
             
             case .liked:
                 mainContent
-          
+            
             case .error(let msg):
                 ErrorState(message: msg) {
-                    viewModel.loadWord(word)
+                    viewModel.loadIdiom(idiom)
                 }
                 
             default:
@@ -68,19 +68,27 @@ struct WordView: View {
     }
     
     private var mainContent: some View {
-        WordDetails(
-            viewModel: viewModel,
+        IdiomDetails(
             title: viewModel.title,
             meanings: viewModel.meanings,
-            synonyms: viewModel.synonyms,
-            conjugation: viewModel.conjugation,
         )
-        .navigationTitle("Neno la Kiswahili", )
+        .navigationTitle("Nahau ya Kiswahili", )
     }
 }
 
-#Preview{
-    WordView(
-        word: Word.sampleWords[0]
-    )
+struct IdiomDetails: View {
+    var title: String
+    var meanings: [String]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                CollapsingHeader(title: title)
+
+                if !meanings.isEmpty {
+                    MeaningsView(meanings: meanings)
+                }
+            }
+        }
+    }
 }

@@ -17,9 +17,7 @@ struct WordsList: View {
                     NavigationLink {
                         WordView(word: word)
                     } label: {
-                        WordItem(
-                            word: word,
-                        )
+                        WordItem(word: word)
                     }
                 }
             }
