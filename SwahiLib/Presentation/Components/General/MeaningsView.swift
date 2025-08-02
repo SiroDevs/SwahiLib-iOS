@@ -17,9 +17,15 @@ struct MeaningsView: View {
                 let maana = parts.first ?? ""
                 let mfano = parts.count > 1 ? parts[1] : nil
 
-                CardView(maana: maana, mfano: mfano, index: index, total: meanings.count)
+                CardView(
+                    maana: maana,
+                    mfano: mfano,
+                    index: index,
+                    total: meanings.count
+                )
             }
         }
+        .padding(.horizontal, 10)
     }
 }
 
@@ -30,12 +36,13 @@ struct CardView: View {
     let total: Int
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 2) {
             Text("\(total > 1 ? "\(index + 1). " : "")\(maana)")
                 .font(.system(size: 22))
                 .foregroundColor(Color(.primary1))
                 .padding(.leading, 5)
                 .padding(.bottom, mfano != nil ? 8 : 0)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             if let mfano = mfano, !mfano.isEmpty {
                 Divider()
@@ -51,12 +58,20 @@ struct CardView: View {
                 .font(.system(size: 18))
                 .foregroundColor(Color(.primary1))
                 .padding(.leading, 15)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .padding(10)
+        .padding(5)
+        .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(8)
         .shadow(radius: 2)
-        .padding(.vertical, 4)
+        .padding(2)
     }
+}
+
+#Preview{
+    WordView(
+        word: Word.sampleWords[0]
+    )
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ProverbItem: View {
     var proverb: Proverb
-    var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
         .system(size: 22, weight: .bold)
@@ -81,8 +80,5 @@ struct ProverbItem: View {
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .onTapGesture {
-            onTap?()
-        }
     }
 }

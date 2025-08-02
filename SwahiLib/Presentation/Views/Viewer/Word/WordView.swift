@@ -71,11 +71,11 @@ struct WordView: View {
         WordDetails(
             viewModel: viewModel,
             title: viewModel.title,
-            conjugation: viewModel.conjugation,
             meanings: viewModel.meanings,
-            synonyms: viewModel.synonyms
+            synonyms: viewModel.synonyms,
+            conjugation: viewModel.conjugation,
         )
-        .navigationTitle("Kamusi ya Kiswahili")
+        .navigationTitle("Kamusi ya Kiswahili", )
     }
 }
 

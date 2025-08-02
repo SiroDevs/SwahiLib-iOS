@@ -9,7 +9,6 @@ import SwiftUI
 
 struct WordItem: View {
     var word: Word
-    var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
         .system(size: 22, weight: .bold)
@@ -45,7 +44,6 @@ struct WordItem: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(word.title)
-                .foregroundColor(.primary)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
 
@@ -82,9 +80,6 @@ struct WordItem: View {
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .onTapGesture {
-            onTap?()
-        }
     }
 }
 

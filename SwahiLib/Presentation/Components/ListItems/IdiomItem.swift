@@ -9,7 +9,6 @@ import SwiftUI
 
 struct IdiomItem: View {
     var idiom: Idiom
-    var onTap: (() -> Void)? = nil
 
     private var titleTextStyle: Font {
         .system(size: 22, weight: .bold)
@@ -58,8 +57,5 @@ struct IdiomItem: View {
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .onTapGesture {
-            onTap?()
-        }
     }
 }

@@ -9,47 +9,45 @@ import SwiftUI
 struct WordDetails: View {
     @ObservedObject var viewModel: WordViewModel
     var title: String
-    var conjugation: String
     var meanings: [String]
     var synonyms: [Word]
+    var conjugation: String
 
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(alignment: .leading, spacing: 10) {
                 CollapsingHeader(title: title)
 
-                VStack(alignment: .leading, spacing: 16) {
-                    if !meanings.isEmpty {
-                        MeaningsView(meanings: meanings)
-                    }
+                if !meanings.isEmpty {
+                    MeaningsView(meanings: meanings)
+                }
 
-                    if !conjugation.isEmpty {
-                        (
-                            Text("Mnyambuliko: ")
-                                .bold() +
-                            Text(conjugation)
-                                .italic()
-                        )
-                        .font(.system(size: 20))
+                if !conjugation.isEmpty {
+                    (
+                        Text("Mnyambuliko: ")
+                            .bold() +
+                        Text(conjugation)
+                            .italic()
+                    )
+                    .padding(.leading, 20)
+                    .font(.system(size: 20))
+                    .foregroundColor(Color(.primary1))
+                }
+
+                if !synonyms.isEmpty {
+                    Spacer().frame(height: 20)
+
+                    Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
+                        .font(.system(size: 25, weight: .bold))
                         .foregroundColor(Color(.primary1))
                         .padding(.leading, 10)
-                    }
 
-                    if !synonyms.isEmpty {
-                        Spacer().frame(height: 20)
-
-                        Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
-                            .font(.system(size: 25, weight: .bold))
-                            .foregroundColor(Color(.primary1))
-                            .padding(.leading, 10)
-
-                        WordSynonyms(
-                            synonyms: synonyms,
-                            onSynonymClicked: { synonym in
-                                viewModel.loadWord(synonym)
-                            }
-                        )
-                    }
+                    WordSynonyms(
+                        synonyms: synonyms,
+                        onSynonymClicked: { synonym in
+                            viewModel.loadWord(synonym)
+                        }
+                    )
                 }
             }
         }
@@ -71,6 +69,7 @@ struct WordSynonyms: View {
                 )
             }
         }
+        .padding(.horizontal, 10)
     }
 }
 

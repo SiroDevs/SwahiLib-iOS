@@ -33,6 +33,7 @@ struct SynonymItem: View {
             .cornerRadius(8)
             .shadow(radius: 2)
         }
+        .frame(maxWidth: .infinity)
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 4)
     }
