@@ -33,23 +33,23 @@ struct CardView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(total > 1 ? "\(index + 1). " : "")\(maana)")
                 .font(.system(size: 22))
-                .foregroundColor(Color("primary1"))
+                .foregroundColor(Color(.primary1))
                 .padding(.leading, 5)
                 .padding(.bottom, mfano != nil ? 8 : 0)
 
             if let mfano = mfano, !mfano.isEmpty {
                 Divider()
-                    .background(Color("primary1").opacity(0.3))
+                    .background(Color(.primary1).opacity(0.3))
                     .padding(.bottom, 8)
 
-                Text {
+                HStack {
                     Text("Mfano: ")
                         .bold()
                     Text(mfano)
                         .italic()
                 }
                 .font(.system(size: 18))
-                .foregroundColor(Color("primary1"))
+                .foregroundColor(Color(.primary1))
                 .padding(.leading, 15)
             }
         }

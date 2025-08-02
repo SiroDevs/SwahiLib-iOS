@@ -4,11 +4,10 @@
 //
 //  Created by Siro Daves on 02/08/2025.
 //
-
 import SwiftUI
 
 struct WordDetails: View {
-    var viewModel: WordViewModel
+    @ObservedObject var viewModel: WordViewModel
     var title: String
     var conjugation: String
     var meanings: [String]
@@ -16,7 +15,7 @@ struct WordDetails: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack {
                 CollapsingHeader(title: title)
 
                 VStack(alignment: .leading, spacing: 16) {
@@ -25,14 +24,24 @@ struct WordDetails: View {
                     }
 
                     if !conjugation.isEmpty {
-                        TextGroup(label: "Mnyambuliko:", value: conjugation)
+                        (
+                            Text("Mnyambuliko: ")
+                                .bold() +
+                            Text(conjugation)
+                                .italic()
+                        )
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(.primary1))
+                        .padding(.leading, 10)
                     }
 
                     if !synonyms.isEmpty {
-                        Text("VISAWE \(synonyms.count)")
-                            .font(.title2.bold())
-                            .foregroundColor(.primary1)
-                            .padding(.top)
+                        Spacer().frame(height: 20)
+
+                        Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
+                            .font(.system(size: 25, weight: .bold))
+                            .foregroundColor(Color(.primary1))
+                            .padding(.leading, 10)
 
                         WordSynonyms(
                             synonyms: synonyms,
@@ -42,27 +51,31 @@ struct WordDetails: View {
                         )
                     }
                 }
-                .padding(.horizontal)
             }
-            .padding(.top)
         }
-        .background(ThemeColors.accent0)
     }
 }
 
-private struct TextGroup: View {
-    let label: String
-    let value: String
+struct WordSynonyms: View {
+    var synonyms: [Word]
+    var onSynonymClicked: (Word) -> Void
 
     var body: some View {
-        HStack {
-            Text(label)
-                .bold()
-            Text(value)
-                .italic()
+        VStack(spacing: 0) {
+            ForEach(synonyms, id: \.id) { synonym in
+                SynonymItem(
+                    title: synonym.title,
+                    onClick: {
+                        onSynonymClicked(synonym)
+                    }
+                )
+            }
         }
-        .font(.title3)
-        .foregroundColor(ThemeColors.primary1)
-        .padding(.leading)
     }
+}
+
+#Preview{
+    WordView(
+        word: Word.sampleWords[0]
+    )
 }

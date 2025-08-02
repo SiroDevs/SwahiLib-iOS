@@ -68,11 +68,13 @@ struct WordView: View {
     }
     
     private var mainContent: some View {
-        VStack(spacing: 20) {
-            EmptyView()
-            .fixedSize(horizontal: false, vertical: true)
-        }
-        .background(.accent2)
+        WordDetails(
+            viewModel: viewModel,
+            title: viewModel.title,
+            conjugation: viewModel.conjugation,
+            meanings: viewModel.meanings,
+            synonyms: viewModel.synonyms
+        )
         .navigationTitle("Kamusi ya Kiswahili")
     }
 }
