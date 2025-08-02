@@ -46,18 +46,22 @@ struct WordItem: View {
             Text(word.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
+                .foregroundColor(.black)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .truncationMode(.tail)
+                    .foregroundColor(.black)
                     .padding(.bottom, synonyms.isEmpty ? 0 : 4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
             }
 
             if !synonyms.isEmpty {
                 HStack(alignment: .center) {
                     Text(synonyms.count == 1 ? "KISAWE:" : "VISAWE \(synonyms.count):")
+                        .foregroundColor(.black)
                         .font(bodyTextStyle.weight(.bold))
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -82,10 +86,17 @@ struct WordItem: View {
         .padding(.vertical, 4)
     }
 }
+//
+//#Preview {
+//    WordItem(
+//        word: Word.sampleWords[3]
+//    )
+//    .padding()
+//}
 
 #Preview {
-    WordItem(
-        word: Word.sampleWords[3]
+    WordsList(
+        words: Word.sampleWords
     )
     .padding()
 }

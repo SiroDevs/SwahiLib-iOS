@@ -39,13 +39,16 @@ struct IdiomItem: View {
             Text(idiom.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
+                .foregroundColor(.black)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .truncationMode(.tail)
                     .padding(.bottom, 4)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
