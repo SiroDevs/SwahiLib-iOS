@@ -56,7 +56,7 @@ struct WordView: View {
             
             case .liked:
                 mainContent
-            
+          
             case .error(let msg):
                 ErrorState(message: msg) {
                     viewModel.loadWord(word)
