@@ -47,6 +47,7 @@ struct ProverbItem: View {
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
                 .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             if !meaning.isEmpty {
                 Text(meaning)

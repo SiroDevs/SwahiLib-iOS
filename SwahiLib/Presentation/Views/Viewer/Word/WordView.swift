@@ -75,7 +75,7 @@ struct WordView: View {
             synonyms: viewModel.synonyms,
             conjugation: viewModel.conjugation,
         )
-        .navigationTitle("Kamusi ya Kiswahili", )
+        .navigationTitle("Neno la Kiswahili", )
     }
 }
 

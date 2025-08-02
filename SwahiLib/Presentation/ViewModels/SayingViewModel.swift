@@ -27,7 +27,9 @@ class SayingViewModel: ObservableObject {
         uiState = .loading()
         isLiked = saying.liked
         title = saying.title
-        meanings = cleanMeaning(saying.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         uiState = .loaded
     }

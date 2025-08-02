@@ -30,7 +30,9 @@ class ProverbViewModel: ObservableObject {
         isLiked = proverb.liked
         title = proverb.title
         conjugation = proverb.conjugation
-        meanings = cleanMeaning(proverb.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         let synonymTitles = (proverb.synonyms)
             .split(separator: ",")

@@ -14,9 +14,11 @@ struct IdiomsList: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(Array(idioms.enumerated()), id: \.element.id) { index, idiom in
-                    IdiomItem(
-                        idiom: idiom,
-                    )
+                    NavigationLink {
+                        IdiomView(idiom: idiom)
+                    } label: {
+                        IdiomItem(idiom: idiom)
+                    }
                 }
             }
         }

@@ -27,7 +27,9 @@ class IdiomViewModel: ObservableObject {
         uiState = .loading()
         isLiked = idiom.liked
         title = idiom.title
-        meanings = cleanMeaning(idiom.meaning).components(separatedBy: "|")
+        meanings = cleanMeaning(
+            idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
 
         uiState = .loaded
     }

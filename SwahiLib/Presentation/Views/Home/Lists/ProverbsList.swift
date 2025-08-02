@@ -14,16 +14,11 @@ struct ProverbsList: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(Array(proverbs.enumerated()), id: \.element.id) { index, proverb in
-//                    NavigationLink {
-////                        PresenterView(song: proverb)
-//                    } label: {
-//                        ProverbItem(
-//                            proverb: proverb,
-//                        )
-//                    }
-                    ProverbItem(
-                        proverb: proverb,
-                    )
+                    NavigationLink {
+                        ProverbView(proverb: proverb)
+                    } label: {
+                        ProverbItem(proverb: proverb)
+                    }
                 }
             }
         }

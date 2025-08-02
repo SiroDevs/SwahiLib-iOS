@@ -75,6 +75,6 @@ struct ProverbView: View {
             synonyms: viewModel.synonyms,
             conjugation: viewModel.conjugation,
         )
-        .navigationTitle("Kamusi ya Kiswahili", )
+        .navigationTitle("Methali ya Kiswahili", )
     }
 }

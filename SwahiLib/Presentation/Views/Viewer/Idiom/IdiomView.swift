@@ -72,7 +72,7 @@ struct IdiomView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
         )
-        .navigationTitle("Kamusi ya Kiswahili", )
+        .navigationTitle("Nahau ya Kiswahili", )
     }
 }
 
