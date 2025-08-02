@@ -14,7 +14,6 @@ class IdiomViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
-    @Published var synonyms: [Idiom] = []
 
     private let idiomRepo: IdiomRepositoryProtocol
 

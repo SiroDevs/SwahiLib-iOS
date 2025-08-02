@@ -14,7 +14,7 @@ struct SynonymItem: View {
     var body: some View {
         Button(action: onClick) {
             HStack(alignment: .center) {
-                Image(systemName: "arrow.circle.right")
+                Image(systemName: "arrow.right.circle")
                     .foregroundColor(Color(.primary1))
 
                 Spacer().frame(width: 12)
@@ -37,4 +37,12 @@ struct SynonymItem: View {
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 4)
     }
+}
+
+#Preview {
+    SynonymItem(
+        title: "Hata Kidogo",
+        onClick: {}
+    )
+    .padding()
 }
