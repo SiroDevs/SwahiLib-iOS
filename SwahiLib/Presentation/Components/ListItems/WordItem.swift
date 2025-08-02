@@ -45,6 +45,7 @@ struct WordItem: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(word.title)
+                .foregroundColor(.primary)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
 
