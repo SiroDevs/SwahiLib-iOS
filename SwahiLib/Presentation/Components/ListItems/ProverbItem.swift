@@ -46,14 +46,15 @@ struct ProverbItem: View {
             Text(proverb.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
-                .foregroundColor(.black)
+                .lineLimit(1)
+                .foregroundColor(.foreground2)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .foregroundColor(.black)
+                    .foregroundColor(.foreground2)
                     .padding(.bottom, synonyms.isEmpty ? 0 : 4)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
@@ -62,7 +63,7 @@ struct ProverbItem: View {
             if !synonyms.isEmpty {
                 HStack(alignment: .center) {
                     Text(synonyms.count == 1 ? "KISAWE:" : "VISAWE \(synonyms.count):")
-                        .foregroundColor(.black)
+                        .foregroundColor(.foreground2)
                         .font(bodyTextStyle.weight(.bold))
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -80,8 +81,8 @@ struct ProverbItem: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                .fill(.background2)
+                .shadow(color: .foreground2.opacity(0.1), radius: 4, x: 0, y: 2)
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

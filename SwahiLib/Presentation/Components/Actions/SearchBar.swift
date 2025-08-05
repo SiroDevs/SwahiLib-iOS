@@ -19,25 +19,24 @@ struct SearchBar: View {
                 .onChange(of: text) { newValue in
                     onSearch(newValue)
                 }
-
             Button(action: {
                 text = ""
                 onSearch("")
                 onClear?()
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.primary1)
+                    .foregroundColor(.foreground1)
                     .imageScale(.large)
             }
         }
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(.accent1)
+                .fill(.background1)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(.primary1, lineWidth: 1)
+                .stroke(.foreground1, lineWidth: 1)
         )
         .padding(.horizontal, 10)
     }

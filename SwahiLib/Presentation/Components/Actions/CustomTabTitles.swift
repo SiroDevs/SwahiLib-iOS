@@ -40,7 +40,7 @@ struct TabItem: View {
             .padding(.vertical, 5)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(isSelected ? .primary1 : Color.clear)
+                    .fill(isSelected ? .primary1 : .white)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
