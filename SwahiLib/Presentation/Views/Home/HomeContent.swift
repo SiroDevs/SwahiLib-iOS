@@ -11,6 +11,7 @@ struct HomeContent: View {
     @ObservedObject var viewModel: HomeViewModel
     @State private var searchText: String = ""
     @State private var isSearching: Bool = true
+    @State private var showSettings: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -51,16 +52,19 @@ struct HomeContent: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            withAnimation {
-                                isSearching = true
-                            }
-                        }) {
-                            Image(systemName: "magnifyingglass")
-                                .imageScale(.large)
-                        }
+                    Button(action: {
+                        showSettings = true
+                    }) {
+                        Image(systemName: "gear")
+                            .imageScale(.large)
+                            .foregroundColor(.foreground1)
+
                     }
                 }
+            }
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
+            }
         }
     }
 }
