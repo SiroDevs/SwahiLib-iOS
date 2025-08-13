@@ -57,7 +57,6 @@ struct HomeContent: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-
             }
             .padding(.vertical)
             .navigationTitle("SwahiLib - Kamusi ya Kiswahili")
@@ -82,5 +81,19 @@ struct HomeContent: View {
 }
 
 #Preview {
-    HomeView()
+    HStack(alignment: .top, spacing: 10) {
+        VerticalLetters(
+            selectedLetter: "A",
+            onLetterSelected: { letter in
+                //
+            }
+        )
+        .frame(width: 60)
+        VStack {
+            WordsList(
+                words: Word.sampleWords
+            )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
 }

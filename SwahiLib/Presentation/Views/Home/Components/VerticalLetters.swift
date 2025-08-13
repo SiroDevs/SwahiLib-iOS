@@ -27,6 +27,7 @@ struct VerticalLetters: View {
                 }
             }
             .padding(.vertical, 4)
+            .padding(.leading, 15)
         }
     }
 }
@@ -39,16 +40,34 @@ struct LetterItem: View {
     var body: some View {
         Button(action: onTap) {
             Text(letter)
-                .font(.system(size: 20, weight: .bold))
-                .frame(width: 44, height: 44)
-                .background(isSelected ? Color.primary1 : Color.white)
-                .foregroundColor(isSelected ? Color.white : Color.primary1)
+                .font(.system(size: 40, weight: .bold))
+                .frame(width: 60, height: 60)
+                .background(isSelected ? .primary1 : Color.white)
+                .foregroundColor(isSelected ? .white : .primary1)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.primary1.opacity(isSelected ? 0 : 0.5), lineWidth: 1)
+                        .stroke(.primary1.opacity(isSelected ? 0 : 0.5), lineWidth: 1)
                 )
                 .shadow(radius: 3)
         }
+    }
+}
+
+#Preview {
+    HStack(alignment: .top, spacing: 10) {
+        VerticalLetters(
+            selectedLetter: "A",
+            onLetterSelected: { letter in
+                //
+            }
+        )
+        .frame(width: 60)
+        VStack {
+            WordsList(
+                words: Word.sampleWords
+            )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
