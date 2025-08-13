@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeContent: View {
     @ObservedObject var viewModel: HomeViewModel
     @State private var searchText: String = ""
+    @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
     @State private var showSettings: Bool = false
 
@@ -32,18 +33,29 @@ struct HomeContent: View {
                 )
                 .padding(.leading, 10)
                 
-                switch viewModel.homeTab {
-                    case .idioms:
-                        IdiomsList(idioms: viewModel.filteredIdioms)
+                HStack(alignment: .top, spacing: 10) {
+                    VerticalLetters(
+                        selectedLetter: selectedLetter,
+                        onLetterSelected: { letter in
+                            selectedLetter = letter
+                            viewModel.filterData(qry: letter)
+                        }
+                    )
+                    .frame(width: 60)
                     
-                    case .proverbs:
-                        ProverbsList(proverbs: viewModel.filteredProverbs)
-                    
-                    case .sayings:
-                        SayingsList(sayings: viewModel.filteredSayings)
-                    
-                    case .words:
-                        WordsList(words: viewModel.filteredWords)
+                    VStack {
+                        switch viewModel.homeTab {
+                        case .idioms:
+                            IdiomsList(idioms: viewModel.filteredIdioms)
+                        case .proverbs:
+                            ProverbsList(proverbs: viewModel.filteredProverbs)
+                        case .sayings:
+                            SayingsList(sayings: viewModel.filteredSayings)
+                        case .words:
+                            WordsList(words: viewModel.filteredWords)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
             }
