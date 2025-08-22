@@ -54,7 +54,7 @@ final class HomeViewModel: ObservableObject {
                 return
             }
 
-            self.hasActiveSubscription = customerInfo.entitlements["swahilib_default_offering"]?.isActive == true
+            self.hasActiveSubscription = customerInfo.entitlements[AppConstants.entitlements]?.isActive == true
         }
     }
     
