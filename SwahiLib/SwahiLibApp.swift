@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 @main
 struct SwahiLibApp: App {
@@ -21,6 +22,8 @@ struct SwahiLibApp: App {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().tintColor = UIColor.label
+        
+        Purchases.configure(withAPIKey: AppSecrets.rc_api_key)
     }
     
     var body: some Scene {

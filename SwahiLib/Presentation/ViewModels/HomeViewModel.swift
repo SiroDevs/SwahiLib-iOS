@@ -7,8 +7,11 @@
 
 import Foundation
 import SwiftUI
+import RevenueCat
 
 final class HomeViewModel: ObservableObject {
+    @Published var hasActiveSubscription: Bool = false
+    
     @Published var allIdioms: [Idiom] = []
     @Published var filteredIdioms: [Idiom] = []
     
@@ -44,6 +47,17 @@ final class HomeViewModel: ObservableObject {
         self.wordRepo = wordRepo
     }
     
+    func checkSubscription() {
+        Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
+            guard let self = self, let customerInfo = customerInfo, error == nil else {
+                self?.hasActiveSubscription = false
+                return
+            }
+
+            self.hasActiveSubscription = customerInfo.entitlements["swahilib_default_offering"]?.isActive == true
+        }
+    }
+    
     func fetchData() {
         print("Fetching data")
         self.uiState = .loading("Inapakia data ...")
@@ -54,7 +68,7 @@ final class HomeViewModel: ObservableObject {
             self.allSayings = sayingRepo.fetchLocalData()
             self.allWords = wordRepo.fetchLocalData()
             
-            // Initially display all data
+            self.checkSubscription()
             self.filterData(qry: "")
             self.uiState = .filtered
         }

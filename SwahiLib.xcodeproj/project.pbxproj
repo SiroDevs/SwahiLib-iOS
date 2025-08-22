@@ -11,6 +11,7 @@
 		173B62752E0977B200454071 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62742E0977B200454071 /* Lottie */; };
 		173B62782E0977DB00454071 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 173B62772E0977DB00454071 /* Supabase */; };
 		173CEE452E06AA5900DB2FE1 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 173CEE442E06AA5200DB2FE1 /* .gitignore */; };
+		17B82D082E59025700C58824 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 17B82D072E59025700C58824 /* RevenueCat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17B82D082E59025700C58824 /* RevenueCat in Frameworks */,
 				173314E42DC159DB00318DD8 /* Swinject in Frameworks */,
 				173B62752E0977B200454071 /* Lottie in Frameworks */,
 				173B62782E0977DB00454071 /* Supabase in Frameworks */,
@@ -162,6 +164,7 @@
 				173314E32DC159DB00318DD8 /* Swinject */,
 				173B62742E0977B200454071 /* Lottie */,
 				173B62772E0977DB00454071 /* Supabase */,
+				17B82D072E59025700C58824 /* RevenueCat */,
 			);
 			productName = SwahiLib;
 			productReference = 175D13A72DC112BB00A6191A /* SwahiLib.app */;
@@ -473,7 +476,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.131;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib.stg;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swahilib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -688,6 +691,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 173B62762E0977CB00454071 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		17B82D072E59025700C58824 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 175222CE2E58CF5100A2AD93 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

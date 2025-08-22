@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 enum AppThemeMode: String, CaseIterable, Identifiable {
     case light, dark, system
