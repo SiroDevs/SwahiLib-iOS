@@ -3,7 +3,7 @@ SwahiLib is an iOS app that allows users to search and explore **Swahili words, 
 
 Built with **SwiftUI**, **Core Data**, and backed by **Supabase**, the app offers an intuitive and fast experience even without an internet connection.
 
-> 🔗 Android Version Repo: [@SiroDaves/SongLib-Android](https://github.com/SiroDaves/SongLib-Android)
+> 🔗 Android Version Repo: [@SiroDaves/SwahiLib-Android](https://github.com/SiroDaves/SwahiLib-Android)
 
 <a href="https://apps.apple.com/us/app/id6446771678">
   <img alt='Get it on AppStore' src='https://developer.apple.com/app-store/marketing/guidelines/images/badge-example-preferred_2x.png' width='200'>

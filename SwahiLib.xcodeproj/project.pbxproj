@@ -249,6 +249,7 @@
 				1733149D2DC1499100318DD8 /* XCRemoteSwiftPackageReference "Swinject" */,
 				173B62732E09774B00454071 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				173B62762E0977CB00454071 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				175222CE2E58CF5100A2AD93 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 175D13A82DC112BB00A6191A /* Products */;
@@ -660,6 +661,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.1;
+			};
+		};
+		175222CE2E58CF5100A2AD93 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.35.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
