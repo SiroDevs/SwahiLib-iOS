@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import RevenueCat
+import RevenueCatUI
 
 enum AppThemeMode: String, CaseIterable, Identifiable {
     case light, dark, system
@@ -31,6 +33,7 @@ final class ThemeManager: ObservableObject {
 
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @State private var showPaywall: Bool = false
 
     var body: some View {
         Form {
@@ -45,10 +48,34 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.inline)
             }
+
+            Section {
+                Button(action: {
+                    showPaywall = true
+                }) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("SwahiLib Pro")
+                                .font(.headline)
+                            Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(displayCloseButton: true)
         }
         .navigationTitle("Mipangilio")
     }
 }
+
+
 #Preview {
     SettingsView()
         .environmentObject(ThemeManager())

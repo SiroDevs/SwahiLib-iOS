@@ -16,8 +16,8 @@ final class SupabaseService: SupabaseServiceProtocol {
     let client: SupabaseClient
 
     init() {
-        let urlString = SupabaseSecrets.url
-        let anonKey = SupabaseSecrets.anonKey
+        let urlString = AppSecrets.sb_url
+        let anonKey = AppSecrets.sb_anon_key
 
         guard let url = URL(string: urlString), !anonKey.isEmpty else {
             fatalError("Invalid Supabase URL or anon key. Check Secrets.plist.")
