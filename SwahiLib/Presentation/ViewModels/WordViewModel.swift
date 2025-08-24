@@ -43,6 +43,8 @@ class WordViewModel: ObservableObject {
         isLiked = word.liked
         title = word.title
         conjugation = word.conjugation
+        
+        checkSubscription()
         meanings = cleanMeaning(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")

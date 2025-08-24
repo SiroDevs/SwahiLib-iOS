@@ -46,7 +46,8 @@ class ProverbViewModel: ObservableObject {
         meanings = cleanMeaning(
             proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
-
+        
+        checkSubscription()
         let synonymTitles = (proverb.synonyms)
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }

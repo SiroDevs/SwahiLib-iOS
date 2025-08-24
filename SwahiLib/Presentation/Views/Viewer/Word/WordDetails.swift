@@ -47,7 +47,7 @@ struct WordDetails: View {
                     WordSynonyms(
                         synonyms: synonyms,
                         onSynonymClicked: { synonym in
-                            if (viewModel.isActiveSubscriber) {
+                            if viewModel.isActiveSubscriber {
                                 viewModel.loadWord(synonym)
                             } else {
                                 onFeatureLocked()
