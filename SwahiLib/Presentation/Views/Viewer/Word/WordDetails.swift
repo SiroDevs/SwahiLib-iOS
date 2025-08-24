@@ -39,7 +39,7 @@ struct WordDetails: View {
 
                     Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
                         .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(Color(.primary1))
+                        .foregroundColor(.primary1)
                         .padding(.leading, 10)
 
                     WordSynonyms(
