@@ -20,16 +20,26 @@ struct SplashView: View {
                 .font(.system(size: 50, weight: .bold))
                 .kerning(5)
                 .foregroundColor(.primary1)
-                .padding(.top, 10)
-
+                .padding(.top, 5)
+            
+            Text(AppConstants.appTitle2)
+                .font(.system(size: 25, weight: .bold))
+                .foregroundColor(.primary1)
+            
             Spacer()
+            
+            Text(AppConstants.appTagline)
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(.primary1)
+            .padding(.top, 10)
+            
             Divider()
                 .frame(height: 1)
-                .padding(.horizontal, 50)
-                .background(.primaryDark1)
+                .padding(.horizontal, 100)
+                .background(.onPrimaryContainer)
 
-            Text(AppConstants.appTagline)
-                .font(.system(size: 25, weight: .bold))
+            Text(AppConstants.appCredits)
+                .font(.system(size: 16))
                 .foregroundColor(.primary1)
             .padding(.top, 10)
 

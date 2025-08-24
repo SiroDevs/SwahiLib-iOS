@@ -9,7 +9,9 @@ import Foundation
 
 struct AppConstants {
     static let appTitle = "SwahiLib"
+    static let appTitle2 = "Kamusi ya Kiswahili"
     static let appTagline = "Kiswahili Kitukuzwe"
+    static let appCredits = "© 2021 - 2025 @SiroDevs"
     static let entitlements = "swahilib_offering_1"
 }
 

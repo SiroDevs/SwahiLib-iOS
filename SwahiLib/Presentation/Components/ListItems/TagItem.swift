@@ -21,7 +21,7 @@ struct TagItem: View {
                 .foregroundColor(.white)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 3)
-                .background(.primary3)
+                .background(.primary2)
                 .cornerRadius(5)
         }
     }

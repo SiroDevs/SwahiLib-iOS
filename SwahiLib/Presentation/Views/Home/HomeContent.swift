@@ -35,6 +35,9 @@ struct HomeContent: View {
                     PaywallView(displayCloseButton: true)
                 #endif
             }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
             .padding(.vertical)
             .navigationTitle("SwahiLib - Kamusi ya Kiswahili")
             .navigationBarTitleDisplayMode(.inline)
@@ -45,13 +48,10 @@ struct HomeContent: View {
                     }) {
                         Image(systemName: "gear")
                             .imageScale(.large)
-                            .foregroundColor(.foreground1)
+                            .foregroundColor(.onPrimaryContainer)
 
                     }
                 }
-            }
-            .navigationDestination(isPresented: $showSettings) {
-                SettingsView()
             }
         }
     }

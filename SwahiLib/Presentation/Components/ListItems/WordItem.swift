@@ -46,13 +46,13 @@ struct WordItem: View {
             Text(word.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
-                .foregroundColor(.foreground2)
+                .foregroundColor(.onPrimaryContainer)
 
             if !meaning.isEmpty {
                 Text(meaning)
                     .font(bodyTextStyle)
                     .lineLimit(2)
-                    .foregroundColor(.foreground2)
+                    .foregroundColor(.onPrimaryContainer)
                     .padding(.bottom, synonyms.isEmpty ? 0 : 4)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
@@ -61,7 +61,7 @@ struct WordItem: View {
             if !synonyms.isEmpty {
                 HStack(alignment: .center) {
                     Text(synonyms.count == 1 ? "KISAWE:" : "VISAWE \(synonyms.count):")
-                        .foregroundColor(.foreground2)
+                        .foregroundColor(.onPrimaryContainer)
                         .font(bodyTextStyle.weight(.bold))
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -79,8 +79,8 @@ struct WordItem: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(.background2)
-                .shadow(color: .foreground2.opacity(0.1), radius: 4, x: 0, y: 2)
+                .fill(.background1)
+                .shadow(color: .onPrimaryContainer.opacity(0.1), radius: 4, x: 0, y: 2)
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
