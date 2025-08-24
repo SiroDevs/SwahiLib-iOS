@@ -24,8 +24,8 @@ struct WordView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(word.title) added to your likes"
-                    : "\(word.title) removed from your likes"
+                    ? "Neno \(word.title) limeongezwa kwa vipendwa"
+                    : "Neno \(word.title) limeondolewa kutoka kwa vipendwa"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

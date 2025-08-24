@@ -24,8 +24,8 @@ struct IdiomView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(idiom.title) added to your likes"
-                    : "\(idiom.title) removed from your likes"
+                    ? "Nahau \(idiom.title) imeongezwa kwa vipendwa"
+                    : "Nahau \(idiom.title) imeondolewa kutoka kwa vipendwa"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

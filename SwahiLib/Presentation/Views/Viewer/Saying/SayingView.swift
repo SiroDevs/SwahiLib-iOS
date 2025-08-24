@@ -24,8 +24,8 @@ struct SayingView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(saying.title) added to your likes"
-                    : "\(saying.title) removed from your likes"
+                    ? "Msemo \(saying.title) umeongezwa kwa vipendwa"
+                    : "Msemo \(saying.title) umeondolewa kutoka kwa vipendwa"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

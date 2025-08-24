@@ -68,7 +68,10 @@ final class HomeViewModel: ObservableObject {
             self.allSayings = sayingRepo.fetchLocalData()
             self.allWords = wordRepo.fetchLocalData()
             
-            self.checkSubscription()
+            #if !DEBUG
+                self.checkSubscription()
+            #endif
+            
             self.filterData(qry: "")
             self.uiState = .filtered
         }

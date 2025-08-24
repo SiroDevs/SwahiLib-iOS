@@ -24,8 +24,8 @@ struct ProverbView: View {
            
             if showToast {
                 let toastMessage = viewModel.isLiked
-                    ? "\(proverb.title) added to your likes"
-                    : "\(proverb.title) removed from your likes"
+                    ? "Methali \(proverb.title) imeongezwa kwa vipendwa"
+                    : "Methali \(proverb.title) imeondolewa kutoka kwa vipendwa"
                 
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
