@@ -8,9 +8,9 @@
 struct L10n {
     static let later = "Baadaye"
     static let cancel = "Kataa"
-    static let okay = "SAWA"
-    static let synonym = "KISAWE"
-    static let synonyms = "VISAWE"
+    static let okay = "Sawa"
+    static let synonym = "Kisawe"
+    static let synonyms = "Visawe"
     static let featureLocked = "Kipengele hiki kimefungwa"
     static let featureLockedDesc = "Jiunge na SwahiLib PRO ili uweze kutumia kipengele (feature) hiki miongoni mwa vipengele vingine. Kujiunga na PRO ni kumuunga mkono msanidi program (developer) wa kitumizi (app) hii. Asante"
     static func featureLockedDescXtra(feature: String) -> String {
@@ -48,4 +48,9 @@ struct L10n {
             return "Nahau \(idiom) imeondolewa kutoka kwa vipendwa"
         }
     }
+    
+    static let wordKiswa = "Neno la Kiswahili"
+    static let idiomKiswa = "Nahau ya Kiswahili"
+    static let sayingKiswa = "Msemo wa Kiswahili"
+    static let proverbKiswa = "Methali ya Kiswahili"
 }

@@ -9,6 +9,7 @@ import RevenueCat
 import RevenueCatUI
 
 struct WordView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: WordViewModel = {
         DiContainer.shared.resolve(WordViewModel.self)
     }()
@@ -99,16 +100,31 @@ struct WordView: View {
             onFeatureLocked: { showAlert = true }
         )
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeWord(word: word)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                         .foregroundColor(.primary1)
                 }
+
+                ShareLink(
+                    item: viewModel.shareText(word: word),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
             }
         }
-        .navigationTitle("Neno la Kiswahili", )
+        .navigationTitle(L10n.wordKiswa)
+        .navigationBarBackButtonHidden(true)
+
     }
 }
 

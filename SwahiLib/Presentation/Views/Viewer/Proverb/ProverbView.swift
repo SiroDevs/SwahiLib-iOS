@@ -4,10 +4,10 @@
 //
 //  Created by Siro Daves on 01/08/2025.
 
-
 import SwiftUI
 
 struct ProverbView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: ProverbViewModel = {
         DiContainer.shared.resolve(ProverbViewModel.self)
     }()
@@ -98,15 +98,29 @@ struct ProverbView: View {
             onFeatureLocked: { showAlert = true }
         )
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeProverb(proverb: proverb)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                         .foregroundColor(.primary1)
                 }
+
+                ShareLink(
+                    item: viewModel.shareText(proverb: proverb),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
             }
         }
-        .navigationTitle("Methali ya Kiswahili", )
+        .navigationTitle(L10n.proverbKiswa)
+        .navigationBarBackButtonHidden(true)
     }
 }

@@ -62,7 +62,42 @@ class ProverbViewModel: ObservableObject {
 
         uiState = .loaded
     }
-
+    
+    func shareText(proverb: Proverb) -> String {
+        let parts = cleanMeaning(
+            proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
+        
+        let meaningsList: String
+        if parts.count > 1 {
+            meaningsList = parts.enumerated()
+                .map { "\($0 + 1). \($1.trimmingCharacters(in: .whitespacesAndNewlines))" }
+                .joined(separator: "\n")
+        } else {
+            meaningsList = parts.first?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        }
+        
+        var text = """
+        \(proverb.title) ni \(L10n.proverbKiswa)
+        
+        Maana:
+        \(meaningsList)
+        """
+        
+        if !proverb.conjugation.isEmpty {
+            text += "\n\nMnyambuliko: \(proverb.conjugation)"
+        }
+        
+        if !synonyms.isEmpty {
+            let synonymList = synonyms.map { $0.title }.joined(separator: ", ")
+            text += "\n\n\(synonyms.count == 1 ? "\(L10n.synonym): " : "\(L10n.synonyms) \(synonyms.count):\n")\(synonymList)"
+        }
+        
+        text += "\n\n\(AppConstants.appTitle) - \(AppConstants.appTitle2)\n\(AppConstants.appLink)\n"
+        
+        return text
+    }
+    
     func likeProverb(proverb: Proverb) {
         let updatedProverb = Proverb(
             rid: proverb.rid,

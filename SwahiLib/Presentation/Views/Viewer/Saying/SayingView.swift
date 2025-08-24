@@ -4,10 +4,10 @@
 //
 //  Created by Siro Daves on 01/08/2025.
 
-
 import SwiftUI
 
 struct SayingView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: SayingViewModel = {
         DiContainer.shared.resolve(SayingViewModel.self)
     }()
@@ -70,16 +70,30 @@ struct SayingView: View {
             meanings: viewModel.meanings,
         )
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeSaying(saying: saying)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                         .foregroundColor(.primary1)
                 }
+
+                ShareLink(
+                    item: viewModel.shareText(saying: saying),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
             }
         }
-        .navigationTitle("Msemo wa Kiswahili", )
+        .navigationTitle(L10n.sayingKiswa)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

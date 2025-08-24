@@ -46,7 +46,33 @@ class SayingViewModel: ObservableObject {
 
         uiState = .loaded
     }
-
+    
+    func shareText(saying: Saying) -> String {
+        let parts = cleanMeaning(
+            saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
+        
+        let meaningsList: String
+        if parts.count > 1 {
+            meaningsList = parts.enumerated()
+                .map { "\($0 + 1). \($1.trimmingCharacters(in: .whitespacesAndNewlines))" }
+                .joined(separator: "\n")
+        } else {
+            meaningsList = parts.first?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        }
+        
+        var text = """
+        \(saying.title) ni \(L10n.sayingKiswa)
+        
+        Maana:
+        \(meaningsList)
+        """
+        
+        text += "\n\n\(AppConstants.appTitle) - \(AppConstants.appTitle2)\n\(AppConstants.appLink)\n"
+        
+        return text
+    }
+    
     func likeSaying(saying: Saying) {
         let updatedSaying = Saying(
             rid: saying.rid,

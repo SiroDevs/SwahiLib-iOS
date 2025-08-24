@@ -4,10 +4,10 @@
 //
 //  Created by Siro Daves on 01/08/2025.
 
-
 import SwiftUI
 
 struct IdiomView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: IdiomViewModel = {
         DiContainer.shared.resolve(IdiomViewModel.self)
     }()
@@ -70,16 +70,30 @@ struct IdiomView: View {
             meanings: viewModel.meanings,
         )
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeIdiom(idiom: idiom)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                         .foregroundColor(.primary1)
                 }
+
+                ShareLink(
+                    item: viewModel.shareText(idiom: idiom),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
             }
         }
-        .navigationTitle("Nahau ya Kiswahili", )
+        .navigationTitle(L10n.idiomKiswa)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

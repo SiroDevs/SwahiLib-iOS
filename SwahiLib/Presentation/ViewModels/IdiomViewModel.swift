@@ -46,7 +46,33 @@ class IdiomViewModel: ObservableObject {
 
         uiState = .loaded
     }
-
+    
+    func shareText(idiom: Idiom) -> String {
+        let parts = cleanMeaning(
+            idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "|")
+        
+        let meaningsList: String
+        if parts.count > 1 {
+            meaningsList = parts.enumerated()
+                .map { "\($0 + 1). \($1.trimmingCharacters(in: .whitespacesAndNewlines))" }
+                .joined(separator: "\n")
+        } else {
+            meaningsList = parts.first?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        }
+        
+        var text = """
+        \(idiom.title) ni \(L10n.idiomKiswa)
+        
+        Maana:
+        \(meaningsList)
+        """
+        
+        text += "\n\n\(AppConstants.appTitle) - \(AppConstants.appTitle2)\n\(AppConstants.appLink)\n"
+        
+        return text
+    }
+    
     func likeIdiom(idiom: Idiom) {
         let updatedIdiom = Idiom(
             rid: idiom.rid,
