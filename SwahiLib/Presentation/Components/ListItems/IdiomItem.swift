@@ -39,7 +39,7 @@ struct IdiomItem: View {
             Text(idiom.title)
                 .font(titleTextStyle)
                 .padding(.bottom, 2)
-                .foregroundColor(.foreground2)
+                .foregroundColor(.onPrimaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             if !meaning.isEmpty {
@@ -47,7 +47,7 @@ struct IdiomItem: View {
                     .font(bodyTextStyle)
                     .lineLimit(2)
                     .padding(.bottom, 4)
-                    .foregroundColor(.foreground2)
+                    .foregroundColor(.onPrimaryContainer)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
             }
@@ -56,8 +56,8 @@ struct IdiomItem: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(.background2)
-                .shadow(color: .foreground2.opacity(0.1), radius: 4, x: 0, y: 2)
+                .fill(.background1)
+                .shadow(color: .onPrimaryContainer.opacity(0.1), radius: 4, x: 0, y: 2)
         )
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

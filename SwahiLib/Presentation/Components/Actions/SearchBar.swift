@@ -25,18 +25,18 @@ struct SearchBar: View {
                 onClear?()
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.foreground1)
+                    .foregroundColor(.onPrimaryContainer)
                     .imageScale(.large)
             }
         }
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(.background1)
+                .fill(.surface)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(.foreground1, lineWidth: 1)
+                .stroke(.onPrimaryContainer, lineWidth: 1)
         )
         .padding(.horizontal, 10)
     }

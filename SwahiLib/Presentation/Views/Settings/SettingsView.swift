@@ -48,25 +48,27 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.inline)
             }
-
-            Section {
-                Button(action: {
-                    showPaywall = true
-                }) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("SwahiLib Pro")
-                                .font(.headline)
-                            Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+            
+            #if !DEBUG
+                Section {
+                    Button(action: {
+                        showPaywall = true
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("SwahiLib Pro")
+                                    .font(.headline)
+                                Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 4)
                 }
-            }
+            #endif
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(displayCloseButton: true)

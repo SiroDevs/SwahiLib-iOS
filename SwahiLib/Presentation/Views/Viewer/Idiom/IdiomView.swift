@@ -4,10 +4,10 @@
 //
 //  Created by Siro Daves on 01/08/2025.
 
-
 import SwiftUI
 
 struct IdiomView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: IdiomViewModel = {
         DiContainer.shared.resolve(IdiomViewModel.self)
     }()
@@ -23,15 +23,12 @@ struct IdiomView: View {
            }
            
             if showToast {
-                let toastMessage = viewModel.isLiked
-                    ? "\(idiom.title) added to your likes"
-                    : "\(idiom.title) removed from your likes"
-                
+                let toastMessage = L10n.favoriteIdiom(for: idiom.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
-       }
+        }
         .task({viewModel.loadIdiom(idiom)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -72,7 +69,31 @@ struct IdiomView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
         )
-        .navigationTitle("Nahau ya Kiswahili", )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.likeIdiom(idiom: idiom)
+                } label: {
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.primary1)
+                }
+
+                ShareLink(
+                    item: viewModel.shareText(idiom: idiom),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
+            }
+        }
+        .navigationTitle(L10n.idiomKiswa)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -42,12 +42,12 @@ struct LetterItem: View {
             Text(letter)
                 .font(.system(size: 40, weight: .bold))
                 .frame(width: 60, height: 60)
-                .background(isSelected ? .primary1 : Color.white)
-                .foregroundColor(isSelected ? .white : .primary1)
+                .background(isSelected ? .primary2 : .white)
+                .foregroundColor(isSelected ? .white : .primary2)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.primary1.opacity(isSelected ? 0 : 0.5), lineWidth: 1)
+                        .stroke(.primary2.opacity(isSelected ? 0 : 0.5), lineWidth: 1)
                 )
                 .shadow(radius: 3)
         }

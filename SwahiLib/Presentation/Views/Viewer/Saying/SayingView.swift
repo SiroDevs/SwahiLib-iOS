@@ -4,10 +4,10 @@
 //
 //  Created by Siro Daves on 01/08/2025.
 
-
 import SwiftUI
 
 struct SayingView: View {
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: SayingViewModel = {
         DiContainer.shared.resolve(SayingViewModel.self)
     }()
@@ -23,15 +23,12 @@ struct SayingView: View {
            }
            
             if showToast {
-                let toastMessage = viewModel.isLiked
-                    ? "\(saying.title) added to your likes"
-                    : "\(saying.title) removed from your likes"
-                
+                let toastMessage = L10n.favoriteSaying(for: saying.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
-       }
+        }
         .task({viewModel.loadSaying(saying)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -72,7 +69,31 @@ struct SayingView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
         )
-        .navigationTitle("Msemo wa Kiswahili", )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: { Image(systemName: "chevron.backward") }
+            }
+
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.likeSaying(saying: saying)
+                } label: {
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.primary1)
+                }
+
+                ShareLink(
+                    item: viewModel.shareText(saying: saying),
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(.primary1)
+                }
+            }
+        }
+        .navigationTitle(L10n.sayingKiswa)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

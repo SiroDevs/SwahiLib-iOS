@@ -24,12 +24,16 @@ struct HomeContent: View {
                 selectedLetter: $selectedLetter
             )
             .onAppear {
-                if !viewModel.hasActiveSubscription {
-                    showPaywall = true
-                }
+                #if !DEBUG
+                    if !viewModel.isActiveSubscriber {
+                        showPaywall = true
+                    }
+                #endif
             }
             .sheet(isPresented: self.$showPaywall) {
-                PaywallView(displayCloseButton: true)
+                #if !DEBUG
+                    PaywallView(displayCloseButton: true)
+                #endif
             }
             .padding(.vertical)
             .navigationTitle("SwahiLib - Kamusi ya Kiswahili")
@@ -41,7 +45,7 @@ struct HomeContent: View {
                     }) {
                         Image(systemName: "gear")
                             .imageScale(.large)
-                            .foregroundColor(.foreground1)
+                            .foregroundColor(.onPrimaryContainer)
 
                     }
                 }
@@ -78,14 +82,16 @@ struct HomeMainView: View {
             .padding(.leading, 10)
 
             HStack(alignment: .top, spacing: 10) {
-                VerticalLetters(
-                    selectedLetter: selectedLetter,
-                    onLetterSelected: { letter in
-                        selectedLetter = letter
-                        viewModel.filterData(qry: letter)
-                    }
-                )
-                .frame(width: 60)
+                if viewModel.isActiveSubscriber {
+                    VerticalLetters(
+                        selectedLetter: selectedLetter,
+                        onLetterSelected: { letter in
+                            selectedLetter = letter
+                            viewModel.filterData(qry: letter)
+                        }
+                    )
+                    .frame(width: 60)
+                }
 
                 VStack {
                     switch viewModel.homeTab {

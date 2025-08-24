@@ -12,6 +12,7 @@ struct ProverbDetails: View {
     var meanings: [String]
     var synonyms: [Proverb]
     var conjugation: String
+    var onFeatureLocked: () -> Void
 
     var body: some View {
         ScrollView {
@@ -37,15 +38,19 @@ struct ProverbDetails: View {
                 if !synonyms.isEmpty {
                     Spacer().frame(height: 20)
 
-                    Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
+                    Text(synonyms.count == 1 ? L10n.synonym : "\(L10n.synonyms) \(synonyms.count)")
                         .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(Color(.primary1))
+                        .foregroundColor(.primary1)
                         .padding(.leading, 10)
 
                     ProverbSynonyms(
                         synonyms: synonyms,
                         onSynonymClicked: { synonym in
-                            viewModel.loadProverb(synonym)
+                            if (viewModel.isActiveSubscriber) {
+                                viewModel.loadProverb(synonym)
+                            } else {
+                                onFeatureLocked()
+                            }
                         }
                     )
                 }

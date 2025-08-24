@@ -35,12 +35,12 @@ struct TabItem: View {
     var body: some View {
         Text(text.uppercased())
             .font(.system(size: 16, weight: .bold))
-            .foregroundColor(isSelected ? .white : .primary1)
+            .foregroundColor(isSelected ? .white : .primary2)
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(isSelected ? .primary1 : .white)
+                    .fill(isSelected ? .primary2 : .white)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 20)

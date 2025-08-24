@@ -46,7 +46,7 @@ struct CardView: View {
 
             if let mfano = mfano, !mfano.isEmpty {
                 Divider()
-                    .background(Color(.primary1).opacity(0.3))
+                    .background(Color(.onPrimaryContainer).opacity(0.3))
                     .padding(.bottom, 8)
 
                 HStack {
@@ -56,14 +56,14 @@ struct CardView: View {
                         .italic()
                 }
                 .font(.system(size: 18))
-                .foregroundColor(Color(.primary1))
+                .foregroundColor(.onPrimaryContainer)
                 .padding(.leading, 15)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(5)
         .frame(maxWidth: .infinity)
-        .background(Color.white)
+        .background(.background1)
         .cornerRadius(8)
         .shadow(radius: 2)
         .padding(2)

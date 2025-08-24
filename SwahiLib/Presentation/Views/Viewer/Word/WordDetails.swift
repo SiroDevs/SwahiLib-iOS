@@ -4,6 +4,7 @@
 //
 //  Created by Siro Daves on 02/08/2025.
 //
+
 import SwiftUI
 
 struct WordDetails: View {
@@ -12,6 +13,7 @@ struct WordDetails: View {
     var meanings: [String]
     var synonyms: [Word]
     var conjugation: String
+    var onFeatureLocked: () -> Void
 
     var body: some View {
         ScrollView {
@@ -37,15 +39,19 @@ struct WordDetails: View {
                 if !synonyms.isEmpty {
                     Spacer().frame(height: 20)
 
-                    Text(synonyms.count == 1 ? "KISAWE" : "VISAWE \(synonyms.count)")
+                    Text(synonyms.count == 1 ? L10n.synonym : "\(L10n.synonyms) \(synonyms.count)")
                         .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(Color(.primary1))
+                        .foregroundColor(.primary1)
                         .padding(.leading, 10)
 
                     WordSynonyms(
                         synonyms: synonyms,
                         onSynonymClicked: { synonym in
-                            viewModel.loadWord(synonym)
+                            if (viewModel.isActiveSubscriber) {
+                                viewModel.loadWord(synonym)
+                            } else {
+                                onFeatureLocked()
+                            }
                         }
                     )
                 }
