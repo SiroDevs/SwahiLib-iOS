@@ -46,7 +46,7 @@ struct ProverbDetails: View {
                     ProverbSynonyms(
                         synonyms: synonyms,
                         onSynonymClicked: { synonym in
-                            if (viewModel.isActiveSubscriber) {
+                            if viewModel.isActiveSubscriber {
                                 viewModel.loadProverb(synonym)
                             } else {
                                 onFeatureLocked()

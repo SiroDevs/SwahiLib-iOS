@@ -35,48 +35,51 @@ struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
     @State private var showPaywall: Bool = false
 
-    var body: some View {
-        Form {
-            Section(header: Text("Mandhari")) {
-                Picker("Chagua Mandhari", selection: Binding(
-                    get: { themeManager.selectedTheme },
-                    set: { themeManager.selectedTheme = $0 }
-                )) {
-                    ForEach(AppThemeMode.allCases) { mode in
-                        Text(mode.displayName).tag(mode)
-                    }
-                }
-                .pickerStyle(.inline)
-            }
-            
-            #if !DEBUG
-                Section {
-                    Button(action: {
-                        showPaywall = true
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.yellow)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("SwahiLib Pro")
-                                    .font(.headline)
-                                Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+    var body: some View {            
+        NavigationStack {
+            Form {
+                Section(header: Text("Mandhari")) {
+                    Picker("Chagua Mandhari", selection: Binding(
+                        get: { themeManager.selectedTheme },
+                        set: { themeManager.selectedTheme = $0 }
+                    )) {
+                        ForEach(AppThemeMode.allCases) { mode in
+                            Text(mode.displayName).tag(mode)
                         }
-                        .padding(.vertical, 4)
                     }
+                    .pickerStyle(.inline)
                 }
-            #endif
+                
+                #if !DEBUG
+                    Section {
+                        Button(action: {
+                            showPaywall = true
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.yellow)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("SwahiLib Pro")
+                                        .font(.headline)
+                                    Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                #endif
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView(displayCloseButton: true)
+            }
+            .navigationTitle("Mipangilio")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(displayCloseButton: true)
-        }
-        .navigationTitle("Mipangilio")
     }
 }
-
 
 #Preview {
     SettingsView()

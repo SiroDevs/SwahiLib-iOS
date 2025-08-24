@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import RevenueCatUI
 
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel = {
         DiContainer.shared.resolve(HomeViewModel.self)
     }()
+    
+    @State private var showSettings: Bool = false
+    @State private var showPaywall: Bool = false
     
     var body: some View {
         stateContent
@@ -26,10 +30,35 @@ struct HomeView: View {
                     title: "Inapakia data ...",
                     fileName: "opener-loading",
                 )
+            
             case .filtered:
-                HomeContent(
-                    viewModel: viewModel,
-                )
+                TabView {
+                    HomeSearch(viewModel: viewModel)
+                        .tabItem {
+                            Label("Tafuta", systemImage: "magnifyingglass")
+                        }
+                    
+                    if viewModel.isActiveSubscriber {
+                        HomeLikes(viewModel: viewModel)
+                            .tabItem {
+                                Label("Vipendwa", systemImage: "heart.fill")
+                            }
+                    }
+                    SettingsView()
+                        .tabItem {
+                            Label("Mipangilio", systemImage: "gear")
+                        }
+                }
+                .onAppear {
+                    #if !DEBUG
+                        showPaywall = true
+                    #endif
+                }
+                .sheet(isPresented: $showPaywall) {
+                    #if !DEBUG
+                        PaywallView(displayCloseButton: true)
+                    #endif
+                }
                
             case .error(let msg):
                 ErrorState(message: msg) {

@@ -12,15 +12,19 @@ final class HomeViewModel: ObservableObject {
     @Published var isActiveSubscriber: Bool = false
     
     @Published var allIdioms: [Idiom] = []
+    @Published var likedIdioms: [Idiom] = []
     @Published var filteredIdioms: [Idiom] = []
     
     @Published var allProverbs: [Proverb] = []
+    @Published var likedProverbs: [Proverb] = []
     @Published var filteredProverbs: [Proverb] = []
     
     @Published var allSayings: [Saying] = []
+    @Published var likedSayings: [Saying] = []
     @Published var filteredSayings: [Saying] = []
     
     @Published var allWords: [Word] = []
+    @Published var likedWords: [Word] = []
     @Published var filteredWords: [Word] = []
     
     @Published var uiState: UiState = .idle
@@ -81,24 +85,28 @@ final class HomeViewModel: ObservableObject {
         
         switch self.homeTab {
         case .idioms:
+            self.likedIdioms = allIdioms.filter { $0.liked }
             self.filteredIdioms = trimmedQuery.isEmpty
                 ? allIdioms
                 : allIdioms.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
             print("Filtered idioms: \(filteredIdioms.count)")
             
         case .sayings:
+            self.likedSayings = allSayings.filter { $0.liked }
             self.filteredSayings = trimmedQuery.isEmpty
                 ? allSayings
                 : allSayings.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
             print("Filtered sayings: \(filteredSayings.count)")
             
         case .proverbs:
+            self.likedProverbs = allProverbs.filter { $0.liked }
             self.filteredProverbs = trimmedQuery.isEmpty
                 ? allProverbs
                 : allProverbs.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
             print("Filtered proverbs: \(filteredProverbs.count)")
             
         case .words:
+            self.likedWords = allWords.filter { $0.liked }
             self.filteredWords = trimmedQuery.isEmpty
                 ? allWords
                 : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
