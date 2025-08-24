@@ -15,6 +15,8 @@ struct ProverbView: View {
     let proverb: Proverb
     
     @State private var showToast = false
+    @State private var showAlert = false
+    @State private var showPaywall = false
 
     var body: some View {
         ZStack {
@@ -23,15 +25,34 @@ struct ProverbView: View {
            }
            
             if showToast {
-                let toastMessage = viewModel.isLiked
-                    ? "Methali \(proverb.title) imeongezwa kwa vipendwa"
-                    : "Methali \(proverb.title) imeondolewa kutoka kwa vipendwa"
-                
+                let toastMessage = L10n.favoriteProverb(for: proverb.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
-       }
+        }
+        .alert(
+            L10n.featureLocked,
+            isPresented: $showAlert,
+            actions: {
+                Button(L10n.later, role: .cancel) {}
+                Button(L10n.okay) { showPaywall = true }
+            },
+            message: {
+                Text(
+                    L10n.featureLockedDescXtra(
+                        feature: L10n.featureViewProverbSynonym
+                    )
+                )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+            }
+        )
+        .sheet(isPresented: $showPaywall) {
+            #if !DEBUG
+                PaywallView(displayCloseButton: true)
+            #endif
+        }
         .task({viewModel.loadProverb(proverb)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -74,7 +95,18 @@ struct ProverbView: View {
             meanings: viewModel.meanings,
             synonyms: viewModel.synonyms,
             conjugation: viewModel.conjugation,
+            onFeatureLocked: { showAlert = true }
         )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.likeProverb(proverb: proverb)
+                } label: {
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.primary1)
+                }
+            }
+        }
         .navigationTitle("Methali ya Kiswahili", )
     }
 }

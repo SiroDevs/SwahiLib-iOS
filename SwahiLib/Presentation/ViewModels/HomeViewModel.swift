@@ -7,10 +7,9 @@
 
 import Foundation
 import SwiftUI
-import RevenueCat
 
 final class HomeViewModel: ObservableObject {
-    @Published var hasActiveSubscription: Bool = false
+    @Published var isActiveSubscriber: Bool = false
     
     @Published var allIdioms: [Idiom] = []
     @Published var filteredIdioms: [Idiom] = []
@@ -32,29 +31,29 @@ final class HomeViewModel: ObservableObject {
     private let proverbRepo: ProverbRepositoryProtocol
     private let sayingRepo: SayingRepositoryProtocol
     private let wordRepo: WordRepositoryProtocol
+    private let subsRepo: SubscriptionRepositoryProtocol
 
     init(
         prefsRepo: PrefsRepository,
         idiomRepo: IdiomRepositoryProtocol,
         proverbRepo: ProverbRepositoryProtocol,
         sayingRepo: SayingRepositoryProtocol,
-        wordRepo: WordRepositoryProtocol
+        wordRepo: WordRepositoryProtocol,
+        subsRepo: SubscriptionRepositoryProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
+        self.subsRepo = subsRepo
     }
     
     func checkSubscription() {
-        Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
-            guard let self = self, let customerInfo = customerInfo, error == nil else {
-                self?.hasActiveSubscription = false
-                return
+        subsRepo.isActiveSubscriber { [weak self] isActive in
+            DispatchQueue.main.async {
+                self?.isActiveSubscriber = isActive
             }
-
-            self.hasActiveSubscription = customerInfo.entitlements[AppConstants.entitlements]?.isActive == true
         }
     }
     
@@ -68,10 +67,7 @@ final class HomeViewModel: ObservableObject {
             self.allSayings = sayingRepo.fetchLocalData()
             self.allWords = wordRepo.fetchLocalData()
             
-            #if !DEBUG
-                self.checkSubscription()
-            #endif
-            
+            self.checkSubscription()
             self.filterData(qry: "")
             self.uiState = .filtered
         }

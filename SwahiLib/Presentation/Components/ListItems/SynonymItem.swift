@@ -15,21 +15,21 @@ struct SynonymItem: View {
         Button(action: onClick) {
             HStack(alignment: .center) {
                 Image(systemName: "arrow.right.circle")
-                    .foregroundColor(Color(.primary1))
+                    .foregroundColor(Color(.onPrimaryContainer))
 
                 Spacer().frame(width: 12)
 
                 Text(title)
                     .font(.system(size: 18))
-                    .foregroundColor(Color(.primary1))
+                    .foregroundColor(Color(.onPrimaryContainer))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Image(systemName: "arrow.forward")
-                    .foregroundColor(Color(.primary1))
+                    .foregroundColor(Color(.onPrimaryContainer))
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 16)
-            .background(Color.white)
+            .background(.background1)
             .cornerRadius(8)
             .shadow(radius: 2)
         }

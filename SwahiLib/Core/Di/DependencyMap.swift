@@ -93,6 +93,10 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
+        container.register(SubscriptionRepositoryProtocol.self) { resolver in
+            SubscriptionRepository()
+        }.inObjectScope(.container)
+        
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
@@ -110,30 +114,35 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(IdiomViewModel.self) { resolver in
             IdiomViewModel(
                 idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(ProverbViewModel.self) { resolver in
             ProverbViewModel(
                 proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(SayingViewModel.self) { resolver in
             SayingViewModel(
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(WordViewModel.self) { resolver in
             WordViewModel(
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         

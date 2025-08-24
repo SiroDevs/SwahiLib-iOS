@@ -23,15 +23,12 @@ struct SayingView: View {
            }
            
             if showToast {
-                let toastMessage = viewModel.isLiked
-                    ? "Msemo \(saying.title) umeongezwa kwa vipendwa"
-                    : "Msemo \(saying.title) umeondolewa kutoka kwa vipendwa"
-                
+                let toastMessage = L10n.favoriteSaying(for: saying.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
-       }
+        }
         .task({viewModel.loadSaying(saying)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -72,6 +69,16 @@ struct SayingView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
         )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.likeSaying(saying: saying)
+                } label: {
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.primary1)
+                }
+            }
+        }
         .navigationTitle("Msemo wa Kiswahili", )
     }
 }

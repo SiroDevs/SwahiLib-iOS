@@ -10,6 +10,8 @@ import SwiftUI
 import Combine
 
 class ProverbViewModel: ObservableObject {
+    @Published var isActiveSubscriber: Bool = false
+    
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
     @Published var conjugation: String = ""
@@ -18,11 +20,22 @@ class ProverbViewModel: ObservableObject {
     @Published var synonyms: [Proverb] = []
 
     private let proverbRepo: ProverbRepositoryProtocol
+    private let subsRepo: SubscriptionRepositoryProtocol
 
     init(
-        proverbRepo: ProverbRepositoryProtocol
+        proverbRepo: ProverbRepositoryProtocol,
+        subsRepo: SubscriptionRepositoryProtocol,
     ) {
         self.proverbRepo = proverbRepo
+        self.subsRepo = subsRepo
+    }
+    
+    func checkSubscription() {
+        subsRepo.isActiveSubscriber { [weak self] isActive in
+            DispatchQueue.main.async {
+                self?.isActiveSubscriber = isActive
+            }
+        }
     }
     
     func loadProverb(_ proverb: Proverb) {
@@ -50,9 +63,22 @@ class ProverbViewModel: ObservableObject {
         uiState = .loaded
     }
 
-    func likeProverb(_ proverb: Proverb) {
-//        let updatedProverb = proverb.copyWith(liked: !proverb.liked)
-//        proverbRepo.updateProverb(updatedProverb)
-//        isLiked = updatedProverb.liked
+    func likeProverb(proverb: Proverb) {
+        let updatedProverb = Proverb(
+            rid: proverb.rid,
+            title: proverb.title,
+            synonyms: proverb.synonyms,
+            meaning: proverb.meaning,
+            conjugation: proverb.conjugation,
+            views: proverb.views,
+            likes: proverb.likes,
+            liked: !proverb.liked,
+            createdAt: proverb.createdAt,
+            updatedAt: proverb.updatedAt
+        )
+        
+        proverbRepo.updateProverb(updatedProverb)
+        isLiked = updatedProverb.liked
+        uiState = .liked
     }
 }

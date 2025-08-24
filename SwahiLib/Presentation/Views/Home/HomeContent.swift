@@ -25,7 +25,7 @@ struct HomeContent: View {
             )
             .onAppear {
                 #if !DEBUG
-                    if !viewModel.hasActiveSubscription {
+                    if !viewModel.isActiveSubscriber {
                         showPaywall = true
                     }
                 #endif
@@ -34,9 +34,6 @@ struct HomeContent: View {
                 #if !DEBUG
                     PaywallView(displayCloseButton: true)
                 #endif
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
             }
             .padding(.vertical)
             .navigationTitle("SwahiLib - Kamusi ya Kiswahili")
@@ -52,6 +49,9 @@ struct HomeContent: View {
 
                     }
                 }
+            }
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
             }
         }
     }
@@ -82,7 +82,7 @@ struct HomeMainView: View {
             .padding(.leading, 10)
 
             HStack(alignment: .top, spacing: 10) {
-                if viewModel.hasActiveSubscription {
+                if viewModel.isActiveSubscriber {
                     VerticalLetters(
                         selectedLetter: selectedLetter,
                         onLetterSelected: { letter in

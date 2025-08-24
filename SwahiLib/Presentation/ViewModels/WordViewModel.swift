@@ -10,6 +10,8 @@ import SwiftUI
 import Combine
 
 class WordViewModel: ObservableObject {
+    @Published var isActiveSubscriber: Bool = false
+    
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
     @Published var conjugation: String = ""
@@ -18,11 +20,22 @@ class WordViewModel: ObservableObject {
     @Published var synonyms: [Word] = []
 
     private let wordRepo: WordRepositoryProtocol
+    private let subsRepo: SubscriptionRepositoryProtocol
 
     init(
-        wordRepo: WordRepositoryProtocol
+        wordRepo: WordRepositoryProtocol,
+        subsRepo: SubscriptionRepositoryProtocol
     ) {
         self.wordRepo = wordRepo
+        self.subsRepo = subsRepo
+    }
+    
+    func checkSubscription() {
+        subsRepo.isActiveSubscriber { [weak self] isActive in
+            DispatchQueue.main.async {
+                self?.isActiveSubscriber = isActive
+            }
+        }
     }
     
     func loadWord(_ word: Word) {
@@ -50,9 +63,22 @@ class WordViewModel: ObservableObject {
         uiState = .loaded
     }
 
-    func likeWord(_ word: Word) {
-//        let updatedWord = word.copyWith(liked: !word.liked)
-//        wordRepo.updateWord(updatedWord)
-//        isLiked = updatedWord.liked
+    func likeWord(word: Word) {
+        let updatedWord = Word(
+            rid: word.rid,
+            title: word.title,
+            synonyms: word.synonyms,
+            meaning: word.meaning,
+            conjugation: word.conjugation,
+            views: word.views,
+            likes: word.likes,
+            liked: !word.liked,
+            createdAt: word.createdAt,
+            updatedAt: word.updatedAt
+        )
+        
+        wordRepo.updateWord(updatedWord)
+        isLiked = updatedWord.liked
+        uiState = .liked
     }
 }

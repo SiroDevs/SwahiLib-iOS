@@ -13,7 +13,7 @@ struct CollapsingHeader: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             Rectangle()
-                .fill(.primary1)
+                .fill(.primary3)
                 .frame(height: 100)
 
             Text(title)

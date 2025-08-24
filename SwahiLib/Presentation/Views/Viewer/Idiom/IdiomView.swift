@@ -23,15 +23,12 @@ struct IdiomView: View {
            }
            
             if showToast {
-                let toastMessage = viewModel.isLiked
-                    ? "Nahau \(idiom.title) imeongezwa kwa vipendwa"
-                    : "Nahau \(idiom.title) imeondolewa kutoka kwa vipendwa"
-                
+                let toastMessage = L10n.favoriteIdiom(for: idiom.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
-       }
+        }
         .task({viewModel.loadIdiom(idiom)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -72,6 +69,16 @@ struct IdiomView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
         )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.likeIdiom(idiom: idiom)
+                } label: {
+                    Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(.primary1)
+                }
+            }
+        }
         .navigationTitle("Nahau ya Kiswahili", )
     }
 }
