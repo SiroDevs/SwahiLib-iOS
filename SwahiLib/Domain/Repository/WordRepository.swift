@@ -13,6 +13,7 @@ protocol WordRepositoryProtocol {
     func getWordsByTitles(titles: [String]) -> [Word]
     func saveWord(_ word: Word)
     func updateWord(_ word: Word)
+    func deleteLocalData()
 }
 
 class WordRepository: WordRepositoryProtocol {
@@ -80,5 +81,9 @@ class WordRepository: WordRepositoryProtocol {
         let words = wordData.getWordsByTitles(titles: titles)
         return words.sorted { $0.id < $1.id }
     }
-
+    
+    func deleteLocalData() {
+        wordData.deleteAllWords()
+    }
+    
 }

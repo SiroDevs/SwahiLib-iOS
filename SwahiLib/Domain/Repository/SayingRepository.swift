@@ -13,6 +13,7 @@ protocol SayingRepositoryProtocol {
     func getSayingsByTitles(titles: [String]) -> [Saying]
     func saveSaying(_ saying: Saying)
     func updateSaying(_ saying: Saying)
+    func deleteLocalData()
 }
 
 class SayingRepository: SayingRepositoryProtocol {
@@ -58,5 +59,9 @@ class SayingRepository: SayingRepositoryProtocol {
         let sayings = sayingData.getSayingsByTitles(titles: titles)
         return sayings.sorted { $0.id < $1.id }
     }
-
+    
+    func deleteLocalData() {
+        sayingData.deleteAllSayings()
+    }
+    
 }

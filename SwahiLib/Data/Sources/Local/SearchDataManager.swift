@@ -123,4 +123,18 @@ class SearchDataManager {
             print("Failed to delete search: \(error)")
         }
     }
+    
+    func deleteAllSearches() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDSearch.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All searches deleted successfully")
+        } catch {
+            print("❌ Failed to delete searches: \(error)")
+        }
+    }
+
 }

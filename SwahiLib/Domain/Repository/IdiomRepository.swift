@@ -13,6 +13,7 @@ protocol IdiomRepositoryProtocol {
     func getIdiomsByTitles(titles: [String]) -> [Idiom]
     func saveIdiom(_ idiom: Idiom)
     func updateIdiom(_ idiom: Idiom)
+    func deleteLocalData()
 }
 
 class IdiomRepository: IdiomRepositoryProtocol {
@@ -57,5 +58,9 @@ class IdiomRepository: IdiomRepositoryProtocol {
         let idioms = idiomData.getIdiomsByTitles(titles: titles)
         return idioms.sorted { $0.id < $1.id }
     }
-
+    
+    func deleteLocalData() {
+        idiomData.deleteAllIdioms()
+    }
+    
 }

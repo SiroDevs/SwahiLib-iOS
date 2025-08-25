@@ -105,4 +105,18 @@ class ProverbDataManager {
             return new
         }
     }
+    
+    func deleteAllProverbs() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDProverb.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All proverbs deleted successfully")
+        } catch {
+            print("❌ Failed to delete proverbs: \(error)")
+        }
+    }
+
 }

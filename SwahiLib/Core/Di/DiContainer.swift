@@ -42,6 +42,7 @@ final class DiContainer {
             { self.container.resolve(ProverbViewModel.self) },
             { self.container.resolve(SayingViewModel.self) },
             { self.container.resolve(WordViewModel.self) },
+            { self.container.resolve(SettingsViewModel.self) },
         ]
 
         for resolve in dependencies {

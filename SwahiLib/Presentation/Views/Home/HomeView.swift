@@ -13,7 +13,6 @@ struct HomeView: View {
         DiContainer.shared.resolve(HomeViewModel.self)
     }()
     
-    @State private var showSettings: Bool = false
     @State private var showPaywall: Bool = false
     
     var body: some View {
@@ -51,7 +50,7 @@ struct HomeView: View {
                 }
                 .onAppear {
                     #if !DEBUG
-                        showPaywall = true
+                        showPaywall = !viewModel.isActiveSubscriber
                     #endif
                     viewModel.requestReview()
                 }

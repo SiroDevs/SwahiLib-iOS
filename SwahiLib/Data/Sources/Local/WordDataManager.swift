@@ -105,4 +105,18 @@ class WordDataManager {
             return new
         }
     }
+    
+    func deleteAllWords() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDWord.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All words deleted successfully")
+        } catch {
+            print("❌ Failed to delete words: \(error)")
+        }
+    }
+
 }

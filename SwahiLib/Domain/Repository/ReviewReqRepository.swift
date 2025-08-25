@@ -15,10 +15,15 @@ protocol ReviewReqRepositoryProtocol {
 }
 
 final class ReviewReqRepository: ReviewReqRepositoryProtocol {
-    private let installDateKey = "installDate"
-    private let usageTimeKey = "usageTime"
-    private let lastPromptKey = "lastReviewPrompt"
     private var sessionStart: Date?
+    private let prefs: PrefsRepository
+    
+    init(prefs: PrefsRepository = PrefsRepository()) {
+        self.prefs = prefs
+        if prefs.installDate == Date() {
+            prefs.installDate = Date()
+        }
+    }
     
     func startSession() {
         sessionStart = Date()
@@ -27,30 +32,30 @@ final class ReviewReqRepository: ReviewReqRepositoryProtocol {
     func endSession() {
         guard let start = sessionStart else { return }
         let duration = Date().timeIntervalSince(start)
-        let total = UserDefaults.standard.double(forKey: usageTimeKey) + duration
-        UserDefaults.standard.set(total, forKey: usageTimeKey)
+        prefs.usageTime += duration
         sessionStart = nil
     }
     
     func shouldPromptReview() -> Bool {
-        let installDate = UserDefaults.standard.object(forKey: installDateKey) as? Date ?? Date()
-        let usageTime = UserDefaults.standard.double(forKey: usageTimeKey)
-        let lastPrompt = UserDefaults.standard.object(forKey: lastPromptKey) as? Date ?? .distantPast
+        guard !prefs.reviewRequested else { return false } // Already done
         
         let threeHours: TimeInterval = 3 * 60 * 60
-        let eligibleByInstall = Date().timeIntervalSince(installDate) >= threeHours
-        let eligibleByUsage = usageTime >= threeHours
-        let eligibleByLastPrompt = Date().timeIntervalSince(lastPrompt) >= threeHours
+        let eligibleByInstall = Date().timeIntervalSince(prefs.installDate) >= threeHours
+        let eligibleByUsage = prefs.usageTime >= threeHours
+        let eligibleByLastPrompt = Date().timeIntervalSince(prefs.lastReviewPrompt) >= threeHours
         
         return eligibleByInstall && eligibleByUsage && eligibleByLastPrompt
     }
     
     func requestReview() {
+        guard shouldPromptReview() else { return }
+        
         if let scene = UIApplication.shared.connectedScenes
             .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
             
             SKStoreReviewController.requestReview(in: scene)
-            UserDefaults.standard.set(Date(), forKey: lastPromptKey)
+            prefs.lastReviewPrompt = Date()
+            prefs.reviewRequested = true
         }
     }
 }
