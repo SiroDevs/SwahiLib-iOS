@@ -105,4 +105,18 @@ class IdiomDataManager {
             return new
         }
     }
+    
+    func deleteAllIdioms() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDIdiom.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All idioms deleted successfully")
+        } catch {
+            print("❌ Failed to delete idioms: \(error)")
+        }
+    }
+
 }

@@ -125,4 +125,18 @@ class HistoryDataManager {
             print("Failed to delete history: \(error)")
         }
     }
+    
+    func deleteAllHistory() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDHistory.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All history deleted successfully")
+        } catch {
+            print("❌ Failed to delete history: \(error)")
+        }
+    }
+
 }

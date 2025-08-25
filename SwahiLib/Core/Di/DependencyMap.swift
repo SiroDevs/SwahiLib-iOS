@@ -97,6 +97,12 @@ struct DependencyMap {
             SubscriptionRepository()
         }.inObjectScope(.container)
         
+        container.register(ReviewReqRepositoryProtocol.self) { resolver in
+            ReviewReqRepository(
+                prefs: resolver.resolve(PrefsRepository.self)!
+            )
+        }.inObjectScope(.container)
+        
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
@@ -106,7 +112,7 @@ struct DependencyMap {
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
-        
+
         container.register(HomeViewModel.self) { resolver in
             HomeViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
@@ -115,6 +121,7 @@ struct DependencyMap {
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
                 subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
+                reviewRepo: resolver.resolve(ReviewReqRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         
@@ -143,6 +150,18 @@ struct DependencyMap {
             WordViewModel(
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
                 subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
+        container.register(SettingsViewModel.self) { resolver in
+            SettingsViewModel(
+                prefsRepo: resolver.resolve(PrefsRepository.self)!,
+                idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
+                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
+                reviewRepo: resolver.resolve(ReviewReqRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         

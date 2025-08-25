@@ -13,6 +13,7 @@ protocol ProverbRepositoryProtocol {
     func getProverbsByTitles(titles: [String]) -> [Proverb]
     func saveProverb(_ proverb: Proverb)
     func updateProverb(_ proverb: Proverb)
+    func deleteLocalData()
 }
 
 class ProverbRepository: ProverbRepositoryProtocol {
@@ -58,5 +59,9 @@ class ProverbRepository: ProverbRepositoryProtocol {
         let proverbs = proverbData.getProverbsByTitles(titles: titles)
         return proverbs.sorted { $0.id < $1.id }
     }
-
+    
+    func deleteLocalData() {
+        proverbData.deleteAllProverbs()
+    }
+    
 }

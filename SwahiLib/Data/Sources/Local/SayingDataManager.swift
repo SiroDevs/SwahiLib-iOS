@@ -105,4 +105,18 @@ class SayingDataManager {
             return new
         }
     }
+    
+    func deleteAllSayings() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDSaying.fetchRequest()
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("🗑️ All sayings deleted successfully")
+        } catch {
+            print("❌ Failed to delete sayings: \(error)")
+        }
+    }
+
 }

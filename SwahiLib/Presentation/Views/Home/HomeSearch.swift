@@ -38,7 +38,6 @@ struct HomeSearch: View {
                         selectedLetter: $selectedLetter
                     )
                 }
-                .padding()
             }
             .navigationTitle("SwahiLib")
             .navigationBarTitleDisplayMode(.large)

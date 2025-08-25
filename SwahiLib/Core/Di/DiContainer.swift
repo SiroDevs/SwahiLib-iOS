@@ -35,12 +35,14 @@ final class DiContainer {
             { self.container.resolve(SayingRepositoryProtocol.self) },
             { self.container.resolve(WordRepositoryProtocol.self) },
             { self.container.resolve(SubscriptionRepositoryProtocol.self) },
+            { self.container.resolve(ReviewReqRepositoryProtocol.self) },
             { self.container.resolve(InitViewModel.self) },
             { self.container.resolve(HomeViewModel.self) },
             { self.container.resolve(IdiomViewModel.self) },
             { self.container.resolve(ProverbViewModel.self) },
             { self.container.resolve(SayingViewModel.self) },
             { self.container.resolve(WordViewModel.self) },
+            { self.container.resolve(SettingsViewModel.self) },
         ]
 
         for resolve in dependencies {

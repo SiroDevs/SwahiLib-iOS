@@ -53,4 +53,6 @@ struct L10n {
     static let idiomKiswa = "Nahau ya Kiswahili"
     static let sayingKiswa = "Msemo wa Kiswahili"
     static let proverbKiswa = "Methali ya Kiswahili"
+    static let resetData = "Weka upya Data?"
+    static let resetDataDesc = "Je, una uhakika unataka kuweka upya data yako yote? Kitendo hiki hakiwezi kutenduliwa."
 }
