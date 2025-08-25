@@ -5,6 +5,8 @@
 //  Created by Siro Daves on 01/08/2025.
 
 import SwiftUI
+import RevenueCat
+import RevenueCatUI
 
 struct ProverbView: View {
     @Environment(\.presentationMode) var presentationMode
