@@ -97,6 +97,10 @@ struct DependencyMap {
             SubscriptionRepository()
         }.inObjectScope(.container)
         
+        container.register(ReviewReqRepositoryProtocol.self) { resolver in
+            ReviewReqRepository()
+        }.inObjectScope(.container)
+        
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
@@ -106,7 +110,7 @@ struct DependencyMap {
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
-        
+
         container.register(HomeViewModel.self) { resolver in
             HomeViewModel(
                 prefsRepo: resolver.resolve(PrefsRepository.self)!,
@@ -115,6 +119,7 @@ struct DependencyMap {
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
                 subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
+                reviewRepo: resolver.resolve(ReviewReqRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         

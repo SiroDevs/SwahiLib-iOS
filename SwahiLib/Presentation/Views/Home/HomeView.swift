@@ -53,6 +53,7 @@ struct HomeView: View {
                     #if !DEBUG
                         showPaywall = true
                     #endif
+                    viewModel.requestReview()
                 }
                 .sheet(isPresented: $showPaywall) {
                     #if !DEBUG

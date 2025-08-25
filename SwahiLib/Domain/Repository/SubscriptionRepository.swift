@@ -15,7 +15,7 @@ protocol SubscriptionRepositoryProtocol {
 final class SubscriptionRepository: SubscriptionRepositoryProtocol {
     func isActiveSubscriber(completion: @escaping (Bool) -> Void) {
         #if DEBUG
-            completion(false)
+            completion(true)
         #else
             Purchases.shared.getCustomerInfo { customerInfo, error in
                 guard let customerInfo = customerInfo, error == nil else {

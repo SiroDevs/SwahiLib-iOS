@@ -9,7 +9,16 @@ import Foundation
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
+    private let prefsRepo: PrefsRepository
+    private let idiomRepo: IdiomRepositoryProtocol
+    private let proverbRepo: ProverbRepositoryProtocol
+    private let sayingRepo: SayingRepositoryProtocol
+    private let wordRepo: WordRepositoryProtocol
+    private let subsRepo: SubscriptionRepositoryProtocol
+    private let reviewRepo: ReviewReqRepositoryProtocol
+
     @Published var isActiveSubscriber: Bool = false
+    @Published var showReviewPrompt: Bool = false
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -29,21 +38,15 @@ final class HomeViewModel: ObservableObject {
     
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
-
-    private let prefsRepo: PrefsRepository
-    private let idiomRepo: IdiomRepositoryProtocol
-    private let proverbRepo: ProverbRepositoryProtocol
-    private let sayingRepo: SayingRepositoryProtocol
-    private let wordRepo: WordRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
-
+    
     init(
         prefsRepo: PrefsRepository,
         idiomRepo: IdiomRepositoryProtocol,
         proverbRepo: ProverbRepositoryProtocol,
         sayingRepo: SayingRepositoryProtocol,
         wordRepo: WordRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol
+        subsRepo: SubscriptionRepositoryProtocol,
+        reviewRepo: ReviewReqRepositoryProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -51,6 +54,7 @@ final class HomeViewModel: ObservableObject {
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
+        self.reviewRepo = reviewRepo
     }
     
     func checkSubscription() {
@@ -59,6 +63,19 @@ final class HomeViewModel: ObservableObject {
                 self?.isActiveSubscriber = isActive
             }
         }
+    }
+    
+    func appDidEnterBackground() {
+        reviewRepo.endSession()
+        showReviewPrompt = reviewRepo.shouldPromptReview()
+    }
+    
+    func appDidBecomeActive() {
+        reviewRepo.startSession()
+    }
+    
+    func requestReview() {
+        reviewRepo.requestReview()
     }
     
     func fetchData() {
