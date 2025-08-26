@@ -52,7 +52,7 @@ struct HomeView: View {
                     #if !DEBUG
                         showPaywall = !viewModel.isActiveSubscriber
                     #endif
-                    viewModel.requestReview()
+                    viewModel.promptReview()
                 }
                 .sheet(isPresented: $showPaywall) {
                     #if !DEBUG

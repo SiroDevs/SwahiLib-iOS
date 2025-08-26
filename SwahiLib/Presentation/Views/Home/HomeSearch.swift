@@ -40,7 +40,6 @@ struct HomeSearch: View {
                 }
             }
             .navigationTitle("SwahiLib")
-            .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }

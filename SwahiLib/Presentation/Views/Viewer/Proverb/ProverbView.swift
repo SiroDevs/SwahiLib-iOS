@@ -27,7 +27,7 @@ struct ProverbView: View {
            }
            
             if showToast {
-                let toastMessage = L10n.favoriteProverb(for: proverb.title, isLiked: viewModel.isLiked)
+                let toastMessage = L10n.likedProverb(for: proverb.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
@@ -55,6 +55,7 @@ struct ProverbView: View {
                 PaywallView(displayCloseButton: true)
             #endif
         }
+        .toolbar(.hidden, for: .tabBar)
         .task({viewModel.loadProverb(proverb)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {

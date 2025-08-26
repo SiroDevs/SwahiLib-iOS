@@ -20,28 +20,28 @@ struct L10n {
     static let featureViewWordSynonym = "kufungua visawe vya neno unalotazama miongoni kwa vipengele vingine."
     static let featureViewProverbSynonym = "kufungua visawe vya methali unayotazama miongoni kwa vipengele vingine."
     
-    static func favoriteWord(for word: String, isLiked: Bool) -> String {
+    static func likedWord(for word: String, isLiked: Bool) -> String {
         if isLiked {
             return "Neno \(word) limeongezwa kwa vipendwa"
         } else {
             return "Neno \(word) limeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteSaying(for saying: String, isLiked: Bool) -> String {
+    static func likedSaying(for saying: String, isLiked: Bool) -> String {
         if isLiked {
             return "Msemo \(saying) umeongezwa kwa vipendwa"
         } else {
             return "Msemo \(saying) umeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteProverb(for proverb: String, isLiked: Bool) -> String {
+    static func likedProverb(for proverb: String, isLiked: Bool) -> String {
         if isLiked {
             return "Methali \(proverb) imeongezwa kwa vipendwa"
         } else {
             return "Methali \(proverb) imeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteIdiom(for idiom: String, isLiked: Bool) -> String {
+    static func likedIdiom(for idiom: String, isLiked: Bool) -> String {
         if isLiked {
             return "Nahau \(idiom) imeongezwa kwa vipendwa"
         } else {

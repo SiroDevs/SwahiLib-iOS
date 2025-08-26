@@ -23,12 +23,13 @@ struct IdiomView: View {
            }
            
             if showToast {
-                let toastMessage = L10n.favoriteIdiom(for: idiom.title, isLiked: viewModel.isLiked)
+                let toastMessage = L10n.likedIdiom(for: idiom.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
         }
+        .toolbar(.hidden, for: .tabBar)
         .task({viewModel.loadIdiom(idiom)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {

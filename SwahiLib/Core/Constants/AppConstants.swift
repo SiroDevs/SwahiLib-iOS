@@ -16,6 +16,14 @@ struct AppConstants {
     static let appLink = "https://linktr.ee/SwahilibApp"
 }
 
+struct PrefConstants {
+    static let isLoaded = "dataIsLoadedKey"
+    static let installDate = "installDateKey"
+    static let reviewRequested = "reviewRequestedKey"
+    static let lastReviewPrompt = "lastReviewPromptKey"
+    static let usageTime = "usageTimeKey"
+}
+
 struct AppSecrets {
     static let rc_api_key: String = {
         guard let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),

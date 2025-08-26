@@ -36,7 +36,6 @@ struct HomeLikes: View {
             }
             .padding(.vertical)
             .navigationTitle("Vipendwa")
-            .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }

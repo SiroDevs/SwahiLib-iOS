@@ -18,8 +18,6 @@ final class SettingsViewModel: ObservableObject {
     private let reviewRepo: ReviewReqRepositoryProtocol
 
     @Published var isActiveSubscriber: Bool = false
-    @Published var showReviewPrompt: Bool = false
-    
     @Published var uiState: UiState = .idle
     
     init(
@@ -48,17 +46,8 @@ final class SettingsViewModel: ObservableObject {
         }
     }
     
-    func appDidEnterBackground() {
-        reviewRepo.endSession()
-        showReviewPrompt = reviewRepo.shouldPromptReview()
-    }
-    
-    func appDidBecomeActive() {
-        reviewRepo.startSession()
-    }
-    
-    func requestReview() {
-        reviewRepo.requestReview()
+    func promptReview() {
+        reviewRepo.promptReview(force: true)
     }
     
     func checkSettings() {

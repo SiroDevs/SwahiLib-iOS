@@ -8,14 +8,6 @@
 import Foundation
 
 class PrefsRepository {
-    private enum Keys {
-        static let isLoaded = "dataIsLoadedKey"
-        static let installDate = "installDateKey"
-        static let reviewRequested = "reviewRequestedKey"
-        static let lastReviewPrompt = "lastReviewPromptKey"
-        static let usageTime = "usageTimeKey"
-    }
-    
     private let userDefaults: UserDefaults
     
     init(userDefaults: UserDefaults = .standard) {
@@ -23,27 +15,27 @@ class PrefsRepository {
     }
     
     var isDataLoaded: Bool {
-        get { userDefaults.bool(forKey: Keys.isLoaded) }
-        set { userDefaults.set(newValue, forKey: Keys.isLoaded) }
+        get { userDefaults.bool(forKey: PrefConstants.isLoaded) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.isLoaded) }
     }
     
     var installDate: Date {
-        get { userDefaults.object(forKey: Keys.installDate) as? Date ?? Date() }
-        set { userDefaults.set(newValue, forKey: Keys.installDate) }
+        get { userDefaults.object(forKey: PrefConstants.installDate) as? Date ?? Date() }
+        set { userDefaults.set(newValue, forKey: PrefConstants.installDate) }
     }
     
     var reviewRequested: Bool {
-        get { userDefaults.bool(forKey: Keys.reviewRequested) }
-        set { userDefaults.set(newValue, forKey: Keys.reviewRequested) }
+        get { userDefaults.bool(forKey: PrefConstants.reviewRequested) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.reviewRequested) }
     }
     
     var lastReviewPrompt: Date {
-        get { userDefaults.object(forKey: Keys.lastReviewPrompt) as? Date ?? .distantPast }
-        set { userDefaults.set(newValue, forKey: Keys.lastReviewPrompt) }
+        get { userDefaults.object(forKey: PrefConstants.lastReviewPrompt) as? Date ?? .distantPast }
+        set { userDefaults.set(newValue, forKey: PrefConstants.lastReviewPrompt) }
     }
     
     var usageTime: TimeInterval {
-        get { userDefaults.double(forKey: Keys.usageTime) }
-        set { userDefaults.set(newValue, forKey: Keys.usageTime) }
+        get { userDefaults.double(forKey: PrefConstants.usageTime) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.usageTime) }
     }
 }

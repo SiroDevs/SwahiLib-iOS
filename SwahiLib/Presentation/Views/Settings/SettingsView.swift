@@ -16,142 +16,72 @@ struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
     @State private var showPaywall: Bool = false
     @State private var showResetAlert: Bool = false
-
-    var body: some View {            
-        NavigationStack {
-            Form {
-                ThemeSectionView(
-                    selectedTheme: $themeManager.selectedTheme
-                )
-                
-                #if !DEBUG
-                if !viewModel.isActiveSubscriber {
-                    ProSectionView { showPaywall = true }
-                }
-                #endif
-                
-                ReviewSectionView(
-                    onReview: viewModel.requestReview,
-                    onEmail: viewModel.sendEmail
-                )
-                
-                ResetSectionView { showResetAlert = true }
-            }
-            .alert(L10n.resetData, isPresented: $showResetAlert) {
-                Button(L10n.cancel, role: .cancel) { }
-                Button(L10n.okay, role: .destructive) {
-                    viewModel.clearAllData()
-                }
-            } message: {
-                Text(L10n.resetDataDesc)
-            }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView(displayCloseButton: true)
-            }
-            .navigationTitle("Mipangilio")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(.regularMaterial, for: .navigationBar)
-        }
-    }
-}
-
-private struct ThemeSectionView: View {
-    @Binding var selectedTheme: AppThemeMode
+    @State private var restartTheApp = false
     
     var body: some View {
-        Section(header: Text("Mandhari")) {
-            Picker("Chagua Mandhari", selection: $selectedTheme) {
-                ForEach(AppThemeMode.allCases) { mode in
-                    Text(mode.displayName).tag(mode)
-                }
+        Group {
+            if restartTheApp {
+                AnyView(SplashView())
+            } else {
+                AnyView(mainContent)
             }
-            .pickerStyle(.inline)
         }
     }
-}
-
-private struct ProSectionView: View {
-    let onTap: () -> Void
     
-    var body: some View {
-        Section(header: Text("SwahiLib Pro")) {
-            Button(action: onTap) {
-                HStack(spacing: 12) {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Jiunge na SwahiLib Pro")
-                            .font(.headline)
-                        Text("Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-            }
-        }
+    var mainContent: some View {
+        stateContent
+        .edgesIgnoringSafeArea(.bottom)
+        .task { viewModel.checkSettings() }
     }
-}
-
-private struct ReviewSectionView: View {
-    let onReview: () -> Void
-    let onEmail: () -> Void
-
-    var body: some View {
-        Section(header: Text("MAONI")) {
-            VStack(alignment: .leading, spacing: 2) {
-                Button(action: onReview) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "text.badge.star")
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Tupe review")
-                                .font(.headline)
-                            Text("Unaweza kutupa review ili kitumizi hizi kionekane kwa wengine")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+    
+    @ViewBuilder
+    private var stateContent: some View {
+        switch viewModel.uiState {
+            case .fetched:
+                NavigationStack {
+                    Form {
+                        ThemeSectionView(
+                            selectedTheme: $themeManager.selectedTheme
+                        )
+                        
+                        #if !DEBUG
+                        if !viewModel.isActiveSubscriber {
+                            ProSectionView { showPaywall = true }
                         }
+                        #endif
+                        
+                        ReviewSectionView(
+                            onReview: viewModel.promptReview,
+                            onEmail: viewModel.sendEmail
+                        )
+                        
+                        ResetSectionView { showResetAlert = true }
                     }
-                    .padding(.vertical, 4)
-                }
-                Divider()
-                Button(action: onEmail) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "envelope")
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Wasiliana nasi")
-                                .font(.headline)
-                            Text("Iwapo una malalamishi/maoni, tutumie barua pepe. Usikose kuweka picha za skrini (screenshot) nyingi uwezavyo.")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+                    .alert(L10n.resetData, isPresented: $showResetAlert) {
+                        Button(L10n.cancel, role: .cancel) { }
+                        Button(L10n.okay, role: .destructive) {
+                            viewModel.clearAllData()
                         }
+                    } message: {
+                        Text(L10n.resetDataDesc)
                     }
-                    .padding(.vertical, 4)
+                    .sheet(isPresented: $showPaywall) {
+                        PaywallView(displayCloseButton: true)
+                    }
+                    .navigationTitle("Mipangilio")
+                    .toolbarBackground(.regularMaterial, for: .navigationBar)
                 }
-            }
+               
+            case .error(let msg):
+                ErrorState(message: msg) { }
+                
+            default:
+                LoadingState()
         }
     }
-}
-
-private struct ResetSectionView: View {
-    let onTap: () -> Void
     
-    var body: some View {
-        Section(header: Text("HATARI").foregroundColor(.red)) {
-            Button(action: onTap) {
-                HStack(spacing: 12) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.red)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Weka upya data")
-                            .font(.headline).foregroundColor(.red)
-                        Text("Unaweza kufuta data yote iliyoko na uanze kudondoa upya")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-            }
-        }
+    private func handleStateChange(_ state: UiState) {
+        restartTheApp = .loaded == state
     }
 }
 
