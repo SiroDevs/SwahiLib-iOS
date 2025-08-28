@@ -19,7 +19,7 @@ final class DiContainer {
 
     private func validateDependencies() {
         let dependencies: [() -> Any?] = [
-            { self.container.resolve(PrefsRepository.self) },
+            { self.container.resolve(PreferencesRepository.self) },
             { self.container.resolve(CoreDataManager.self) },
             { self.container.resolve(SupabaseServiceProtocol.self) },
             { self.container.resolve(AnalyticsServiceProtocol.self) },
@@ -37,12 +37,11 @@ final class DiContainer {
             { self.container.resolve(SubscriptionRepositoryProtocol.self) },
             { self.container.resolve(ReviewReqRepositoryProtocol.self) },
             { self.container.resolve(InitViewModel.self) },
-            { self.container.resolve(HomeViewModel.self) },
+            { self.container.resolve(MainViewModel.self) },
             { self.container.resolve(IdiomViewModel.self) },
             { self.container.resolve(ProverbViewModel.self) },
             { self.container.resolve(SayingViewModel.self) },
             { self.container.resolve(WordViewModel.self) },
-            { self.container.resolve(SettingsViewModel.self) },
         ]
 
         for resolve in dependencies {

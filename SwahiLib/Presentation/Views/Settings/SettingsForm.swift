@@ -48,7 +48,7 @@ struct SettingsForm: View {
                     systemImage: "envelope",
                     title: L10n.contactUs,
                     subtitle: L10n.contactUsDesc,
-                    action: AppUtils.sendEmail
+                    action: AppUtilities.sendEmail
                 )
             }
 

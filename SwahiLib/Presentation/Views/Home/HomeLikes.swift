@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeLikes: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         NavigationStack {

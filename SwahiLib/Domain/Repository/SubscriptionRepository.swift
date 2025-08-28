@@ -9,13 +9,13 @@ import Combine
 import RevenueCat
 
 protocol SubscriptionRepositoryProtocol {
-    func isActiveSubscriber(completion: @escaping (Bool) -> Void)
+    func activeSubscriber(completion: @escaping (Bool) -> Void)
 }
 
 final class SubscriptionRepository: SubscriptionRepositoryProtocol {
-    func isActiveSubscriber(completion: @escaping (Bool) -> Void) {
+    func activeSubscriber(completion: @escaping (Bool) -> Void) {
         #if DEBUG
-            completion(true)
+            completion(false)
         #else
             Purchases.shared.getCustomerInfo { customerInfo, error in
                 guard let customerInfo = customerInfo, error == nil else {

@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class IdiomViewModel: ObservableObject {
-    @Published var isActiveSubscriber: Bool = false
+    @Published var activeSubscriber: Bool = false
     
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
@@ -29,9 +29,9 @@ class IdiomViewModel: ObservableObject {
     }
     
     func checkSubscription() {
-        subsRepo.isActiveSubscriber { [weak self] isActive in
+        subsRepo.activeSubscriber { [weak self] isActive in
             DispatchQueue.main.async {
-                self?.isActiveSubscriber = isActive
+                self?.activeSubscriber = isActive
             }
         }
     }

@@ -14,6 +14,7 @@ struct AppConstants {
     static let appCredits = "© 2021 - 2025 @SiroDevs"
     static let entitlements = "swahilib_offering_1"
     static let appLink = "https://linktr.ee/SwahilibApp"
+    static let supportEmail = "futuristicken@gmail.com"
 }
 
 struct PrefConstants {

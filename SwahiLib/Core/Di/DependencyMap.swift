@@ -9,8 +9,8 @@ import Swinject
 
 struct DependencyMap {
     static func registerDependencies(in container: Container) {
-        container.register(PrefsRepository.self) { _ in
-            PrefsRepository()
+        container.register(PreferencesRepository.self) { _ in
+            PreferencesRepository()
         }.inObjectScope(.container)
 
         container.register(CoreDataManager.self) { _ in
@@ -99,13 +99,13 @@ struct DependencyMap {
         
         container.register(ReviewReqRepositoryProtocol.self) { resolver in
             ReviewReqRepository(
-                prefsRepo: resolver.resolve(PrefsRepository.self)!
+                prefsRepo: resolver.resolve(PreferencesRepository.self)!
             )
         }.inObjectScope(.container)
         
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
-                prefsRepo: resolver.resolve(PrefsRepository.self)!,
+                prefsRepo: resolver.resolve(PreferencesRepository.self)!,
                 idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
                 proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
@@ -113,9 +113,9 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
 
-        container.register(HomeViewModel.self) { resolver in
-            HomeViewModel(
-                prefsRepo: resolver.resolve(PrefsRepository.self)!,
+        container.register(MainViewModel.self) { resolver in
+            MainViewModel(
+                prefsRepo: resolver.resolve(PreferencesRepository.self)!,
                 idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
                 proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
@@ -150,18 +150,6 @@ struct DependencyMap {
             WordViewModel(
                 wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
                 subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
-            )
-        }.inObjectScope(.container)
-        
-        container.register(SettingsViewModel.self) { resolver in
-            SettingsViewModel(
-                prefsRepo: resolver.resolve(PrefsRepository.self)!,
-                idiomRepo: resolver.resolve(IdiomRepositoryProtocol.self)!,
-                proverbRepo: resolver.resolve(ProverbRepositoryProtocol.self)!,
-                sayingRepo: resolver.resolve(SayingRepositoryProtocol.self)!,
-                wordRepo: resolver.resolve(WordRepositoryProtocol.self)!,
-                subsRepo: resolver.resolve(SubscriptionRepositoryProtocol.self)!,
-                reviewRepo: resolver.resolve(ReviewReqRepositoryProtocol.self)!,
             )
         }.inObjectScope(.container)
         

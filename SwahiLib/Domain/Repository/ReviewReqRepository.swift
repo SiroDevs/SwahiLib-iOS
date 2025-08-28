@@ -16,9 +16,9 @@ protocol ReviewReqRepositoryProtocol {
 
 final class ReviewReqRepository: ReviewReqRepositoryProtocol {
     private var sessionStart: Date?
-    private let prefsRepo: PrefsRepository
+    private let prefsRepo: PreferencesRepository
     
-    init(prefsRepo: PrefsRepository = PrefsRepository()) {
+    init(prefsRepo: PreferencesRepository = PreferencesRepository()) {
         self.prefsRepo = prefsRepo
         if prefsRepo.installDate == Date() {
             prefsRepo.installDate = Date()

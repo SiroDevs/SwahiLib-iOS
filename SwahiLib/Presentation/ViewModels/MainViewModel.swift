@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
-    private let prefsRepo: PrefsRepository
+    private let prefsRepo: PreferencesRepository
     private let idiomRepo: IdiomRepositoryProtocol
     private let proverbRepo: ProverbRepositoryProtocol
     private let sayingRepo: SayingRepositoryProtocol
@@ -17,7 +17,8 @@ final class MainViewModel: ObservableObject {
     private let subsRepo: SubscriptionRepositoryProtocol
     private let reviewRepo: ReviewReqRepositoryProtocol
 
-    @Published var isActiveSubscriber: Bool = false
+    @Published var activeSubscriber: Bool = false
+    @Published var showParentalGate: Bool = false
     @Published var showReviewPrompt: Bool = false
     
     @Published var allIdioms: [Idiom] = []
@@ -40,7 +41,7 @@ final class MainViewModel: ObservableObject {
     @Published var homeTab: HomeTab = .words
     
     init(
-        prefsRepo: PrefsRepository,
+        prefsRepo: PreferencesRepository,
         idiomRepo: IdiomRepositoryProtocol,
         proverbRepo: ProverbRepositoryProtocol,
         sayingRepo: SayingRepositoryProtocol,
@@ -58,9 +59,10 @@ final class MainViewModel: ObservableObject {
     }
     
     func checkSubscription() {
-        subsRepo.isActiveSubscriber { [weak self] isActive in
+        showParentalGate = prefsRepo.isUserAKid
+        subsRepo.activeSubscriber { [weak self] isActive in
             DispatchQueue.main.async {
-                self?.isActiveSubscriber = isActive
+                self?.activeSubscriber = isActive
             }
         }
     }
@@ -131,6 +133,11 @@ final class MainViewModel: ObservableObject {
         }
         
         self.uiState = .filtered
+    }
+    
+    func updateParentalGate(value: Bool) {
+        prefsRepo.isUserAKid = value
+        showParentalGate = value
     }
     
     func clearAllData() {
