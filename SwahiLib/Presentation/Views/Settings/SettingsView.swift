@@ -6,64 +6,33 @@
 //
 
 import SwiftUI
-import RevenueCat
 import RevenueCatUI
 
 struct SettingsView: View {
-    @StateObject private var viewModel: SettingsViewModel = {
-        DiContainer.shared.resolve(SettingsViewModel.self)
-    }()
+    @ObservedObject var viewModel: MainViewModel
     @EnvironmentObject var themeManager: ThemeManager
     @State private var showPaywall: Bool = false
     @State private var showResetAlert: Bool = false
     @State private var restartTheApp = false
-    
+
     var body: some View {
         Group {
             if restartTheApp {
-                AnyView(SplashView())
+                SplashView()
             } else {
-                AnyView(mainContent)
-            }
-        }
-    }
-    
-    var mainContent: some View {
-        stateContent
-        .edgesIgnoringSafeArea(.bottom)
-        .task { viewModel.checkSettings() }
-    }
-    
-    @ViewBuilder
-    private var stateContent: some View {
-        switch viewModel.uiState {
-            case .fetched:
                 NavigationStack {
-                    Form {
-                        ThemeSectionView(
-                            selectedTheme: $themeManager.selectedTheme
-                        )
-                        
-                        #if !DEBUG
-                        if !viewModel.isActiveSubscriber {
-                            ProSectionView { showPaywall = true }
-                        }
-                        #endif
-                        
-                        ReviewSectionView(
-                            onReview: viewModel.promptReview,
-                            onEmail: viewModel.sendEmail
-                        )
-                        
-                        ResetSectionView { showResetAlert = true }
-                    }
-                    .alert(L10n.resetData, isPresented: $showResetAlert) {
+                    SettingsForm(
+                        viewModel: viewModel,
+                        showPaywall: $showPaywall,
+                        showResetAlert: $showResetAlert
+                    )
+                    .alert(L10n.resetDataAlert, isPresented: $showResetAlert) {
                         Button(L10n.cancel, role: .cancel) { }
                         Button(L10n.okay, role: .destructive) {
                             viewModel.clearAllData()
                         }
                     } message: {
-                        Text(L10n.resetDataDesc)
+                        Text(L10n.resetDataAlertDesc)
                     }
                     .sheet(isPresented: $showPaywall) {
                         PaywallView(displayCloseButton: true)
@@ -71,20 +40,7 @@ struct SettingsView: View {
                     .navigationTitle("Mipangilio")
                     .toolbarBackground(.regularMaterial, for: .navigationBar)
                 }
-               
-            case .error(let msg):
-                ErrorState(message: msg) { }
-                
-            default:
-                LoadingState()
+            }
         }
     }
-    
-    private func handleStateChange(_ state: UiState) {
-        restartTheApp = .loaded == state
-    }
-}
-
-#Preview {
-    SettingsView()
 }

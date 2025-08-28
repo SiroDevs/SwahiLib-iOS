@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  MainViewModel.swift
 //  SwahiLib
 //
 //  Created by Siro Daves on 30/04/2025.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-final class HomeViewModel: ObservableObject {
+final class MainViewModel: ObservableObject {
     private let prefsRepo: PrefsRepository
     private let idiomRepo: IdiomRepositoryProtocol
     private let proverbRepo: ProverbRepositoryProtocol
@@ -131,5 +131,20 @@ final class HomeViewModel: ObservableObject {
         }
         
         self.uiState = .filtered
+    }
+    
+    func clearAllData() {
+        print("Clearing data")
+        self.uiState = .loading("Inafuta data ...")
+
+        Task { @MainActor in
+            self.idiomRepo.deleteLocalData()
+            self.proverbRepo.deleteLocalData()
+            self.sayingRepo.deleteLocalData()
+            self.idiomRepo.deleteLocalData()
+            
+            prefsRepo.resetPrefs()
+            self.uiState = .loaded
+        }
     }
 }

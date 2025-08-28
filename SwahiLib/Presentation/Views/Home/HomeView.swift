@@ -9,8 +9,8 @@ import SwiftUI
 import RevenueCatUI
 
 struct HomeView: View {
-    @StateObject private var viewModel: HomeViewModel = {
-        DiContainer.shared.resolve(HomeViewModel.self)
+    @StateObject private var viewModel: MainViewModel = {
+        DiContainer.shared.resolve(MainViewModel.self)
     }()
     
     @State private var showPaywall: Bool = false
@@ -43,7 +43,7 @@ struct HomeView: View {
                                 Label("Vipendwa", systemImage: "heart.fill")
                             }
                     }
-                    SettingsView()
+                    SettingsView(viewModel: viewModel)
                         .tabItem {
                             Label("Mipangilio", systemImage: "gear")
                         }

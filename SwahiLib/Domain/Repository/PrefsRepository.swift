@@ -14,6 +14,11 @@ class PrefsRepository {
         self.userDefaults = userDefaults
     }
     
+    var isUserAKid: Bool {
+        get { userDefaults.bool(forKey: PrefConstants.isUserAKid) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.isUserAKid) }
+    }
+    
     var isDataLoaded: Bool {
         get { userDefaults.bool(forKey: PrefConstants.isLoaded) }
         set { userDefaults.set(newValue, forKey: PrefConstants.isLoaded) }
@@ -37,5 +42,13 @@ class PrefsRepository {
     var usageTime: TimeInterval {
         get { userDefaults.double(forKey: PrefConstants.usageTime) }
         set { userDefaults.set(newValue, forKey: PrefConstants.usageTime) }
+    }
+    
+    func resetPrefs() {
+        installDate = Date()
+        lastReviewPrompt = .distantPast
+        isUserAKid = false
+        isDataLoaded = false
+        reviewRequested = false
     }
 }

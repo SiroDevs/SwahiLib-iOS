@@ -21,6 +21,7 @@ struct PrefConstants {
     static let installDate = "installDateKey"
     static let reviewRequested = "reviewRequestedKey"
     static let lastReviewPrompt = "lastReviewPromptKey"
+    static let isUserAKid = "isUserAKidKey"
     static let usageTime = "usageTimeKey"
 }
 
