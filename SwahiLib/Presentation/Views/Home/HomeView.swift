@@ -13,119 +13,82 @@ struct HomeView: View {
         DiContainer.shared.resolve(MainViewModel.self)
     }()
     
-    @State private var showPaywall: Bool = false
+    private enum ActiveSheet: Identifiable {
+        case parentalGate
+        case paywall
+        
+        var id: Int { hashValue }
+    }
     
-    @State private var showParentalGate = false
-    @State private var firstNumber = Int.random(in: 5...10)
-    @State private var secondNumber = Int.random(in: 1...5)
-    @State private var answer: String = ""
-    @State private var errorMessage: String?
+    @State private var activeSheet: ActiveSheet?
     
     var body: some View {
         stateContent
-        .edgesIgnoringSafeArea(.bottom)
-        .task { viewModel.fetchData() }
+            .edgesIgnoringSafeArea(.bottom)
+            .task { viewModel.fetchData() }
+            .onAppear {
+                if !viewModel.activeSubscriber {
+                    activeSheet = .parentalGate
+                }
+                viewModel.promptReview()
+            }
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                    case .parentalGate:
+                        ParentalGateView {
+                            activeSheet = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                activeSheet = .paywall
+                            }
+                        }
+                    case .paywall:
+                        #if !DEBUG
+                        PaywallView(displayCloseButton: true)
+                        #endif
+                }
+            }
     }
     
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-            case .loading:
-                LoadingState(
-                    title: "Inapakia data ...",
-                    fileName: "opener-loading",
-                )
+        case .loading:
+            LoadingState(
+                title: "Inapakia data ...",
+                fileName: "opener-loading"
+            )
             
-            case .filtered:
-                TabView {
-                    HomeSearch(viewModel: viewModel)
-                        .tabItem {
-                            Label("Tafuta", systemImage: "magnifyingglass")
-                        }
-                    
-                    if viewModel.activeSubscriber {
-                        HomeLikes(viewModel: viewModel)
-                            .tabItem {
-                                Label("Vipendwa", systemImage: "heart.fill")
-                            }
+        case .filtered:
+            TabView {
+                HomeSearch(viewModel: viewModel)
+                    .tabItem {
+                        Label("Tafuta", systemImage: "magnifyingglass")
                     }
-                    SettingsView(viewModel: viewModel)
+                
+                if viewModel.activeSubscriber {
+                    HomeLikes(viewModel: viewModel)
                         .tabItem {
-                            Label("Mipangilio", systemImage: "gear")
+                            Label("Vipendwa", systemImage: "heart.fill")
                         }
-                }
-                .onAppear {
-                    showPaywall = !viewModel.activeSubscriber
-                    viewModel.promptReview()
-                }
-//                .alert("Parents Only", isPresented: $showParentalGate, actions: {
-//                    TextField("\(firstNumber) + \(secondNumber) = ?", text: $answer)
-//                        .keyboardType(.numberPad)
-//
-//                    Button("Continue") {
-//                        if Int(answer) == firstNumber + secondNumber {
-//                            // reset state
-//                            errorMessage = nil
-//                            answer = ""
-//                            firstNumber = Int.random(in: 5...10)
-//                            secondNumber = Int.random(in: 1...5)
-//
-//                            showParentalGate = false
-//                            showPaywall = true
-//                        } else {
-//                            errorMessage = "Incorrect. Try again."
-//                        }
-//                    }
-//
-//                    Button("Cancel", role: .cancel) {
-//                        answer = ""
-//                        errorMessage = nil
-//                    }
-//                }, message: {
-//                    if let error = errorMessage {
-//                        Text(error)
-//                    } else {
-//                        Text("To continue, answer the question above.")
-//                    }
-//                })
-                .sheet(isPresented: $showPaywall) {
-                    ParentalGateView {
-                        DispatchQueue.main.async {
-                            showPaywall = true
-                        }
-                    }
-                }
-                .sheet(isPresented: $showPaywall) {
-                    #if !DEBUG
-                    PaywallView(displayCloseButton: true)
-                    #endif
-                }
-
-//                .sheet(isPresented: $showPaywall) {
-//                    ParentalGateView(onSuccess: {
-//                        viewModel.updateParentalGate(value: true)
-//                        PaywallView(displayCloseButton: true)
-//                    })
-//                    #if !DEBUG
-//                    if viewModel.showParentalGate {
-//                        ParentalGateView {
-//                            viewModel.showParentalGate = false
-//                        }
-//                                                PaywallView(displayCloseButton: true)
-//                    }
-//                    #endif
-//                }
-               
-            case .error(let msg):
-                ErrorState(message: msg) {
-                    Task { viewModel.fetchData() }
                 }
                 
-            default:
-                LoadingState(
-                    title: "Inapakia data ...",
-                    fileName: "circle-loader",
-                )
+                SettingsView(viewModel: viewModel)
+                    .tabItem {
+                        Label("Mipangilio", systemImage: "gear")
+                    }
+            }
+            .environment(\.horizontalSizeClass, .compact)
+            
+        case .error(let msg):
+            ErrorState(message: msg) {
+                Task { viewModel.fetchData() }
+            }
+            
+        default:
+            LoadingState(
+                title: "Inapakia data ...",
+                fileName: "circle-loader"
+            )
         }
     }
 }

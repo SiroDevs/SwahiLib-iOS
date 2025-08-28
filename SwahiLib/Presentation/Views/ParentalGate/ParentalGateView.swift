@@ -52,4 +52,3 @@ struct ParentalGateView: View {
         .padding()
     }
 }
-
