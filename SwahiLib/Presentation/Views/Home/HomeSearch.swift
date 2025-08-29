@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeSearch: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: MainViewModel
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
@@ -40,19 +40,18 @@ struct HomeSearch: View {
                 }
             }
             .navigationTitle("SwahiLib")
-            .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }
 }
 
 struct HomeSearchView: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: MainViewModel
     @Binding var selectedLetter: String?
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            if viewModel.isActiveSubscriber {
+            if viewModel.activeSubscriber {
                 VerticalLetters(
                     selectedLetter: selectedLetter,
                     onLetterSelected: { letter in

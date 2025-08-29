@@ -16,14 +16,14 @@ final class InitViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var progress: Int = 0
 
-    private let prefsRepo: PrefsRepository
+    private let prefsRepo: PreferencesRepository
     private let idiomRepo: IdiomRepositoryProtocol
     private let proverbRepo: ProverbRepositoryProtocol
     private let sayingRepo: SayingRepositoryProtocol
     private let wordRepo: WordRepositoryProtocol
 
     init(
-        prefsRepo: PrefsRepository,
+        prefsRepo: PreferencesRepository,
         idiomRepo: IdiomRepositoryProtocol,
         proverbRepo: ProverbRepositoryProtocol,
         sayingRepo: SayingRepositoryProtocol,

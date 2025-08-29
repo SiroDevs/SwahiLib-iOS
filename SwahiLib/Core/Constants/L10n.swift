@@ -20,28 +20,28 @@ struct L10n {
     static let featureViewWordSynonym = "kufungua visawe vya neno unalotazama miongoni kwa vipengele vingine."
     static let featureViewProverbSynonym = "kufungua visawe vya methali unayotazama miongoni kwa vipengele vingine."
     
-    static func favoriteWord(for word: String, isLiked: Bool) -> String {
+    static func likedWord(for word: String, isLiked: Bool) -> String {
         if isLiked {
             return "Neno \(word) limeongezwa kwa vipendwa"
         } else {
             return "Neno \(word) limeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteSaying(for saying: String, isLiked: Bool) -> String {
+    static func likedSaying(for saying: String, isLiked: Bool) -> String {
         if isLiked {
             return "Msemo \(saying) umeongezwa kwa vipendwa"
         } else {
             return "Msemo \(saying) umeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteProverb(for proverb: String, isLiked: Bool) -> String {
+    static func likedProverb(for proverb: String, isLiked: Bool) -> String {
         if isLiked {
             return "Methali \(proverb) imeongezwa kwa vipendwa"
         } else {
             return "Methali \(proverb) imeondolewa kutoka kwa vipendwa"
         }
     }
-    static func favoriteIdiom(for idiom: String, isLiked: Bool) -> String {
+    static func likedIdiom(for idiom: String, isLiked: Bool) -> String {
         if isLiked {
             return "Nahau \(idiom) imeongezwa kwa vipendwa"
         } else {
@@ -53,6 +53,14 @@ struct L10n {
     static let idiomKiswa = "Nahau ya Kiswahili"
     static let sayingKiswa = "Msemo wa Kiswahili"
     static let proverbKiswa = "Methali ya Kiswahili"
-    static let resetData = "Weka upya Data?"
-    static let resetDataDesc = "Je, una uhakika unataka kuweka upya data yako yote? Kitendo hiki hakiwezi kutenduliwa."
+    static let joinPro = "Jiunge na SwahiLib Pro"
+    static let joinProDesc = "Jiunge na SwahiLib Pro, ufurahie utafutaji wa kina, vipengele kadhaa kama vipendwa na alamisho kama njia ya kumuunga mkono developer wa SwahiLib"
+    static let leaveReview = "Tupe review"
+    static let leaveReviewDesc = "Unaweza kutupa review ili kitumizi hizi kionekane kwa wengine"
+    static let resetDataAlert = "Weka upya Data?"
+    static let resetDataAlertDesc = "Je, una uhakika unataka kuweka upya data yako yote? Kitendo hiki hakiwezi kutenduliwa."
+    static let resetData = "Weka upya Data"
+    static let resetDataDesc = "Unaweza kufuta data yote na kufanya uteuzi upya."
+    static let contactUs = "Wasiliana nasi"
+    static let contactUsDesc = "Iwapo una malalamishi/maoni, tutumie barua pepe. Usikose kuweka picha za skrini (screenshot) nyingi uwezavyo."
 }

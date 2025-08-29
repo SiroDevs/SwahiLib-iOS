@@ -9,11 +9,11 @@ import Combine
 import RevenueCat
 
 protocol SubscriptionRepositoryProtocol {
-    func isActiveSubscriber(completion: @escaping (Bool) -> Void)
+    func activeSubscriber(completion: @escaping (Bool) -> Void)
 }
 
 final class SubscriptionRepository: SubscriptionRepositoryProtocol {
-    func isActiveSubscriber(completion: @escaping (Bool) -> Void) {
+    func activeSubscriber(completion: @escaping (Bool) -> Void) {
         #if DEBUG
             completion(true)
         #else

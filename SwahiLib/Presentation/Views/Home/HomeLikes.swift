@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeLikes: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         NavigationStack {
@@ -36,7 +36,6 @@ struct HomeLikes: View {
             }
             .padding(.vertical)
             .navigationTitle("Vipendwa")
-            .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }

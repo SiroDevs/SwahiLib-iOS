@@ -9,67 +9,86 @@ import SwiftUI
 import RevenueCatUI
 
 struct HomeView: View {
-    @StateObject private var viewModel: HomeViewModel = {
-        DiContainer.shared.resolve(HomeViewModel.self)
+    @StateObject private var viewModel: MainViewModel = {
+        DiContainer.shared.resolve(MainViewModel.self)
     }()
     
-    @State private var showPaywall: Bool = false
+    private enum ActiveSheet: Identifiable {
+        case parentalGate
+        case paywall
+        
+        var id: Int { hashValue }
+    }
+    
+    @State private var activeSheet: ActiveSheet?
     
     var body: some View {
         stateContent
-        .edgesIgnoringSafeArea(.bottom)
-        .task { viewModel.fetchData() }
+            .edgesIgnoringSafeArea(.bottom)
+            .task { viewModel.fetchData() }
+            .onAppear {
+                if !viewModel.activeSubscriber {
+                    activeSheet = .parentalGate
+                }
+                viewModel.promptReview()
+            }
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                    case .parentalGate:
+                        ParentalGateView {
+                            activeSheet = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                activeSheet = .paywall
+                            }
+                        }
+                    case .paywall:
+                        #if !DEBUG
+                        PaywallView(displayCloseButton: true)
+                        #endif
+                }
+            }
     }
     
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-            case .loading:
-                LoadingState(
-                    title: "Inapakia data ...",
-                    fileName: "opener-loading",
-                )
+        case .loading:
+            LoadingState(
+                title: "Inapakia data ...",
+                fileName: "opener-loading"
+            )
             
-            case .filtered:
-                TabView {
-                    HomeSearch(viewModel: viewModel)
-                        .tabItem {
-                            Label("Tafuta", systemImage: "magnifyingglass")
-                        }
-                    
-                    if viewModel.isActiveSubscriber {
-                        HomeLikes(viewModel: viewModel)
-                            .tabItem {
-                                Label("Vipendwa", systemImage: "heart.fill")
-                            }
+        case .filtered:
+            TabView {
+                HomeSearch(viewModel: viewModel)
+                    .tabItem {
+                        Label("Tafuta", systemImage: "magnifyingglass")
                     }
-                    SettingsView()
+                
+                if viewModel.activeSubscriber {
+                    HomeLikes(viewModel: viewModel)
                         .tabItem {
-                            Label("Mipangilio", systemImage: "gear")
+                            Label("Vipendwa", systemImage: "heart.fill")
                         }
-                }
-                .onAppear {
-                    #if !DEBUG
-                        showPaywall = !viewModel.isActiveSubscriber
-                    #endif
-                    viewModel.requestReview()
-                }
-                .sheet(isPresented: $showPaywall) {
-                    #if !DEBUG
-                        PaywallView(displayCloseButton: true)
-                    #endif
-                }
-               
-            case .error(let msg):
-                ErrorState(message: msg) {
-                    Task { viewModel.fetchData() }
                 }
                 
-            default:
-                LoadingState(
-                    title: "Inapakia data ...",
-                    fileName: "circle-loader",
-                )
+                SettingsView(viewModel: viewModel)
+                    .tabItem {
+                        Label("Mipangilio", systemImage: "gear")
+                    }
+            }
+            .environment(\.horizontalSizeClass, .compact)
+            
+        case .error(let msg):
+            ErrorState(message: msg) {
+                Task { viewModel.fetchData() }
+            }
+            
+        default:
+            LoadingState(
+                title: "Inapakia data ...",
+                fileName: "circle-loader"
+            )
         }
     }
 }
