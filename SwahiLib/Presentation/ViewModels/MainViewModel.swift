@@ -17,7 +17,7 @@ final class MainViewModel: ObservableObject {
     private let subsRepo: SubscriptionRepositoryProtocol
     private let reviewRepo: ReviewReqRepositoryProtocol
 
-    @Published var activeSubscriber: Bool = false
+    @Published var isProUser: Bool = false
     @Published var showParentalGate: Bool = false
     @Published var showReviewPrompt: Bool = false
     
@@ -60,9 +60,9 @@ final class MainViewModel: ObservableObject {
     
     func checkSubscription() {
         showParentalGate = prefsRepo.isUserAKid
-        subsRepo.activeSubscriber { [weak self] isActive in
+        subsRepo.isProUser { [weak self] isActive in
             DispatchQueue.main.async {
-                self?.activeSubscriber = isActive
+                self?.isProUser = isActive
             }
         }
     }

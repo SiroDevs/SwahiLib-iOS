@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class SayingViewModel: ObservableObject {
-    @Published var activeSubscriber: Bool = false
+    @Published var isProUser: Bool = false
     
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
@@ -29,9 +29,9 @@ class SayingViewModel: ObservableObject {
     }
     
     func checkSubscription() {
-        subsRepo.activeSubscriber { [weak self] isActive in
+        subsRepo.isProUser { [weak self] isActive in
             DispatchQueue.main.async {
-                self?.activeSubscriber = isActive
+                self?.isProUser = isActive
             }
         }
     }

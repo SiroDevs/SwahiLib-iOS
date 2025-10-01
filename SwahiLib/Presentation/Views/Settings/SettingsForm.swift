@@ -24,7 +24,7 @@ struct SettingsForm: View {
             }
 
             #if !DEBUG
-            if !viewModel.activeSubscriber {
+            if !viewModel.isProUser {
                 SettingsSection(header: "Swahilib Pro") {
                     SettingsRow(
                         systemImage: "star.fill",

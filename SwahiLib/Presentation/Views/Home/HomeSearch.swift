@@ -51,7 +51,7 @@ struct HomeSearchView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            if viewModel.activeSubscriber {
+            if viewModel.isProUser {
                 VerticalLetters(
                     selectedLetter: selectedLetter,
                     onLetterSelected: { letter in

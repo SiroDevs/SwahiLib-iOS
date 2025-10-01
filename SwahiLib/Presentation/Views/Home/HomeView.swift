@@ -27,7 +27,7 @@ struct HomeView: View {
             .edgesIgnoringSafeArea(.bottom)
             .task { viewModel.fetchData() }
             .onAppear {
-                if !viewModel.activeSubscriber {
+                if !viewModel.isProUser {
                     activeSheet = .parentalGate
                 }
                 viewModel.promptReview()
@@ -65,7 +65,7 @@ struct HomeView: View {
                         Label("Tafuta", systemImage: "magnifyingglass")
                     }
                 
-                if viewModel.activeSubscriber {
+                if viewModel.isProUser {
                     HomeLikes(viewModel: viewModel)
                         .tabItem {
                             Label("Vipendwa", systemImage: "heart.fill")

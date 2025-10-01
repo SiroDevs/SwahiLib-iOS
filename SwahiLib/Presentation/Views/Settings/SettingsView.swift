@@ -42,7 +42,7 @@ struct SettingsView: View {
                 Text(L10n.resetDataAlertDesc)
             }
             .onAppear {
-                showPaywall = !viewModel.activeSubscriber
+                showPaywall = !viewModel.isProUser
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView(displayCloseButton: true)
