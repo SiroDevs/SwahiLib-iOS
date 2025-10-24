@@ -20,7 +20,7 @@ struct ContentView: View {
         Group {
             if navigateToNextScreen {
                 if prefsRepo.isDataLoaded {
-                    HomeView()
+                    MainView()
                 } else {
                     InitView()
                 }

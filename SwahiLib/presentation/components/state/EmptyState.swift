@@ -11,7 +11,7 @@ struct EmptyState: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Image(AppAssets.emptyIcon)
+            Image(.emptyIcon)
                 .resizable()
                 .frame(width: 200, height: 200)
 

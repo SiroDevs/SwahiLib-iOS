@@ -153,4 +153,19 @@ final class MainViewModel: ObservableObject {
             self.uiState = .loaded
         }
     }
+    
+    func setRandomWordForWidget() {
+        guard !allWords.isEmpty else { return }
+        
+        // Get a random word
+        let randomWord = allWords.randomElement()!
+        
+        // Save to widget
+        WidgetDataManager.shared.saveRandomWord(randomWord)
+        
+        // Tell widget to update
+        #if os(iOS)
+//        WidgetCenter.shared.reloadAllTimelines()
+        #endif
+    }
 }

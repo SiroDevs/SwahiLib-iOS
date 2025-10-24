@@ -12,7 +12,7 @@ struct SplashView: View {
         VStack {
             Spacer()
             
-            Image(AppAssets.mainIcon)
+            Image(.mainIcon)
                 .resizable()
                 .frame(width: 200, height: 200)
 
