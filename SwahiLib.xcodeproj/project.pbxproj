@@ -16,6 +16,8 @@
 		1745C3022EABBE6F0011EF91 /* SwahiLibWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1745C2EF2EABBE6B0011EF91 /* SwahiLibWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		17B82D082E59025700C58824 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 17B82D072E59025700C58824 /* RevenueCat */; };
 		17B82D0D2E5909C200C58824 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 17B82D0C2E5909C200C58824 /* RevenueCatUI */; };
+		17BBE4F72EAC1419005A656D /* SharedWidgetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BBE4F52EAC1417005A656D /* SharedWidgetManager.swift */; };
+		17BBE4F82EAC1643005A656D /* SharedWidgetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BBE4F52EAC1417005A656D /* SharedWidgetManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,9 @@
 		175D13A72DC112BB00A6191A /* SwahiLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwahiLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13B92DC112D300A6191A /* SwahiLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		175D13C32DC112D300A6191A /* SwahiLibUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwahiLibUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		17BBE4F22EAC11D1005A656D /* SwahiLibWidgetExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwahiLibWidgetExtensionRelease.entitlements; sourceTree = "<group>"; };
+		17BBE4F32EAC11DF005A656D /* SwahiLibWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwahiLibWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
+		17BBE4F52EAC1417005A656D /* SharedWidgetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedWidgetManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -173,6 +178,8 @@
 		175D139E2DC112BB00A6191A = {
 			isa = PBXGroup;
 			children = (
+				17BBE4F32EAC11DF005A656D /* SwahiLibWidgetExtensionDebug.entitlements */,
+				17BBE4F22EAC11D1005A656D /* SwahiLibWidgetExtensionRelease.entitlements */,
 				173CEE442E06AA5200DB2FE1 /* .gitignore */,
 				175D13A92DC112BB00A6191A /* SwahiLib */,
 				175D13BC2DC112D300A6191A /* SwahiLibTests */,
@@ -180,6 +187,7 @@
 				1745C2F22EABBE6C0011EF91 /* SwahiLibWidget */,
 				173314E22DC159DB00318DD8 /* Frameworks */,
 				175D13A82DC112BB00A6191A /* Products */,
+				17BBE4F52EAC1417005A656D /* SharedWidgetManager.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -386,6 +394,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17BBE4F82EAC1643005A656D /* SharedWidgetManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17BBE4F72EAC1419005A656D /* SharedWidgetManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +446,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SwahiLibWidgetExtensionDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 136;
@@ -469,6 +480,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SwahiLibWidgetExtensionRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 136;
@@ -624,6 +636,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconStg;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = SwahiLib/SwahiLibDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 136;
@@ -663,6 +676,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = SwahiLib/SwahiLib.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 136;

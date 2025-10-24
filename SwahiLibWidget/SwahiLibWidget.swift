@@ -9,29 +9,24 @@ import WidgetKit
 import SwiftUI
 
 @main
-struct DailyTipWidget: Widget {
-    let kind: String = "SwahiLibWidgetBundle"
+struct SwahiLibWidget: Widget {
+    let kind: String = "SwahiLibWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(
             kind: kind,
-            provider: DailyTipProvider(),
-            content: { DailyTipWidgetView(entry: $0) }
-        )
+            provider: DailyWordProvider()
+        ) { entry in
+            WordWidgetEntryView(entry: entry)
+        }
         .configurationDisplayName("Neno la Siku")
-        .description("Neno la kuchangamsha siku yako!")
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .description("Jifunze neno jipya la Kiswahili kila siku.")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
 #Preview(as: .systemMedium) {
-    DailyTipWidget()
+    SwahiLibWidget()
 } timeline: {
-    TipEntry(date: .now, dailyTip: "Baba")
-}
-
-#Preview(as: .systemLarge) {
-    DailyTipWidget()
-} timeline: {
-    TipEntry(date: .now, dailyTip: "Baba")
+    WordEntry.sampleWords[0]
 }

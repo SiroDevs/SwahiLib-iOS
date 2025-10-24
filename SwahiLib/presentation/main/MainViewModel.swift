@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WidgetKit
 
 final class MainViewModel: ObservableObject {
     private let prefsRepo: PreferencesRepository
@@ -140,6 +141,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func clearAllData() {
+        
         print("Clearing data")
         self.uiState = .loading("Inafuta data ...")
 
@@ -152,20 +154,5 @@ final class MainViewModel: ObservableObject {
             prefsRepo.resetPrefs()
             self.uiState = .loaded
         }
-    }
-    
-    func setRandomWordForWidget() {
-        guard !allWords.isEmpty else { return }
-        
-        // Get a random word
-        let randomWord = allWords.randomElement()!
-        
-        // Save to widget
-        WidgetDataManager.shared.saveRandomWord(randomWord)
-        
-        // Tell widget to update
-        #if os(iOS)
-//        WidgetCenter.shared.reloadAllTimelines()
-        #endif
     }
 }
