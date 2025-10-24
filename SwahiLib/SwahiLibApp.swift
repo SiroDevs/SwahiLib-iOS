@@ -30,7 +30,7 @@ struct SwahiLibApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(prefsRepo: PreferencesRepository())
+            ContentView(prefsRepo: PrefsRepo())
             .environmentObject(themeManager)
             .preferredColorScheme({
                 switch themeManager.selectedTheme {

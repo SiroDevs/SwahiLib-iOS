@@ -1,5 +1,5 @@
 //
-//  ProverbRepository.swift
+//  ProverbRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 02/05/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ProverbRepositoryProtocol {
+protocol ProverbRepoProtocol {
     func fetchRemoteData() async throws -> [Proverb]
     func fetchLocalData() -> [Proverb]
     func getProverbsByTitles(titles: [String]) -> [Proverb]
@@ -16,7 +16,7 @@ protocol ProverbRepositoryProtocol {
     func deleteLocalData()
 }
 
-class ProverbRepository: ProverbRepositoryProtocol {
+class ProverbRepo: ProverbRepoProtocol {
     private let supabase: SupabaseServiceProtocol
     private let proverbData: ProverbDataManager
     

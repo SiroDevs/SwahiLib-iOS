@@ -1,5 +1,5 @@
 //
-//  SubscriptionRepository.swift
+//  SubsRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 24/08/2025.
@@ -8,11 +8,11 @@
 import Combine
 import RevenueCat
 
-protocol SubscriptionRepositoryProtocol {
+protocol SubsRepoProtocol {
     func isProUser(completion: @escaping (Bool) -> Void)
 }
 
-final class SubscriptionRepository: SubscriptionRepositoryProtocol {
+final class SubsRepo: SubsRepoProtocol {
     func isProUser(completion: @escaping (Bool) -> Void) {
         #if DEBUG
             completion(true)

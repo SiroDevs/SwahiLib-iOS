@@ -19,12 +19,12 @@ class WordViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Word] = []
 
-    private let wordRepo: WordRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
+    private let wordRepo: WordRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
     init(
-        wordRepo: WordRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol
+        wordRepo: WordRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo

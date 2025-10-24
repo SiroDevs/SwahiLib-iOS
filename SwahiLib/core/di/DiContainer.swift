@@ -19,7 +19,7 @@ final class DiContainer {
 
     private func validateDependencies() {
         let dependencies: [() -> Any?] = [
-            { self.container.resolve(PreferencesRepository.self) },
+            { self.container.resolve(PrefsRepo.self) },
             { self.container.resolve(CoreDataManager.self) },
             { self.container.resolve(SupabaseServiceProtocol.self) },
             { self.container.resolve(AnalyticsServiceProtocol.self) },
@@ -30,18 +30,19 @@ final class DiContainer {
             { self.container.resolve(SayingDataManager.self) },
             { self.container.resolve(SearchDataManager.self) },
             { self.container.resolve(WordDataManager.self) },
-            { self.container.resolve(IdiomRepositoryProtocol.self) },
-            { self.container.resolve(ProverbRepositoryProtocol.self) },
-            { self.container.resolve(SayingRepositoryProtocol.self) },
-            { self.container.resolve(WordRepositoryProtocol.self) },
-            { self.container.resolve(SubscriptionRepositoryProtocol.self) },
-            { self.container.resolve(ReviewReqRepositoryProtocol.self) },
+            { self.container.resolve(IdiomRepoProtocol.self) },
+            { self.container.resolve(ProverbRepoProtocol.self) },
+            { self.container.resolve(SayingRepoProtocol.self) },
+            { self.container.resolve(WordRepoProtocol.self) },
+            { self.container.resolve(SubsRepoProtocol.self) },
+            { self.container.resolve(ReviewReqRepoProtocol.self) },
             { self.container.resolve(InitViewModel.self) },
             { self.container.resolve(MainViewModel.self) },
             { self.container.resolve(IdiomViewModel.self) },
             { self.container.resolve(ProverbViewModel.self) },
             { self.container.resolve(SayingViewModel.self) },
             { self.container.resolve(WordViewModel.self) },
+            { self.container.resolve(SplashViewModel.self) },
         ]
 
         for resolve in dependencies {

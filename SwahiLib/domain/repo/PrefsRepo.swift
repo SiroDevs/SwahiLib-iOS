@@ -1,5 +1,5 @@
 //
-//  PreferencesRepository.swift
+//  PrefsRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 30/04/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PreferencesRepository {
+class PrefsRepo {
     private let userDefaults: UserDefaults
     
     init(userDefaults: UserDefaults = .standard) {

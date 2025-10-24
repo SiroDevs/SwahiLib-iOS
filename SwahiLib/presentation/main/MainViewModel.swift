@@ -9,13 +9,13 @@ import Foundation
 import WidgetKit
 
 final class MainViewModel: ObservableObject {
-    private let prefsRepo: PreferencesRepository
-    private let idiomRepo: IdiomRepositoryProtocol
-    private let proverbRepo: ProverbRepositoryProtocol
-    private let sayingRepo: SayingRepositoryProtocol
-    private let wordRepo: WordRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
-    private let reviewRepo: ReviewReqRepositoryProtocol
+    private let prefsRepo: PrefsRepo
+    private let idiomRepo: IdiomRepoProtocol
+    private let proverbRepo: ProverbRepoProtocol
+    private let sayingRepo: SayingRepoProtocol
+    private let wordRepo: WordRepoProtocol
+    private let subsRepo: SubsRepoProtocol
+    private let reviewRepo: ReviewReqRepoProtocol
 
     @Published var isProUser: Bool = false
     @Published var showParentalGate: Bool = false
@@ -41,13 +41,13 @@ final class MainViewModel: ObservableObject {
     @Published var homeTab: HomeTab = .words
     
     init(
-        prefsRepo: PreferencesRepository,
-        idiomRepo: IdiomRepositoryProtocol,
-        proverbRepo: ProverbRepositoryProtocol,
-        sayingRepo: SayingRepositoryProtocol,
-        wordRepo: WordRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol,
-        reviewRepo: ReviewReqRepositoryProtocol
+        prefsRepo: PrefsRepo,
+        idiomRepo: IdiomRepoProtocol,
+        proverbRepo: ProverbRepoProtocol,
+        sayingRepo: SayingRepoProtocol,
+        wordRepo: WordRepoProtocol,
+        subsRepo: SubsRepoProtocol,
+        reviewRepo: ReviewReqRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo

@@ -17,12 +17,12 @@ class IdiomViewModel: ObservableObject {
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
 
-    private let idiomRepo: IdiomRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
+    private let idiomRepo: IdiomRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
     init(
-        idiomRepo: IdiomRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol
+        idiomRepo: IdiomRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.idiomRepo = idiomRepo
         self.subsRepo = subsRepo

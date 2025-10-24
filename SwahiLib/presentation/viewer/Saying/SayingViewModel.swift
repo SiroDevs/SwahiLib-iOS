@@ -17,12 +17,12 @@ class SayingViewModel: ObservableObject {
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
 
-    private let sayingRepo: SayingRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
+    private let sayingRepo: SayingRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
     init(
-        sayingRepo: SayingRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol
+        sayingRepo: SayingRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.sayingRepo = sayingRepo
         self.subsRepo = subsRepo

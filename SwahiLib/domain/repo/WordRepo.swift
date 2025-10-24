@@ -1,5 +1,5 @@
 //
-//  WordRepository.swift
+//  WordRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 02/05/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol WordRepositoryProtocol {
+protocol WordRepoProtocol {
     func fetchRemoteData() async throws -> [Word]
     func fetchLocalData() -> [Word]
     func getWordsByTitles(titles: [String]) -> [Word]
@@ -16,7 +16,7 @@ protocol WordRepositoryProtocol {
     func deleteLocalData()
 }
 
-class WordRepository: WordRepositoryProtocol {
+class WordRepo: WordRepoProtocol {
     private let supabase: SupabaseServiceProtocol
     private let wordData: WordDataManager
     

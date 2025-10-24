@@ -19,12 +19,12 @@ class ProverbViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Proverb] = []
 
-    private let proverbRepo: ProverbRepositoryProtocol
-    private let subsRepo: SubscriptionRepositoryProtocol
+    private let proverbRepo: ProverbRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
     init(
-        proverbRepo: ProverbRepositoryProtocol,
-        subsRepo: SubscriptionRepositoryProtocol,
+        proverbRepo: ProverbRepoProtocol,
+        subsRepo: SubsRepoProtocol,
     ) {
         self.proverbRepo = proverbRepo
         self.subsRepo = subsRepo

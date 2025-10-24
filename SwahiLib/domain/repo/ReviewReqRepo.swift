@@ -7,18 +7,18 @@
 
 import StoreKit
 
-protocol ReviewReqRepositoryProtocol {
+protocol ReviewReqRepoProtocol {
     func startSession()
     func endSession()
     func shouldPromptReview() -> Bool
     func promptReview(force: Bool)
 }
 
-final class ReviewReqRepository: ReviewReqRepositoryProtocol {
+final class ReviewReqRepo: ReviewReqRepoProtocol {
     private var sessionStart: Date?
-    private let prefsRepo: PreferencesRepository
+    private let prefsRepo: PrefsRepo
     
-    init(prefsRepo: PreferencesRepository = PreferencesRepository()) {
+    init(prefsRepo: PrefsRepo = PrefsRepo()) {
         self.prefsRepo = prefsRepo
         if prefsRepo.installDate == Date() {
             prefsRepo.installDate = Date()

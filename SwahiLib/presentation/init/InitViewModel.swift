@@ -16,18 +16,18 @@ final class InitViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var progress: Int = 0
 
-    private let prefsRepo: PreferencesRepository
-    private let idiomRepo: IdiomRepositoryProtocol
-    private let proverbRepo: ProverbRepositoryProtocol
-    private let sayingRepo: SayingRepositoryProtocol
-    private let wordRepo: WordRepositoryProtocol
+    private let prefsRepo: PrefsRepo
+    private let idiomRepo: IdiomRepoProtocol
+    private let proverbRepo: ProverbRepoProtocol
+    private let sayingRepo: SayingRepoProtocol
+    private let wordRepo: WordRepoProtocol
 
     init(
-        prefsRepo: PreferencesRepository,
-        idiomRepo: IdiomRepositoryProtocol,
-        proverbRepo: ProverbRepositoryProtocol,
-        sayingRepo: SayingRepositoryProtocol,
-        wordRepo: WordRepositoryProtocol
+        prefsRepo: PrefsRepo,
+        idiomRepo: IdiomRepoProtocol,
+        proverbRepo: ProverbRepoProtocol,
+        sayingRepo: SayingRepoProtocol,
+        wordRepo: WordRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo

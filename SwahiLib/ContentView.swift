@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    private let prefsRepo: PreferencesRepository
+    private let prefsRepo: PrefsRepo
     
     @State private var navigateToNextScreen = false
     
-    init(prefsRepo: PreferencesRepository) {
+    init(prefsRepo: PrefsRepo) {
         self.prefsRepo = prefsRepo
     }
     

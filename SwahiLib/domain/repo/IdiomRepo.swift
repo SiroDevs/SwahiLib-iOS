@@ -1,5 +1,5 @@
 //
-//  IdiomRepository.swift
+//  IdiomRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 02/05/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol IdiomRepositoryProtocol {
+protocol IdiomRepoProtocol {
     func fetchRemoteData() async throws -> [Idiom]
     func fetchLocalData() -> [Idiom]
     func getIdiomsByTitles(titles: [String]) -> [Idiom]
@@ -16,7 +16,7 @@ protocol IdiomRepositoryProtocol {
     func deleteLocalData()
 }
 
-class IdiomRepository: IdiomRepositoryProtocol {
+class IdiomRepo: IdiomRepoProtocol {
     private let supabase: SupabaseServiceProtocol
     private let idiomData: IdiomDataManager
     

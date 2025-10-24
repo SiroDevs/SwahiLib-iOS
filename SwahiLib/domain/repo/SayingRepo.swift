@@ -1,5 +1,5 @@
 //
-//  SayingRepository.swift
+//  SayingRepo.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 02/05/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SayingRepositoryProtocol {
+protocol SayingRepoProtocol {
     func fetchRemoteData() async throws -> [Saying]
     func fetchLocalData() -> [Saying]
     func getSayingsByTitles(titles: [String]) -> [Saying]
@@ -16,7 +16,7 @@ protocol SayingRepositoryProtocol {
     func deleteLocalData()
 }
 
-class SayingRepository: SayingRepositoryProtocol {
+class SayingRepo: SayingRepoProtocol {
     private let supabase: SupabaseServiceProtocol
     private let sayingData: SayingDataManager
     
