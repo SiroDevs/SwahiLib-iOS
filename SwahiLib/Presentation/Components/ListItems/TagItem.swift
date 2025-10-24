@@ -2,7 +2,7 @@
 //  TagItem.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 04/05/2025.
+//  Created by @sirodevs on 04/05/2025.
 //
 
 import SwiftUI

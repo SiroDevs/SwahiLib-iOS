@@ -2,7 +2,7 @@
 //  ProverbDTO.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 24/06/2025.
+//  Created by @sirodevs on 24/06/2025.
 //
 
 struct ProverbDTO: Codable {

@@ -2,7 +2,7 @@
 //  WordRepository.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 02/05/2025.
+//  Created by @sirodevs on 02/05/2025.
 //
 
 import Foundation

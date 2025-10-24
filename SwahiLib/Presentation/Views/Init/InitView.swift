@@ -2,7 +2,7 @@
 //  InitView.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 30/04/2025.
+//  Created by @sirodevs on 30/04/2025.
 //
 
 import SwiftUI
@@ -53,8 +53,6 @@ struct InitView: View {
                     showProgress: true,
                     progressValue: viewModel.progress
                 )
-                ProgressView(value: Double(viewModel.progress), total: 100)
-                    .padding(.top, 12)
             }
 
         case .error(let msg):
@@ -76,7 +74,7 @@ struct InitView: View {
         }
     }
 }
-
-#Preview {
-    InitView()
-}
+//
+//#Preview {
+//    InitView()
+//}

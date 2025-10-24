@@ -2,7 +2,7 @@
 //  L10n.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 24/08/2025.
+//  Created by @sirodevs on 24/08/2025.
 //
 
 struct L10n {

@@ -2,11 +2,10 @@
 //  MainViewModel.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 30/04/2025.
+//  Created by @sirodevs on 30/04/2025.
 //
 
 import Foundation
-import SwiftUI
 
 final class MainViewModel: ObservableObject {
     private let prefsRepo: PreferencesRepository

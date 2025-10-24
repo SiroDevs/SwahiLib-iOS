@@ -2,7 +2,7 @@
 //  SupabaseService.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 21/06/2025.
+//  Created by @sirodevs on 21/06/2025.
 //
 
 import Foundation

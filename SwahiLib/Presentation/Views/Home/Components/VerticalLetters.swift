@@ -2,7 +2,7 @@
 //  VerticalLetters.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 13/08/2025.
+//  Created by @sirodevs on 13/08/2025.
 //
 
 import SwiftUI

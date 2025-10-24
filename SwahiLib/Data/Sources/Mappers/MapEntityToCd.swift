@@ -2,7 +2,7 @@
 //  MapEntityToCd.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 03/07/2025.
+//  Created by @sirodevs on 03/07/2025.
 //
 
 struct MapEntityToCd {

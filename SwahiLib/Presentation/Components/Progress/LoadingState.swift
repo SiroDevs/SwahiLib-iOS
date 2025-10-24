@@ -2,7 +2,7 @@
 //  LoadingView.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 04/05/2025.
+//  Created by @sirodevs on 04/05/2025.
 //
 
 import SwiftUI
@@ -48,5 +48,7 @@ struct LoadingState: View {
     LoadingState(
         title: "Inapakia data ...",
         fileName: "opener-loading",
+        showProgress: true,
+        progressValue: 65,
     )
 }

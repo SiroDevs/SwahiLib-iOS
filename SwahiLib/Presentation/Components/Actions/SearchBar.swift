@@ -2,7 +2,7 @@
 //  SearchBar.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 12/07/2025.
+//  Created by @sirodevs on 12/07/2025.
 //
 
 import SwiftUI

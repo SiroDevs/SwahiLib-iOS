@@ -2,7 +2,7 @@
 //  SettingsSection.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 26/08/2025.
+//  Created by @sirodevs on 26/08/2025.
 //
 
 import SwiftUI

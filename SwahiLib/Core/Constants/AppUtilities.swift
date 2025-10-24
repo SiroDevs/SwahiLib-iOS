@@ -2,7 +2,7 @@
 //  AppUtils.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 28/08/2025.
+//  Created by @sirodevs on 28/08/2025.
 //
 
 import Foundation

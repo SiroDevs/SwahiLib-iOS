@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 29/04/2025.
+//  Created by @sirodevs on 29/04/2025.
 //
 
 import SwiftUI

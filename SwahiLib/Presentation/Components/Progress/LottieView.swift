@@ -2,7 +2,7 @@
 //  LottieView.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 23/06/2025.
+//  Created by @sirodevs on 23/06/2025.
 //
 
 import SwiftUI

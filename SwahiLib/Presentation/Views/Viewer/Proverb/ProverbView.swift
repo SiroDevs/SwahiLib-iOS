@@ -2,7 +2,7 @@
 //  ProverbView.swift
 //  SwahiLib
 //
-//  Created by Siro Daves on 01/08/2025.
+//  Created by @sirodevs on 01/08/2025.
 
 import SwiftUI
 import RevenueCat
