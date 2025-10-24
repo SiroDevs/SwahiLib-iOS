@@ -9,15 +9,17 @@ import Combine
 import RevenueCat
 
 protocol SubsRepoProtocol {
-    func isProUser(completion: @escaping (Bool) -> Void)
+    func isProUser(isOnline: Bool, completion: @escaping (Bool) -> Void)
 }
 
 final class SubsRepo: SubsRepoProtocol {
-    func isProUser(completion: @escaping (Bool) -> Void) {
+    func isProUser(isOnline: Bool, completion: @escaping (Bool) -> Void) {
         #if DEBUG
             completion(true)
         #else
-            Purchases.shared.getCustomerInfo { customerInfo, error in
+        let cachePolicy: CacheFetchPolicy = isOnline ? .fetchCurrent : .fromCacheOnly
+            
+            Purchases.shared.getCustomerInfo(fetchPolicy: cachePolicy) { customerInfo, error in
                 guard let customerInfo = customerInfo, error == nil else {
                     completion(false)
                     return
