@@ -28,6 +28,7 @@ struct SearchBar: View {
                     .foregroundColor(.onPrimaryContainer)
                     .imageScale(.large)
             }
+            .buttonStyle(.plain)
         }
         .padding(10)
         .background(
@@ -38,6 +39,5 @@ struct SearchBar: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(.onPrimaryContainer, lineWidth: 1)
         )
-        .padding(.horizontal, 10)
     }
 }
