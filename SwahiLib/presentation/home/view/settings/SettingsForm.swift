@@ -27,7 +27,7 @@ struct SettingsForm: View {
             if !viewModel.isProUser {
                 SettingsSection(header: "Swahilib Pro") {
                     SettingsRow(
-                        systemImage: "star.fill",
+                        systemImage: "crown.fill",
                         title: L10n.joinPro,
                         subtitle: L10n.joinProDesc,
                         foregroundColor: .yellow,

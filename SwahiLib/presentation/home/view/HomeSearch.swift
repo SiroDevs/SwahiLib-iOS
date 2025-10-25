@@ -6,38 +6,49 @@
 //
 
 import SwiftUI
+import RevenueCatUI
 
 struct HomeSearch: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
+    @State private var showPaywall: Bool = false
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    SearchBar(
-                        text: $searchText,
-                        onSearch: { query in
-                            viewModel.filterData(qry: query)
-                        }
-                    )
-                    
-                    CustomTabTitles(
-                        selectedTab: viewModel.homeTab,
-                        onSelect: { homeTab in
-                            viewModel.homeTab = homeTab
-                            viewModel.filterData(qry: "")
-                        }
-                    )
-                    .padding(.leading, 10)
+            ZStack(alignment: .bottomTrailing) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 12) {
+                        SearchBar(
+                            text: $searchText,
+                            onSearch: { query in
+                                viewModel.filterData(qry: query)
+                            }
+                        )
+                        
+                        CustomTabTitles(
+                            selectedTab: viewModel.homeTab,
+                            onSelect: { homeTab in
+                                viewModel.homeTab = homeTab
+                                viewModel.filterData(qry: "")
+                            }
+                        )
+                        .padding(.leading, 10)
 
-                    HomeSearchView(
-                        viewModel: viewModel,
-                        selectedLetter: $selectedLetter
-                    )
+                        HomeSearchView(
+                            viewModel: viewModel,
+                            selectedLetter: $selectedLetter
+                        )
+                    }
                 }
+                
+                if !viewModel.isProUser {
+                    UpgradeBanner1 { showPaywall = true }
+                }
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView(displayCloseButton: true)
             }
             .navigationTitle("SwahiLib")
             .toolbarBackground(.regularMaterial, for: .navigationBar)

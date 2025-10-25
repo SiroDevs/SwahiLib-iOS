@@ -17,21 +17,37 @@ class IdiomViewModel: ObservableObject {
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
 
+    private let netUtils: NetworkUtils
+    let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
     private let subsRepo: SubsRepoProtocol
 
     init(
+        netUtils: NetworkUtils = .shared,
+        prefsRepo: PrefsRepo,
         idiomRepo: IdiomRepoProtocol,
         subsRepo: SubsRepoProtocol
     ) {
+        self.netUtils = netUtils
+        self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.subsRepo = subsRepo
     }
     
-    func checkSubscription() {
-        subsRepo.isProUser { [weak self] isActive in
-            DispatchQueue.main.async {
-                self?.isProUser = isActive
+    private func checkSubscription(isOnline: Bool) async throws {
+        if !prefsRepo.isProUser || (isOnline) {
+            try await verifySubscription(isOnline: isOnline)
+        }
+    }
+    
+    private func verifySubscription(isOnline: Bool) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            subsRepo.isProUser(isOnline: isOnline) { isActive in
+                Task { @MainActor in
+                    self.prefsRepo.isProUser = isActive
+                    self.isProUser = isActive
+                    continuation.resume()
+                }
             }
         }
     }

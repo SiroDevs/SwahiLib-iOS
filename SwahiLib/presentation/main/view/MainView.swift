@@ -14,8 +14,8 @@ struct MainView: View {
     }()
     
     private enum ActiveSheet: Identifiable {
-        case parentalGate
-        case paywall
+        case showParentalGate
+        case showPaywall
         
         var id: Int { hashValue }
     }
@@ -26,27 +26,29 @@ struct MainView: View {
         stateContent
             .edgesIgnoringSafeArea(.bottom)
             .task { viewModel.fetchData() }
-//            .onAppear {
-//                if !viewModel.isProUser {
-//                    activeSheet = .parentalGate
-//                }
-//                viewModel.promptReview()
-//            }
-//            .sheet(item: $activeSheet) { sheet in
-//                switch sheet {
-//                    case .parentalGate:
-//                        ParentalGateView {
-//                            activeSheet = nil
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                                activeSheet = .paywall
-//                            }
-//                        }
-//                    case .paywall:
-//                        #if !DEBUG
-//                        PaywallView(displayCloseButton: true)
-//                        #endif
-//                }
-//            }
+            .onAppear {
+                if !viewModel.isProUser && viewModel.userIsAKid && !viewModel.shownParentalGate {
+                    activeSheet = .showParentalGate
+                } else if !viewModel.isProUser && viewModel.shownParentalGate{
+                    activeSheet = .showPaywall
+                }
+            }
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                    case .showParentalGate:
+                        ParentalGateView {
+                            activeSheet = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                viewModel.updateParentalGate(value: true)
+                                activeSheet = .showPaywall
+                            }
+                        }
+                    case .showPaywall:
+                        #if !DEBUG
+                        PaywallView(displayCloseButton: true)
+                        #endif
+                }
+            }
     }
     
     @ViewBuilder
@@ -65,12 +67,10 @@ struct MainView: View {
                         Label("Tafuta", systemImage: "magnifyingglass")
                     }
                 
-                if viewModel.isProUser {
-                    HomeLikes(viewModel: viewModel)
-                        .tabItem {
-                            Label("Vipendwa", systemImage: "heart.fill")
-                        }
-                }
+                HomeLikes(viewModel: viewModel)
+                    .tabItem {
+                        Label("Vipendwa", systemImage: "heart.fill")
+                    }
                 
                 SettingsView(viewModel: viewModel)
                     .tabItem {

@@ -7,6 +7,7 @@
 
 import Foundation
 import WidgetKit
+import StoreKit
 
 final class MainViewModel: ObservableObject {
     private let prefsRepo: PrefsRepo
@@ -15,11 +16,11 @@ final class MainViewModel: ObservableObject {
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
-    private let reviewRepo: ReviewReqRepoProtocol
 
     @Published var isProUser: Bool = false
-    @Published var showParentalGate: Bool = false
-    @Published var showReviewPrompt: Bool = false
+    @Published var userIsAKid: Bool = false
+    @Published var shownParentalGate: Bool = false
+    @Published var showPaywall: Bool = false
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -46,8 +47,7 @@ final class MainViewModel: ObservableObject {
         proverbRepo: ProverbRepoProtocol,
         sayingRepo: SayingRepoProtocol,
         wordRepo: WordRepoProtocol,
-        subsRepo: SubsRepoProtocol,
-        reviewRepo: ReviewReqRepoProtocol
+        subsRepo: SubsRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -55,29 +55,33 @@ final class MainViewModel: ObservableObject {
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
-        self.reviewRepo = reviewRepo
     }
     
     func checkSubscription() {
-        showParentalGate = prefsRepo.isUserAKid
-        subsRepo.isProUser { [weak self] isActive in
-            DispatchQueue.main.async {
-                self?.isProUser = isActive
-            }
+        userIsAKid = prefsRepo.isUserAKid
+        shownParentalGate = prefsRepo.shownParentalGate
+        isProUser = prefsRepo.isProUser
+        if !isProUser && prefsRepo.approveShowingPrompt(hours: 5) {
+            showPaywall = true
         }
     }
     
-    func appDidEnterBackground() {
-        reviewRepo.endSession()
-        showReviewPrompt = reviewRepo.shouldPromptReview()
+    private func checkSubscription(isOnline: Bool) async throws {
+        if !prefsRepo.isProUser || (isOnline) {
+            try await verifySubscription(isOnline: isOnline)
+        }
     }
     
-    func appDidBecomeActive() {
-        reviewRepo.startSession()
-    }
-    
-    func promptReview() {
-        reviewRepo.promptReview(force: false)
+    private func verifySubscription(isOnline: Bool) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            subsRepo.isProUser(isOnline: isOnline) { isActive in
+                Task { @MainActor in
+                    self.prefsRepo.isProUser = isActive
+                    self.isProUser = isActive
+                    continuation.resume()
+                }
+            }
+        }
     }
     
     func fetchData() {
@@ -137,7 +141,16 @@ final class MainViewModel: ObservableObject {
     
     func updateParentalGate(value: Bool) {
         prefsRepo.isUserAKid = value
-        showParentalGate = value
+        prefsRepo.shownParentalGate = true
+        shownParentalGate = true
+    }
+    
+    func promptReview() {
+        if let scene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            
+            SKStoreReviewController.requestReview(in: scene)
+        }
     }
     
     func clearAllData() {

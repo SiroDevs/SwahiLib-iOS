@@ -19,6 +19,11 @@ class PrefsRepo {
         set { userDefaults.set(newValue, forKey: PrefConstants.isUserAKid) }
     }
     
+    var shownParentalGate: Bool {
+        get { userDefaults.bool(forKey: PrefConstants.shownParentalGate) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.shownParentalGate) }
+    }
+    
     var isDataLoaded: Bool {
         get { userDefaults.bool(forKey: PrefConstants.isLoaded) }
         set { userDefaults.set(newValue, forKey: PrefConstants.isLoaded) }
@@ -39,9 +44,9 @@ class PrefsRepo {
         set { userDefaults.set(newValue, forKey: PrefConstants.lastAppOpenTime) }
     }
     
-    func hasTimeExceeded(hours: Int) -> Bool {
+    func approveShowingPrompt(hours: Int) -> Bool {
         let lastTime = lastAppOpenTime
-        if lastTime == 0 { return false }
+        if lastTime == 0 { return true }
         
         let currentTime = Date().timeIntervalSince1970
         let timeDifference = currentTime - lastTime
@@ -62,9 +67,7 @@ class PrefsRepo {
     
     func resetPrefs() {
         installDate = Date()
-        lastReviewPrompt = .distantPast
         isUserAKid = false
         isDataLoaded = false
-        reviewRequested = false
     }
 }

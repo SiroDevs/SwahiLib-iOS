@@ -20,7 +20,7 @@ struct SplashView: View {
             } else {
                 SplashContent()
                     .onAppear {
-                        viewModel.initializeApp()
+                        viewModel.initialize()
                     }
             }
         }

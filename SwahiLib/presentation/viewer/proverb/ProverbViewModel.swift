@@ -19,21 +19,37 @@ class ProverbViewModel: ObservableObject {
     @Published var meanings: [String] = []
     @Published var synonyms: [Proverb] = []
 
+    private let netUtils: NetworkUtils
+    let prefsRepo: PrefsRepo
     private let proverbRepo: ProverbRepoProtocol
     private let subsRepo: SubsRepoProtocol
 
     init(
+        netUtils: NetworkUtils = .shared,
+        prefsRepo: PrefsRepo,
         proverbRepo: ProverbRepoProtocol,
         subsRepo: SubsRepoProtocol,
     ) {
+        self.netUtils = netUtils
+        self.prefsRepo = prefsRepo
         self.proverbRepo = proverbRepo
         self.subsRepo = subsRepo
     }
     
-    func checkSubscription() {
-        subsRepo.isProUser { [weak self] isActive in
-            DispatchQueue.main.async {
-                self?.isProUser = isActive
+    private func checkSubscription(isOnline: Bool) async throws {
+        if !prefsRepo.isProUser || (isOnline) {
+            try await verifySubscription(isOnline: isOnline)
+        }
+    }
+    
+    private func verifySubscription(isOnline: Bool) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            subsRepo.isProUser(isOnline: isOnline) { isActive in
+                Task { @MainActor in
+                    self.prefsRepo.isProUser = isActive
+                    self.isProUser = isActive
+                    continuation.resume()
+                }
             }
         }
     }
@@ -47,7 +63,7 @@ class ProverbViewModel: ObservableObject {
             proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         
-        checkSubscription()
+        self.isProUser = self.prefsRepo.isProUser
         let synonymTitles = (proverb.synonyms)
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }

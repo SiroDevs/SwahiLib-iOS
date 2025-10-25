@@ -97,12 +97,6 @@ struct DependencyMap {
             SubsRepo()
         }.inObjectScope(.container)
         
-        container.register(ReviewReqRepoProtocol.self) { resolver in
-            ReviewReqRepo(
-                prefsRepo: resolver.resolve(PrefsRepo.self)!
-            )
-        }.inObjectScope(.container)
-        
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
@@ -128,12 +122,12 @@ struct DependencyMap {
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
-                reviewRepo: resolver.resolve(ReviewReqRepoProtocol.self)!,
             )
         }.inObjectScope(.container)
         
         container.register(IdiomViewModel.self) { resolver in
             IdiomViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )
@@ -141,6 +135,7 @@ struct DependencyMap {
         
         container.register(ProverbViewModel.self) { resolver in
             ProverbViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )
@@ -148,6 +143,7 @@ struct DependencyMap {
         
         container.register(SayingViewModel.self) { resolver in
             SayingViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )
@@ -155,6 +151,7 @@ struct DependencyMap {
         
         container.register(WordViewModel.self) { resolver in
             WordViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )

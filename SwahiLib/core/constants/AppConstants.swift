@@ -21,6 +21,7 @@ struct PrefConstants {
     static let isLoaded = "dataIsLoadedKey"
     static let installDate = "installDateKey"
     static let isUserAKid = "isUserAKidKey"
+    static let shownParentalGate = "shownParentalGateKey"
     static let usageTime = "usageTimeKey"
     static let isProUser = "isProUserKey"
     static let selectAfresh = "selectAfreshKey"

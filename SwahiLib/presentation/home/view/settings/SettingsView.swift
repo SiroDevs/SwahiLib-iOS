@@ -41,9 +41,6 @@ struct SettingsView: View {
             } message: {
                 Text(L10n.resetDataAlertDesc)
             }
-            .onAppear {
-                showPaywall = !viewModel.isProUser
-            }
             .sheet(isPresented: $showPaywall) {
                 PaywallView(displayCloseButton: true)
             }

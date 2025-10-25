@@ -26,7 +26,7 @@ final class SplashViewModel: ObservableObject {
         self.subsRepo = subsRepo
     }
     
-    func initializeApp() {
+    func initialize() {
         Task { @MainActor in
             do {
                 let isOnline = await netUtils.checkNetworkAvailability()
@@ -34,6 +34,7 @@ final class SplashViewModel: ObservableObject {
             } catch {
                 print("Subscription check failed: \(error)")
             }
+            prefsRepo.updateAppOpenTime()
             isInitialized = true
         }
     }

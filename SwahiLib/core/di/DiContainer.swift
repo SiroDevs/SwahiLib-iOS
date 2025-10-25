@@ -35,7 +35,6 @@ final class DiContainer {
             { self.container.resolve(SayingRepoProtocol.self) },
             { self.container.resolve(WordRepoProtocol.self) },
             { self.container.resolve(SubsRepoProtocol.self) },
-            { self.container.resolve(ReviewReqRepoProtocol.self) },
             { self.container.resolve(InitViewModel.self) },
             { self.container.resolve(MainViewModel.self) },
             { self.container.resolve(IdiomViewModel.self) },
