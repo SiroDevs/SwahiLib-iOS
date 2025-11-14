@@ -140,7 +140,6 @@ final class MainViewModel: ObservableObject {
     }
     
     func updateParentalGate(value: Bool) {
-        prefsRepo.isUserAKid = value
         prefsRepo.shownParentalGate = true
         shownParentalGate = true
     }
