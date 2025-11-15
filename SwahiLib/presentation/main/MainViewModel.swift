@@ -10,17 +10,12 @@ import WidgetKit
 import StoreKit
 
 final class MainViewModel: ObservableObject {
-    private let prefsRepo: PrefsRepo
+    let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
     private let proverbRepo: ProverbRepoProtocol
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
-
-    @Published var isProUser: Bool = false
-    @Published var userIsAKid: Bool = false
-    @Published var shownParentalGate: Bool = false
-    @Published var showPaywall: Bool = false
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -57,15 +52,6 @@ final class MainViewModel: ObservableObject {
         self.subsRepo = subsRepo
     }
     
-    func checkSubscription() {
-        userIsAKid = prefsRepo.isUserAKid
-        shownParentalGate = prefsRepo.shownParentalGate
-        isProUser = prefsRepo.isProUser
-        if !isProUser && prefsRepo.approveShowingPrompt(hours: 5) {
-            showPaywall = true
-        }
-    }
-    
     private func checkSubscription(isOnline: Bool) async throws {
         if !prefsRepo.isProUser || (isOnline) {
             try await verifySubscription(isOnline: isOnline)
@@ -77,7 +63,6 @@ final class MainViewModel: ObservableObject {
             subsRepo.isProUser(isOnline: isOnline) { isActive in
                 Task { @MainActor in
                     self.prefsRepo.isProUser = isActive
-                    self.isProUser = isActive
                     continuation.resume()
                 }
             }
@@ -94,7 +79,6 @@ final class MainViewModel: ObservableObject {
             self.allSayings = sayingRepo.fetchLocalData()
             self.allWords = wordRepo.fetchLocalData()
             
-            self.checkSubscription()
             self.filterData(qry: "")
             self.uiState = .filtered
         }
@@ -103,7 +87,6 @@ final class MainViewModel: ObservableObject {
     func filterData(qry: String) {
         let trimmedQuery = qry.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
-        print("Filtering data with query: '\(trimmedQuery)'")
         self.uiState = .filtering
         
         switch self.homeTab {
@@ -112,36 +95,31 @@ final class MainViewModel: ObservableObject {
             self.filteredIdioms = trimmedQuery.isEmpty
                 ? allIdioms
                 : allIdioms.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered idioms: \(filteredIdioms.count)")
             
         case .sayings:
             self.likedSayings = allSayings.filter { $0.liked }
             self.filteredSayings = trimmedQuery.isEmpty
                 ? allSayings
                 : allSayings.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered sayings: \(filteredSayings.count)")
             
         case .proverbs:
             self.likedProverbs = allProverbs.filter { $0.liked }
             self.filteredProverbs = trimmedQuery.isEmpty
                 ? allProverbs
                 : allProverbs.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered proverbs: \(filteredProverbs.count)")
             
         case .words:
             self.likedWords = allWords.filter { $0.liked }
             self.filteredWords = trimmedQuery.isEmpty
                 ? allWords
                 : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered words: \(filteredWords.count)")
         }
         
         self.uiState = .filtered
     }
     
     func updateParentalGate(value: Bool) {
-        prefsRepo.shownParentalGate = true
-        shownParentalGate = true
+        prefsRepo.shownParentalGate = value
     }
     
     func promptReview() {

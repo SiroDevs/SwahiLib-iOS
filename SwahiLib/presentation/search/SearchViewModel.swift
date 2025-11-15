@@ -16,8 +16,8 @@ final class SearchViewModel: ObservableObject {
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
 
+    @Published var showAlertDialog: Bool = false
     @Published var isProUser: Bool = false
-    @Published var showPaywall: Bool = false
     
     @Published var allIdioms: [Idiom] = []
     @Published var filteredIdioms: [Idiom] = []
@@ -46,6 +46,8 @@ final class SearchViewModel: ObservableObject {
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
+        self.isProUser = prefsRepo.isProUser
+        self.showAlertDialog = !prefsRepo.isProUser
     }
     
     func fetchData() {
@@ -66,7 +68,6 @@ final class SearchViewModel: ObservableObject {
     func filterData(qry: String) {
         let trimmedQuery = qry.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
-        print("Filtering data with query: '\(trimmedQuery)'")
         self.uiState = .filtering
         
         switch self.homeTab {
@@ -74,25 +75,21 @@ final class SearchViewModel: ObservableObject {
             self.filteredIdioms = trimmedQuery.isEmpty
                 ? allIdioms
                 : allIdioms.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered idioms: \(filteredIdioms.count)")
             
         case .sayings:
             self.filteredSayings = trimmedQuery.isEmpty
                 ? allSayings
                 : allSayings.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered sayings: \(filteredSayings.count)")
             
         case .proverbs:
             self.filteredProverbs = trimmedQuery.isEmpty
                 ? allProverbs
                 : allProverbs.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered proverbs: \(filteredProverbs.count)")
             
         case .words:
             self.filteredWords = trimmedQuery.isEmpty
                 ? allWords
                 : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            print("Filtered words: \(filteredWords.count)")
         }
         
         self.uiState = .filtered

@@ -27,11 +27,11 @@ struct MainView: View {
             .edgesIgnoringSafeArea(.bottom)
             .task { viewModel.fetchData() }
             .onAppear {
-                if !viewModel.isProUser  {
-                    if viewModel.shownParentalGate{
-                        activeSheet = .paywall
-                    } else {
+                if !viewModel.prefsRepo.isProUser  {
+                    if !viewModel.prefsRepo.shownParentalGate {
                         activeSheet = .parentalGate
+                    } else if viewModel.prefsRepo.shownParentalGate && viewModel.prefsRepo.approveShowingPrompt(hours: 5) {
+                        activeSheet = .paywall
                     }
                 }
             }
