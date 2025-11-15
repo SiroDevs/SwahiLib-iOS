@@ -1,41 +1,32 @@
 //
-//  HomeSearch.swift
+//  AdvancedSearchView.swift
 //  SwahiLib
 //
-//  Created by @sirodevs on 05/07/2025.
+//  Created by @sirodevs on 15/11/2025.
 //
 
 import SwiftUI
-import RevenueCatUI
 
-struct HomeSearch: View {
-    @ObservedObject var viewModel: MainViewModel
+struct AdvancedSearchView: View {
+    @ObservedObject var viewModel: SearchViewModel
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
+    
+    @State private var showAlertDialog = false
     @State private var showPaywall: Bool = false
-
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            SearchBar(
-                                text: $searchText,
-                                onSearch: { query in
-                                    viewModel.filterData(qry: query)
-                                }
-                            )
-                            NavigationLink {
-                                AdvancedSearch()
-                            } label: {
-                                Text("TAFUTA ZAIDI")
-                                    .font(.headline)
-                                    .padding(.vertical, 5)
+                        SearchBar(
+                            text: $searchText,
+                            onSearch: { query in
+                                viewModel.filterData(qry: query)
                             }
-                            .buttonStyle(.borderedProminent)
-                        }
+                        )
                         .padding(.horizontal, 10)
                         
                         CustomTabTitles(
@@ -47,42 +38,33 @@ struct HomeSearch: View {
                         )
                         .padding(.leading, 10)
 
-                        HomeSearchView(
+                        AdvancedSearchBody(
                             viewModel: viewModel,
                             selectedLetter: $selectedLetter
                         )
                     }
                 }
-                
-                if !viewModel.prefsRepo.isProUser {
-                    UpgradeBanner1 { showPaywall = true }
-                }
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView(displayCloseButton: true)
-            }
-            .navigationTitle("SwahiLib")
+            .navigationTitle("Tafuta kwa Kina")
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }
 }
 
-struct HomeSearchView: View {
-    @ObservedObject var viewModel: MainViewModel
+struct AdvancedSearchBody: View {
+    @ObservedObject var viewModel: SearchViewModel
     @Binding var selectedLetter: String?
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            if viewModel.prefsRepo.isProUser {
-                VerticalLetters(
-                    selectedLetter: selectedLetter,
-                    onLetterSelected: { letter in
-                        selectedLetter = letter
-                        viewModel.filterData(qry: letter)
-                    }
-                )
-                .frame(width: 60)
-            }
+            VerticalLetters(
+                selectedLetter: selectedLetter,
+                onLetterSelected: { letter in
+                    selectedLetter = letter
+                    viewModel.filterData(qry: letter)
+                }
+            )
+            .frame(width: 60)
 
             switch viewModel.homeTab {
                 case .idioms:
@@ -101,21 +83,5 @@ struct HomeSearchView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-    }
-}
-
-#Preview {
-    HStack(alignment: .top, spacing: 10) {
-        VerticalLetters(
-            selectedLetter: "A",
-            onLetterSelected: { letter in
-                //
-            }
-        )
-        .frame(width: 60)
-        WordsList(
-            words: Word.sampleWords
-        )
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

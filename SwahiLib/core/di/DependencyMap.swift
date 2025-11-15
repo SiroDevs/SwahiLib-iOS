@@ -125,6 +125,16 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
+        container.register(SearchViewModel.self) { resolver in
+            SearchViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
+                idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!,
+            )
+        }.inObjectScope(.container)
+        
         container.register(IdiomViewModel.self) { resolver in
             IdiomViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,

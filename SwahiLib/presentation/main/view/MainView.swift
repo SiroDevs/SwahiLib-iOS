@@ -14,8 +14,8 @@ struct MainView: View {
     }()
     
     private enum ActiveSheet: Identifiable {
-        case showParentalGate
-        case showPaywall
+        case parentalGate
+        case paywall
         
         var id: Int { hashValue }
     }
@@ -27,23 +27,25 @@ struct MainView: View {
             .edgesIgnoringSafeArea(.bottom)
             .task { viewModel.fetchData() }
             .onAppear {
-                if !viewModel.isProUser && viewModel.userIsAKid && !viewModel.shownParentalGate {
-                    activeSheet = .showParentalGate
-                } else if !viewModel.isProUser && viewModel.shownParentalGate{
-                    activeSheet = .showPaywall
+                if !viewModel.prefsRepo.isProUser  {
+                    if !viewModel.prefsRepo.shownParentalGate {
+                        activeSheet = .parentalGate
+                    } else if viewModel.prefsRepo.shownParentalGate && viewModel.prefsRepo.approveShowingPrompt(hours: 5) {
+                        activeSheet = .paywall
+                    }
                 }
             }
             .sheet(item: $activeSheet) { sheet in
                 switch sheet {
-                    case .showParentalGate:
+                    case .parentalGate:
                         ParentalGateView {
                             activeSheet = nil
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 viewModel.updateParentalGate(value: true)
-                                activeSheet = .showPaywall
+                                activeSheet = .paywall
                             }
                         }
-                    case .showPaywall:
+                    case .paywall:
                         #if !DEBUG
                         PaywallView(displayCloseButton: true)
                         #endif

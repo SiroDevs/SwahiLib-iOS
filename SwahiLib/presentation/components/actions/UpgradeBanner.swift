@@ -55,7 +55,7 @@ struct UpgradeBanner1: View {
         }
         .buttonStyle(.plain)
         .padding(.vertical, 4)
-        .background(.onSurfaceVariant)
+        .background(.primary3)
         .contentShape(Rectangle())
     }
 }

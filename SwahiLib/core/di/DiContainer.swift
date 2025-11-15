@@ -42,6 +42,7 @@ final class DiContainer {
             { self.container.resolve(SayingViewModel.self) },
             { self.container.resolve(WordViewModel.self) },
             { self.container.resolve(SplashViewModel.self) },
+            { self.container.resolve(SearchViewModel.self) },
         ]
 
         for resolve in dependencies {
