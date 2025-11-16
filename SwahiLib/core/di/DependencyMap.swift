@@ -17,6 +17,12 @@ struct DependencyMap {
             CoreDataManager.shared
         }.inObjectScope(.container)
         
+        container.register(NotificationServiceProtocol.self) { resolver in
+            NotificationService(
+                wordDataManager: resolver.resolve(WordDataManager.self)!
+            )
+        }.inObjectScope(.container)
+        
         container.register(SupabaseServiceProtocol.self) { _ in
             SupabaseService()
         }.inObjectScope(.container)
@@ -122,6 +128,7 @@ struct DependencyMap {
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                notifySvc: resolver.resolve(NotificationServiceProtocol.self)!
             )
         }.inObjectScope(.container)
         

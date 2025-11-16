@@ -39,6 +39,21 @@ class PrefsRepo {
         set { userDefaults.set(newValue, forKey: PrefConstants.lastAppOpenTime) }
     }
     
+    var notificationHour: Int {
+        get { userDefaults.integer(forKey: PrefConstants.notificationHour) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.notificationHour) }
+    }
+    
+    var notificationMinute: Int {
+        get { userDefaults.integer(forKey: PrefConstants.notificationMinute) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.notificationMinute) }
+    }
+    
+    var notificationsEnabled: Bool {
+        get { userDefaults.bool(forKey: PrefConstants.notificationsEnabled) }
+        set { userDefaults.set(newValue, forKey: PrefConstants.notificationsEnabled) }
+    }
+    
     func approveShowingPrompt(hours: Int) -> Bool {
         let lastTime = lastAppOpenTime
         if lastTime == 0 { return true }
@@ -48,6 +63,11 @@ class PrefsRepo {
         let hoursInSeconds = TimeInterval(hours * 60 * 60)
         
         return timeDifference >= hoursInSeconds
+    }
+    
+    func setNotificationTime(hour: Int, minute: Int) {
+        notificationHour = hour
+        notificationMinute = minute
     }
     
     func updateAppOpenTime() {

@@ -21,6 +21,7 @@ final class DiContainer {
         let dependencies: [() -> Any?] = [
             { self.container.resolve(PrefsRepo.self) },
             { self.container.resolve(CoreDataManager.self) },
+            { self.container.resolve(NotificationServiceProtocol.self) },
             { self.container.resolve(SupabaseServiceProtocol.self) },
             { self.container.resolve(AnalyticsServiceProtocol.self) },
             { self.container.resolve(LoggerProtocol.self) },

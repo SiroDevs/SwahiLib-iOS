@@ -26,6 +26,9 @@ struct PrefConstants {
     static let isProUser = "isProUserKey"
     static let selectAfresh = "selectAfreshKey"
     static let lastAppOpenTime = "lastAppOpenTimeKey"
+    static let notificationsEnabled = "notificationsEnabledKey"
+    static let notificationHour = "notificationHourKey"
+    static let notificationMinute = "notificationMinuteKey"
 }
 
 struct AppSecrets {

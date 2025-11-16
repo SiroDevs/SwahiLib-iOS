@@ -13,6 +13,9 @@ struct SettingsForm: View {
     @Binding var showPaywall: Bool
     @Binding var showResetAlert: Bool
     
+    @State private var notificationTime = Date()
+    @State private var notificationsEnabled = true
+    
     var body: some View {
         Form {
             SettingsSection(header: "Mandhari") {
@@ -20,6 +23,20 @@ struct SettingsForm: View {
                     ForEach(AppThemeMode.allCases) { mode in
                         Text(mode.displayName).tag(mode)
                     }
+                }
+            }
+            
+            Section(header: Text("Neno la Siku")) {
+                Toggle("Wezesha Notifications", isOn: Binding(
+                    get: { viewModel.notificationsEnabled },
+                    set: { viewModel.toggleNotifications($0) }
+                ))
+                
+                if viewModel.notificationsEnabled {
+                    DatePicker("Wakati wa Notification", selection: Binding(
+                        get: { viewModel.notificationTime },
+                        set: { viewModel.updateNotificationTime($0) }
+                    ), displayedComponents: .hourAndMinute)
                 }
             }
 

@@ -8,14 +8,16 @@
 import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Request notification permission
-        NotificationManager.shared.requestNotificationPermission()
-        
-        // Schedule notifications (you might want to do this after user sets preferences)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            NotificationManager.shared.scheduleDailyWordNotification(at: 6, minute: 0)
+        let prefsRepo = DiContainer.shared.resolve(PrefsRepo.self)
+        if prefsRepo.notificationsEnabled {
+            let notifySvc = DiContainer.shared.resolve(NotificationServiceProtocol.self)
+            notifySvc.checkNotificationPermission()
+            
+            let hour = prefsRepo.notificationHour
+            let minute = prefsRepo.notificationMinute
+            notifySvc.scheduleDailyWordNotification(at: hour, minute: minute)
         }
         
         return true
