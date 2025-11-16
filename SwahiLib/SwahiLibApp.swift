@@ -10,6 +10,7 @@ import RevenueCat
 
 @main
 struct SwahiLibApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var themeManager = ThemeManager()
     
     init() {
