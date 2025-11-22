@@ -45,6 +45,8 @@ struct MainView: View {
                                 activeSheet = .paywall
                             }
                         }
+                        .interactiveDismissDisabled(true)
+                    
                     case .paywall:
                         #if !DEBUG
                         PaywallView(displayCloseButton: true)
