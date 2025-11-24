@@ -12,12 +12,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         let prefsRepo = DiContainer.shared.resolve(PrefsRepo.self)
         if prefsRepo.notificationsEnabled {
-            let notifySvc = DiContainer.shared.resolve(NotificationServiceProtocol.self)
-            notifySvc.checkNotificationPermission()
+            let notifyService = DiContainer.shared.resolve(NotificationServiceProtocol.self)
+            notifyService.checkNotificationPermission()
             
             let hour = prefsRepo.notificationHour
             let minute = prefsRepo.notificationMinute
-            notifySvc.scheduleDailyWordNotification(at: hour, minute: minute)
+            notifyService.scheduleDailyWordNotification(at: hour, minute: minute)
         }
         
         return true

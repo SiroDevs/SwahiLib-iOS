@@ -30,6 +30,7 @@ struct IdiomView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .toolbarTitleDisplayMode(.inline)
         .task({viewModel.loadIdiom(idiom)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {

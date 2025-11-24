@@ -9,7 +9,7 @@ import RevenueCat
 import RevenueCatUI
 
 struct WordView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: WordViewModel = {
         DiContainer.shared.resolve(WordViewModel.self)
     }()
@@ -25,7 +25,6 @@ struct WordView: View {
            NavigationStack {
                stateContent
            }
-           
             if showToast {
                 let toastMessage = L10n.likedWord(for: word.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
@@ -56,6 +55,7 @@ struct WordView: View {
             #endif
         }
         .toolbar(.hidden, for: .tabBar)
+        .toolbarTitleDisplayMode(.inline)
         .task({viewModel.loadWord(word)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -103,7 +103,7 @@ struct WordView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 } label: { Image(systemName: "chevron.backward") }
             }
 

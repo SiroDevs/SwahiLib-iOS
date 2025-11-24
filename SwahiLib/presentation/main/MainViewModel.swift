@@ -16,7 +16,7 @@ final class MainViewModel: ObservableObject {
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
-    private let notifySvc: NotificationServiceProtocol
+    private let notifyService: NotificationServiceProtocol
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -47,7 +47,7 @@ final class MainViewModel: ObservableObject {
         sayingRepo: SayingRepoProtocol,
         wordRepo: WordRepoProtocol,
         subsRepo: SubsRepoProtocol,
-        notifySvc: NotificationServiceProtocol
+        notifyService: NotificationServiceProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -55,7 +55,7 @@ final class MainViewModel: ObservableObject {
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
-        self.notifySvc = notifySvc
+        self.notifyService = notifyService
         
         let savedHour = prefsRepo.notificationHour
         let savedMinute = prefsRepo.notificationMinute
@@ -67,7 +67,7 @@ final class MainViewModel: ObservableObject {
         self.notificationsEnabled = prefsRepo.notificationsEnabled
         
         if notificationsEnabled {
-            notifySvc.checkNotificationPermission()
+            notifyService.checkNotificationPermission()
         }
     }
     
@@ -149,10 +149,10 @@ final class MainViewModel: ObservableObject {
         prefsRepo.notificationsEnabled = enabled
         
         if enabled {
-            notifySvc.checkNotificationPermission()
+            notifyService.checkNotificationPermission()
             scheduleNotifications()
         } else {
-            notifySvc.cancelDailyNotifications()
+            notifyService.cancelDailyNotifications()
         }
     }
     
@@ -167,7 +167,7 @@ final class MainViewModel: ObservableObject {
     
     private func scheduleNotifications() {
         let components = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
-        notifySvc.scheduleDailyWordNotification(
+        notifyService.scheduleDailyWordNotification(
             at: components.hour ?? 6,
             minute: components.minute ?? 0
         )

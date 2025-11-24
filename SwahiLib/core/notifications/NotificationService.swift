@@ -11,6 +11,7 @@ protocol NotificationServiceProtocol {
     func checkNotificationPermission()
     func scheduleDailyWordNotification(at hour: Int, minute: Int)
     func cancelDailyNotifications()
+    func handleNotificationTap(_ userInfo: [AnyHashable: Any]) -> Word?
 }
 
 class NotificationService: NotificationServiceProtocol {
@@ -80,6 +81,13 @@ class NotificationService: NotificationServiceProtocol {
         return allWords[index]
     }
     
+    func handleNotificationTap(_ userInfo: [AnyHashable: Any]) -> Word? {
+        if let wordId = userInfo["wordId"] as? Int {
+            return wordDataManager.fetchWord(withId: wordId)
+        }
+        return nil
+    }
+
     private func formatNotificationBody(for word: Word?) -> String {
         guard let word = word else {
             return "Tazama neno la siku ya leo!"

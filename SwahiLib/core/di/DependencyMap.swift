@@ -128,7 +128,7 @@ struct DependencyMap {
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
-                notifySvc: resolver.resolve(NotificationServiceProtocol.self)!
+                notifyService: resolver.resolve(NotificationServiceProtocol.self)!
             )
         }.inObjectScope(.container)
         
@@ -174,5 +174,9 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
         
+        container.register(NavigationCoordinator.self) { _ in
+            NavigationCoordinator()
+        }.inObjectScope(.container)
+
     }
 }
