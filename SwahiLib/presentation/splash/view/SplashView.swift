@@ -41,7 +41,7 @@ struct SplashView: View {
     private var destinationView: some View {
         if viewModel.prefsRepo.isDataLoaded {
             if deepLinked {
-                WordView(word: word)
+                WordView(word: word, deepLinked: true)
             } else {
                 MainView()
             }

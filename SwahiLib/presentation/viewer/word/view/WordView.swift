@@ -15,6 +15,7 @@ struct WordView: View {
     }()
     
     let word: Word
+    let deepLinked: Bool
     
     @State private var showToast = false
     @State private var showAlert = false
@@ -103,7 +104,11 @@ struct WordView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    dismiss()
+                    if (deepLinked) {
+                        navigateToNewMainView()
+                    } else {
+                        dismiss()
+                    }
                 } label: { Image(systemName: "chevron.backward") }
             }
 
@@ -127,10 +132,26 @@ struct WordView: View {
         .navigationBarBackButtonHidden(true)
 
     }
+    
+    private func navigateToNewMainView() {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                let mainView = MainView()
+                let hostingController = UIHostingController(rootView: mainView)
+                
+                UIView.transition(with: window,
+                                duration: 0.3,
+                                options: .transitionCrossDissolve,
+                                animations: {
+                                    window.rootViewController = hostingController
+                                })
+            }
+        }
+
 }
 
 #Preview{
     WordView(
-        word: Word.sampleWords[0]
+        word: Word.sampleWords[0], deepLinked: false
     )
 }

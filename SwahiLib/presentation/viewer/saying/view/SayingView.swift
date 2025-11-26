@@ -30,6 +30,7 @@ struct SayingView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .toolbarTitleDisplayMode(.inline)
         .task({viewModel.loadSaying(saying)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
