@@ -53,7 +53,7 @@ class WordViewModel: ObservableObject {
         title = word.title
         conjugation = word.conjugation
         
-        meanings = cleanMeaning(
+        meanings = cleanText(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
 
@@ -74,7 +74,7 @@ class WordViewModel: ObservableObject {
     }
     
     func shareText(word: Word) -> String {
-        let parts = cleanMeaning(
+        let parts = cleanText(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         

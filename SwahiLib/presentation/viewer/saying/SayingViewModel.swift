@@ -49,7 +49,7 @@ class SayingViewModel: ObservableObject {
         uiState = .loading()
         isLiked = saying.liked
         title = saying.title
-        meanings = cleanMeaning(
+        meanings = cleanText(
             saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         
@@ -57,7 +57,7 @@ class SayingViewModel: ObservableObject {
     }
     
     func shareText(saying: Saying) -> String {
-        let parts = cleanMeaning(
+        let parts = cleanText(
             saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         

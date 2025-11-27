@@ -19,7 +19,7 @@ struct ProverbItem: View {
     }
 
     private var meaning: String {
-        let cleaned = cleanMeaning(proverb.meaning)
+        let cleaned = cleanText(proverb.meaning)
         let contents = cleaned.split(separator: "|")
         let extra = contents.first?.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
 

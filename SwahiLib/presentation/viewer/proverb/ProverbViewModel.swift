@@ -14,9 +14,9 @@ class ProverbViewModel: ObservableObject {
     
     @Published var uiState: UiState = .idle
     @Published var title: String = ""
-    @Published var conjugation: String = ""
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
+    @Published var explanations: [String] = []
     @Published var synonyms: [Proverb] = []
 
     private let netUtils: NetworkUtils
@@ -51,10 +51,12 @@ class ProverbViewModel: ObservableObject {
         uiState = .loading()
         isLiked = proverb.liked
         title = proverb.title
-        conjugation = proverb.conjugation
-        meanings = cleanMeaning(
+        explanations = cleanText(
+            proverb.conjugation.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "#")
+        meanings = cleanText(
             proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
-        ).components(separatedBy: "|")
+        ).components(separatedBy: "#")
         
         let synonymTitles = (proverb.synonyms)
             .split(separator: ",")
@@ -73,7 +75,7 @@ class ProverbViewModel: ObservableObject {
     }
     
     func shareText(proverb: Proverb) -> String {
-        let parts = cleanMeaning(
+        let parts = cleanText(
             proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         
