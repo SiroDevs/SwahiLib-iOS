@@ -38,7 +38,7 @@ struct HomeLikes: View {
                         }
                     }
                 }
-                if !viewModel.prefsRepo.isProUser {
+                if !viewModel.isProUser {
                     UpgradeBanner1 { showPaywall = true }
                 }
             }

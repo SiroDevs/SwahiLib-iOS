@@ -25,8 +25,8 @@ final class SubsRepo: SubsRepoProtocol {
                     return
                 }
 
-                let isActive = customerInfo.entitlements[AppConstants.entitlements]?.isActive == true
-                completion(isActive)
+                let isActive = customerInfo.entitlements.active.isEmpty
+                completion(!isActive)
             }
         #endif
     }
