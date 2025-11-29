@@ -46,8 +46,6 @@ final class SearchViewModel: ObservableObject {
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
-        self.isProUser = prefsRepo.isProUser
-        self.showAlertDialog = !prefsRepo.isProUser
     }
     
     func fetchData() {

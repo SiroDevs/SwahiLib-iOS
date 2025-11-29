@@ -36,17 +36,10 @@ class WordViewModel: ObservableObject {
         self.subsRepo = subsRepo
     }
     
-    private func checkSubscription(isOnline: Bool) async throws {
-        if !prefsRepo.isProUser || (isOnline) {
-            try await verifySubscription(isOnline: isOnline)
-        }
-    }
-    
     private func verifySubscription(isOnline: Bool) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             subsRepo.isProUser(isOnline: isOnline) { isActive in
                 Task { @MainActor in
-                    self.prefsRepo.isProUser = isActive
                     self.isProUser = isActive
                     continuation.resume()
                 }
@@ -60,7 +53,6 @@ class WordViewModel: ObservableObject {
         title = word.title
         conjugation = word.conjugation
         
-        self.isProUser = self.prefsRepo.isProUser
         meanings = cleanMeaning(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")

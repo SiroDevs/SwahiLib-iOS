@@ -27,7 +27,7 @@ struct MainView: View {
             .edgesIgnoringSafeArea(.bottom)
             .task { viewModel.fetchData() }
             .onAppear {
-                if !viewModel.prefsRepo.isProUser  {
+                if !viewModel.isProUser  {
                     if !viewModel.prefsRepo.shownParentalGate {
                         activeSheet = .parentalGate
                     } else if viewModel.prefsRepo.shownParentalGate && viewModel.prefsRepo.approveShowingPrompt(hours: 5) {
@@ -45,6 +45,8 @@ struct MainView: View {
                                 activeSheet = .paywall
                             }
                         }
+                        .interactiveDismissDisabled(true)
+                    
                     case .paywall:
                         #if !DEBUG
                         PaywallView(displayCloseButton: true)

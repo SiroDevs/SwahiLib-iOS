@@ -34,11 +34,6 @@ class PrefsRepo {
         set { userDefaults.set(newValue, forKey: PrefConstants.installDate) }
     }
     
-    var isProUser: Bool {
-        get { userDefaults.bool(forKey: PrefConstants.isProUser) }
-        set { userDefaults.set(newValue, forKey: PrefConstants.isProUser) }
-    }
-    
     var lastAppOpenTime: TimeInterval {
         get { userDefaults.double(forKey: PrefConstants.lastAppOpenTime) }
         set { userDefaults.set(newValue, forKey: PrefConstants.lastAppOpenTime) }

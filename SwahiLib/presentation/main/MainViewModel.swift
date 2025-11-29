@@ -35,6 +35,7 @@ final class MainViewModel: ObservableObject {
     
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
+    @Published var isProUser: Bool = false
     
     init(
         prefsRepo: PrefsRepo,
@@ -52,17 +53,11 @@ final class MainViewModel: ObservableObject {
         self.subsRepo = subsRepo
     }
     
-    private func checkSubscription(isOnline: Bool) async throws {
-        if !prefsRepo.isProUser || (isOnline) {
-            try await verifySubscription(isOnline: isOnline)
-        }
-    }
-    
-    private func verifySubscription(isOnline: Bool) async throws {
+    private func validateSubscription(isOnline: Bool) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             subsRepo.isProUser(isOnline: isOnline) { isActive in
                 Task { @MainActor in
-                    self.prefsRepo.isProUser = isActive
+                    self.isProUser = isActive
                     continuation.resume()
                 }
             }
@@ -74,6 +69,7 @@ final class MainViewModel: ObservableObject {
         self.uiState = .loading("Inapakia data ...")
 
         Task { @MainActor in
+            try await validateSubscription(isOnline: false)
             self.allIdioms = idiomRepo.fetchLocalData()
             self.allProverbs = proverbRepo.fetchLocalData()
             self.allSayings = sayingRepo.fetchLocalData()
@@ -122,11 +118,11 @@ final class MainViewModel: ObservableObject {
         prefsRepo.shownParentalGate = value
     }
     
-    func promptReview() {
+    @MainActor func promptReview() {
         if let scene = UIApplication.shared.connectedScenes
             .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
             
-            SKStoreReviewController.requestReview(in: scene)
+            AppStore.requestReview(in: scene)
         }
     }
     

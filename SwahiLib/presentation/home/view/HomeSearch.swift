@@ -54,7 +54,7 @@ struct HomeSearch: View {
                     }
                 }
                 
-                if !viewModel.prefsRepo.isProUser {
+                if !viewModel.isProUser {
                     UpgradeBanner1 { showPaywall = true }
                 }
             }
@@ -73,7 +73,7 @@ struct HomeSearchView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            if viewModel.prefsRepo.isProUser {
+            if viewModel.isProUser {
                 VerticalLetters(
                     selectedLetter: selectedLetter,
                     onLetterSelected: { letter in
