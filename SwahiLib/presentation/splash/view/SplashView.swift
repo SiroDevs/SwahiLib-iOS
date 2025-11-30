@@ -13,6 +13,9 @@ struct SplashView: View {
     }()
     @State private var navigateToNextScreen = false
     
+    let deepLinked: Bool
+    let word: Word
+    
     var body: some View {
         Group {
             if navigateToNextScreen {
@@ -37,7 +40,11 @@ struct SplashView: View {
     @ViewBuilder
     private var destinationView: some View {
         if viewModel.prefsRepo.isDataLoaded {
-            MainView()
+            if deepLinked {
+                WordView(word: word, deepLinked: true)
+            } else {
+                MainView()
+            }
         } else {
             InitView()
         }
@@ -86,5 +93,5 @@ struct SplashContent: View {
 }
 
 #Preview {
-    SplashView()
+    SplashView(deepLinked: false, word: Word.sampleWords[0])
 }

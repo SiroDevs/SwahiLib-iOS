@@ -9,12 +9,13 @@ import RevenueCat
 import RevenueCatUI
 
 struct WordView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: WordViewModel = {
         DiContainer.shared.resolve(WordViewModel.self)
     }()
     
     let word: Word
+    let deepLinked: Bool
     
     @State private var showToast = false
     @State private var showAlert = false
@@ -25,7 +26,6 @@ struct WordView: View {
            NavigationStack {
                stateContent
            }
-           
             if showToast {
                 let toastMessage = L10n.likedWord(for: word.title, isLiked: viewModel.isLiked)
                 ToastView(message: toastMessage)
@@ -56,6 +56,7 @@ struct WordView: View {
             #endif
         }
         .toolbar(.hidden, for: .tabBar)
+        .toolbarTitleDisplayMode(.inline)
         .task({viewModel.loadWord(word)})
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
@@ -103,7 +104,11 @@ struct WordView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    if (deepLinked) {
+                        navigateToNewMainView()
+                    } else {
+                        dismiss()
+                    }
                 } label: { Image(systemName: "chevron.backward") }
             }
 
@@ -127,10 +132,26 @@ struct WordView: View {
         .navigationBarBackButtonHidden(true)
 
     }
+    
+    private func navigateToNewMainView() {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                let mainView = MainView()
+                let hostingController = UIHostingController(rootView: mainView)
+                
+                UIView.transition(with: window,
+                                duration: 0.3,
+                                options: .transitionCrossDissolve,
+                                animations: {
+                                    window.rootViewController = hostingController
+                                })
+            }
+        }
+
 }
 
 #Preview{
     WordView(
-        word: Word.sampleWords[0]
+        word: Word.sampleWords[0], deepLinked: false
     )
 }

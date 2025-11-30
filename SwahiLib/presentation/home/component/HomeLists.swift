@@ -62,7 +62,7 @@ struct WordsList: View {
         LazyVStack(spacing: 0) {
             ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
                 NavigationLink {
-                    WordView(word: word)
+                    WordView(word: word, deepLinked: false)
                 } label: {
                     WordItem(word: word)
                 }

@@ -16,6 +16,7 @@ final class MainViewModel: ObservableObject {
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
+    private let notifyService: NotificationServiceProtocol
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -36,6 +37,8 @@ final class MainViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
     @Published var isProUser: Bool = false
+    @Published var notificationsEnabled: Bool = false
+    @Published var notificationTime: Date
     
     init(
         prefsRepo: PrefsRepo,
@@ -43,7 +46,8 @@ final class MainViewModel: ObservableObject {
         proverbRepo: ProverbRepoProtocol,
         sayingRepo: SayingRepoProtocol,
         wordRepo: WordRepoProtocol,
-        subsRepo: SubsRepoProtocol
+        subsRepo: SubsRepoProtocol,
+        notifyService: NotificationServiceProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -51,6 +55,20 @@ final class MainViewModel: ObservableObject {
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
+        self.notifyService = notifyService
+        
+        let savedHour = prefsRepo.notificationHour
+        let savedMinute = prefsRepo.notificationMinute
+        
+        var components = DateComponents()
+        components.hour = savedHour
+        components.minute = savedMinute
+        self.notificationTime = Calendar.current.date(from: components) ?? Date()
+        self.notificationsEnabled = prefsRepo.notificationsEnabled
+        
+        if notificationsEnabled {
+            notifyService.checkNotificationPermission()
+        }
     }
     
     private func validateSubscription(isOnline: Bool) async throws {
@@ -126,8 +144,36 @@ final class MainViewModel: ObservableObject {
         }
     }
     
-    func clearAllData() {
+    func toggleNotifications(_ enabled: Bool) {
+        notificationsEnabled = enabled
+        prefsRepo.notificationsEnabled = enabled
         
+        if enabled {
+            notifyService.checkNotificationPermission()
+            scheduleNotifications()
+        } else {
+            notifyService.cancelDailyNotifications()
+        }
+    }
+    
+    func updateNotificationTime(_ time: Date) {
+        notificationTime = time
+        prefsRepo.setNotificationTime(hour: time.hour, minute: time.minute)
+        
+        if notificationsEnabled {
+            scheduleNotifications()
+        }
+    }
+    
+    private func scheduleNotifications() {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
+        notifyService.scheduleDailyWordNotification(
+            at: components.hour ?? 6,
+            minute: components.minute ?? 0
+        )
+    }
+
+    func clearAllData() {
         print("Clearing data")
         self.uiState = .loading("Inafuta data ...")
 
@@ -140,5 +186,15 @@ final class MainViewModel: ObservableObject {
             prefsRepo.resetPrefs()
             self.uiState = .loaded
         }
+    }
+}
+
+extension Date {
+    var hour: Int {
+        Calendar.current.component(.hour, from: self)
+    }
+    
+    var minute: Int {
+        Calendar.current.component(.minute, from: self)
     }
 }

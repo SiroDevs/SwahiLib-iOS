@@ -19,7 +19,7 @@ struct SettingsView: View {
     var body: some View {
         Group {
             if restartTheApp {
-                SplashView()
+                SplashView(deepLinked: false, word: Word.sampleWords[0])
             } else {
                 mainContent
             }

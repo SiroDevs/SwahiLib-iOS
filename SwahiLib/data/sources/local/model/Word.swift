@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Word: Identifiable, Codable {
+struct Word: Identifiable, Codable, Hashable {
     var id: Int { rid }
     let rid: Int
     let title: String
