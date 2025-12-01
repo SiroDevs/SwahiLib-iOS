@@ -14,56 +14,68 @@ struct HomeSearch: View {
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
     @State private var showPaywall: Bool = false
+    @State private var scrollViewProxy: ScrollViewProxy? = nil
 
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            SearchBar(
-                                text: $searchText,
-                                onSearch: { query in
-                                    viewModel.filterData(qry: query)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Color.clear
+                                .frame(height: 0)
+                                .id("top")
+                            
+                            HStack {
+                                SearchBar(
+                                    text: $searchText,
+                                    onSearch: { query in
+                                        viewModel.filterData(qry: query)
+                                    }
+                                )
+                                NavigationLink {
+                                    AdvancedSearch()
+                                } label: {
+                                    Text("TAFUTA ZAIDI")
+                                        .font(.headline)
+                                        .padding(.vertical, 5)
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                            .padding(.horizontal, 10)
+                            
+                            CustomTabTitles(
+                                selectedTab: viewModel.homeTab,
+                                onSelect: { homeTab in
+                                    viewModel.homeTab = homeTab
+                                    viewModel.filterData(qry: "")
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        scrollToTop()
+                                    }
                                 }
                             )
-                            NavigationLink {
-                                AdvancedSearch()
-                            } label: {
-                                Text("TAFUTA ZAIDI")
-                                    .font(.headline)
-                                    .padding(.vertical, 5)
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-                        .padding(.horizontal, 10)
-                        
-                        CustomTabTitles(
-                            selectedTab: viewModel.homeTab,
-                            onSelect: { homeTab in
-                                viewModel.homeTab = homeTab
-                                viewModel.filterData(qry: "")
-                            }
-                        )
-                        .padding(.leading, 10)
+                            .padding(.leading, 10)
 
-                        HomeSearchView(
-                            viewModel: viewModel,
-                            selectedLetter: $selectedLetter
-                        )
+                            HomeSearchView(
+                                viewModel: viewModel,
+                                selectedLetter: $selectedLetter
+                            )
+                        }
+                        .onAppear {
+                            self.scrollViewProxy = proxy
+                        }
+                        .onChange(of: viewModel.homeTab) { _ in
+                            if scrollViewProxy == nil {
+                                self.scrollViewProxy = proxy
+                            }
+                        }
                     }
                 }
                 
-                Button {
-                    
-                } label: {
-                    Image(systemName: "chevron.up.circle")
-                        .font(.title.weight(.semibold))
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(.primary2)
-                        .clipShape(Circle())
-                        .shadow(radius: 4, x: 0, y: 4)
+                ScrollToTopButton {
+                    withAnimation {
+                        scrollToTop()
+                    }
                 }
                 .padding()
                 
@@ -76,6 +88,12 @@ struct HomeSearch: View {
             }
             .navigationTitle("SwahiLib")
             .toolbarBackground(.regularMaterial, for: .navigationBar)
+        }
+    }
+    
+    private func scrollToTop() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            scrollViewProxy?.scrollTo("top", anchor: .top)
         }
     }
 }
