@@ -49,7 +49,7 @@ class IdiomViewModel: ObservableObject {
         uiState = .loading()
         isLiked = idiom.liked
         title = idiom.title
-        meanings = cleanMeaning(
+        meanings = cleanText(
             idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
 
@@ -57,7 +57,7 @@ class IdiomViewModel: ObservableObject {
     }
     
     func shareText(idiom: Idiom) -> String {
-        let parts = cleanMeaning(
+        let parts = cleanText(
             idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         

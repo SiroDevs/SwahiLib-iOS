@@ -12,41 +12,67 @@ struct AdvancedSearchView: View {
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
-    
     @State private var showAlertDialog = false
     @State private var showPaywall: Bool = false
-    
+    @State private var scrollViewProxy: ScrollViewProxy? = nil
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SearchBar(
-                            text: $searchText,
-                            onSearch: { query in
-                                viewModel.filterData(qry: query)
-                            }
-                        )
-                        .padding(.horizontal, 10)
-                        
-                        CustomTabTitles(
-                            selectedTab: viewModel.homeTab,
-                            onSelect: { homeTab in
-                                viewModel.homeTab = homeTab
-                                viewModel.filterData(qry: "")
-                            }
-                        )
-                        .padding(.leading, 10)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Color.clear
+                                .frame(height: 0)
+                                .id("top")
+                            
+                            SearchBar(
+                                text: $searchText,
+                                onSearch: { query in
+                                    viewModel.filterData(qry: query)
+                                }
+                            )
+                            .padding(.horizontal, 10)
+                            
+                            CustomTabTitles(
+                                selectedTab: viewModel.homeTab,
+                                onSelect: { homeTab in
+                                    viewModel.homeTab = homeTab
+                                    viewModel.filterData(qry: "")
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        scrollToTop()
+                                    }
+                                }
+                            )
+                            .padding(.leading, 10)
 
-                        AdvancedSearchBody(
-                            viewModel: viewModel,
-                            selectedLetter: $selectedLetter
-                        )
+                            AdvancedSearchBody(
+                                viewModel: viewModel,
+                                selectedLetter: $selectedLetter
+                            )
+                        }
+                        .onAppear {
+                            self.scrollViewProxy = proxy
+                        }
                     }
                 }
+                
+                ScrollToTopButton {
+                    withAnimation {
+                        scrollToTop()
+                    }
+                }
+                .padding()
             }
             .navigationTitle("Tafuta kwa Kina")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
+        }
+    }
+    
+    private func scrollToTop() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            scrollViewProxy?.scrollTo("top", anchor: .top)
         }
     }
 }

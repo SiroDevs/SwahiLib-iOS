@@ -19,7 +19,7 @@ struct WordItem: View {
     }
 
     private var meaning: String {
-        let cleaned = cleanMeaning(word.meaning)
+        let cleaned = cleanText(word.meaning)
         let contents = cleaned.split(separator: "|")
         let extra = contents.first?.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
 
@@ -93,10 +93,10 @@ struct WordItem: View {
 //    )
 //    .padding()
 //}
-
-#Preview {
-    WordsList(
-        words: Word.sampleWords
-    )
-    .padding()
-}
+//
+//#Preview {
+//    WordsList(
+//        words: Word.sampleWords
+//    )
+//    .padding()
+//}

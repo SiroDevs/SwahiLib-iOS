@@ -63,11 +63,11 @@ struct LetterItem: View {
             }
         )
         .frame(width: 60)
-        VStack {
-            WordsList(
-                words: Word.sampleWords
-            )
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+//        VStack {
+//            WordsList(
+//                words: Word.sampleWords
+//            )
+//        }
+//        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

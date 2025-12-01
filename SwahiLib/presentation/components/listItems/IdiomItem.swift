@@ -19,7 +19,7 @@ struct IdiomItem: View {
     }
 
     private var meaning: String {
-        let cleaned = cleanMeaning(idiom.meaning)
+        let cleaned = cleanText(idiom.meaning)
         let contents = cleaned.split(separator: "|")
         let extra = contents.first?.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
 

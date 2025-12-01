@@ -169,6 +169,7 @@ struct DependencyMap {
         container.register(WordViewModel.self) { resolver in
             WordViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )

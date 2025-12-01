@@ -198,6 +198,6 @@ func getFontSize(characters: Int, height: Double, width: Double) -> Double {
     return sqrt((height * width) / Double(characters))
 }
 
-func cleanMeaning(_ input: String) -> String {
+func cleanText(_ input: String) -> String {
     input.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
 }

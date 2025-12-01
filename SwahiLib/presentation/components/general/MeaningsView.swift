@@ -72,6 +72,6 @@ struct CardView: View {
 
 #Preview{
     WordView(
-        word: Word.sampleWords[0], deepLinked: false
+        deepLinked: false, word: Word.sampleWords[0]
     )
 }

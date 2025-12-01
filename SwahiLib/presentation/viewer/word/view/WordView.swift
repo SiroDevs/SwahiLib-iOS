@@ -14,8 +14,8 @@ struct WordView: View {
         DiContainer.shared.resolve(WordViewModel.self)
     }()
     
-    let word: Word
     let deepLinked: Bool
+    let word: Word
     
     @State private var showToast = false
     @State private var showAlert = false
@@ -57,7 +57,9 @@ struct WordView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbarTitleDisplayMode(.inline)
-        .task({viewModel.loadWord(word)})
+        .task(
+            {viewModel.loadWord(word)}
+        )
         .onChange(of: viewModel.uiState) { newState in
             if case .liked = newState {
                 showToast = true
@@ -99,6 +101,7 @@ struct WordView: View {
             meanings: viewModel.meanings,
             synonyms: viewModel.synonyms,
             conjugation: viewModel.conjugation,
+            proverbs: viewModel.proverbs,
             onFeatureLocked: { showAlert = true }
         )
         .toolbar {
@@ -152,6 +155,6 @@ struct WordView: View {
 
 #Preview{
     WordView(
-        word: Word.sampleWords[0], deepLinked: false
+        deepLinked: false, word: Word.sampleWords[0]
     )
 }

@@ -97,7 +97,7 @@ struct ProverbView: View {
             title: viewModel.title,
             meanings: viewModel.meanings,
             synonyms: viewModel.synonyms,
-            conjugation: viewModel.conjugation,
+            explanations: viewModel.explanations,
             onFeatureLocked: { showAlert = true }
         )
         .toolbar {
