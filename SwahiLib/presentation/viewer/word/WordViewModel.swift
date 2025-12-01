@@ -18,20 +18,24 @@ class WordViewModel: ObservableObject {
     @Published var isLiked: Bool = false
     @Published var meanings: [String] = []
     @Published var synonyms: [Word] = []
-
+    @Published var proverbs: [Proverb] = []
+    
     private let netUtils: NetworkUtils
     let prefsRepo: PrefsRepo
+    private let proverbRepo: ProverbRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
-
+    
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
+        proverbRepo: ProverbRepoProtocol,
         wordRepo: WordRepoProtocol,
         subsRepo: SubsRepoProtocol
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
+        self.proverbRepo = proverbRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
     }
@@ -53,15 +57,17 @@ class WordViewModel: ObservableObject {
         title = word.title
         conjugation = word.conjugation
         
+        loadRelatedProverbs(word: word)
+        
         meanings = cleanText(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
-
+        
         let synonymTitles = (word.synonyms)
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
-
+        
         Task { @MainActor in
             if !synonymTitles.isEmpty {
                 self.synonyms =  wordRepo.getWordsByTitles(titles: synonymTitles).sorted { ($0.title).lowercased() < ($1.title).lowercased() }
@@ -73,6 +79,19 @@ class WordViewModel: ObservableObject {
         uiState = .loaded
     }
     
+    func loadRelatedProverbs(word: Word){
+        let allProverbs = proverbRepo.fetchLocalData()
+        let searchTerm = word.title.lowercased()
+        
+        self.proverbs = allProverbs.filter { proverb in
+            let proverbTitle = proverb.title.lowercased()
+            let wordsInProverbs = proverbTitle.split(separator: " ").map { String($0) }
+            
+            return wordsInProverbs.contains { $0 == searchTerm }
+        }
+        .sorted { $0.title < $1.title }
+    }
+
     func shareText(word: Word) -> String {
         let parts = cleanText(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)

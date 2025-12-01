@@ -73,20 +73,20 @@ struct ProverbDetails: View {
                 if !meanings.isEmpty {
                     if hasLiteralAndFigurativeMeanings {
                         Spacer().frame(height: Constants.sizeXSmall)
-                        Text("MAANA HALISI")
+                        Text("MAANA HALISI \(literalMeanings.count)")
                             .bold()
                             .font(.system(size: Constants.fontSizeTitle))
                             .padding(.horizontal, Constants.sizeLarge)
                         ProverbMeaning(meanings: literalMeanings)
                         
                         Spacer().frame(height: Constants.sizeXSmall)
-                        Text("MAANA YA KIFALSAFA/KIMAFUMBO")
+                        Text("MAANA YA KIFALSAFA/KIMAFUMBO \(figurativeMeanings.count)")
                             .bold()
                             .font(.system(size: Constants.fontSizeTitle))
                             .padding(.leading, Constants.sizeLarge)
                         ProverbMeaning(meanings: figurativeMeanings)
                     } else {
-                        Text("MAANA YA METHALI")
+                        Text("MAANA YA METHALI \(literalMeanings.count)")
                             .bold()
                             .font(.system(size: Constants.fontSizeTitle))
                             .padding(.leading, Constants.sizeLarge)

@@ -54,6 +54,19 @@ struct HomeSearch: View {
                     }
                 }
                 
+                Button {
+                    
+                } label: {
+                    Image(systemName: "chevron.up.circle")
+                        .font(.title.weight(.semibold))
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(.primary2)
+                        .clipShape(Circle())
+                        .shadow(radius: 4, x: 0, y: 4)
+                }
+                .padding()
+                
                 if !viewModel.isProUser {
                     UpgradeBanner1 { showPaywall = true }
                 }
