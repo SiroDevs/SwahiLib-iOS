@@ -36,7 +36,7 @@ struct HomeSearch: View {
                                 NavigationLink {
                                     AdvancedSearch()
                                 } label: {
-                                    Text("TAFUTA ZAIDI")
+                                    Text("TAFUTA KWA KINA")
                                         .font(.headline)
                                         .padding(.vertical, 5)
                                 }

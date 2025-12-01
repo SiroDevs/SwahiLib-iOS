@@ -19,6 +19,9 @@ final class SearchViewModel: ObservableObject {
     @Published var showAlertDialog: Bool = false
     @Published var isProUser: Bool = false
     
+    @Published var searchPart: SearchOptionsParts = .byTitle
+    @Published var searchPattern: SearchOptionsPatterns = .beginning
+        
     @Published var allIdioms: [Idiom] = []
     @Published var filteredIdioms: [Idiom] = []
     
@@ -70,26 +73,72 @@ final class SearchViewModel: ObservableObject {
         
         switch self.homeTab {
         case .idioms:
-            self.filteredIdioms = trimmedQuery.isEmpty
-                ? allIdioms
-                : allIdioms.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            
+            self.filteredIdioms = filterItems(items: allIdioms, query: trimmedQuery)
         case .sayings:
-            self.filteredSayings = trimmedQuery.isEmpty
-                ? allSayings
-                : allSayings.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            
+            self.filteredSayings = filterItems(items: allSayings, query: trimmedQuery)
         case .proverbs:
-            self.filteredProverbs = trimmedQuery.isEmpty
-                ? allProverbs
-                : allProverbs.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
-            
+            self.filteredProverbs = filterItems(items: allProverbs, query: trimmedQuery)
         case .words:
-            self.filteredWords = trimmedQuery.isEmpty
-                ? allWords
-                : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
+            self.filteredWords = filterItems(items: allWords, query: trimmedQuery)
         }
         
         self.uiState = .filtered
+    }
+    
+    private func filterItems<T: SearchableItem>(items: [T], query: String) -> [T] {
+        guard !query.isEmpty else { return items }
+        
+        return items.filter { item in
+            let searchText: String
+            
+            switch searchPart {
+            case .byTitle:
+                searchText = item.title.lowercased()
+            case .byMeaning:
+                if let meanings = item.meanings {
+                    searchText = meanings.joined(separator: " ").lowercased()
+                } else {
+                    searchText = item.title.lowercased()
+                }
+            }
+            
+            switch searchPattern {
+            case .beginning:
+                return searchText.hasPrefix(query)
+            case .middle:
+                return searchText.contains(query)
+            case .end:
+                return searchText.hasSuffix(query)
+            }
+        }
+    }
+}
+
+protocol SearchableItem {
+    var title: String { get }
+    var meanings: [String]? { get }
+}
+
+extension Idiom: SearchableItem {
+    var meanings: [String]? {
+        return []
+    }
+}
+
+extension Proverb: SearchableItem {
+    var meanings: [String]? {
+        return []
+    }
+}
+
+extension Saying: SearchableItem {
+    var meanings: [String]? {
+        return []
+    }
+}
+
+extension Word: SearchableItem {
+    var meanings: [String]? {
+        return []
     }
 }
