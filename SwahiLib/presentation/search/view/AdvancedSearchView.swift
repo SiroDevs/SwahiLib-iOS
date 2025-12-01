@@ -18,7 +18,7 @@ struct AdvancedSearchView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
+            ZStack {
                 ScrollViewReader { proxy in
                     ScrollView {
                         VStack(alignment: .leading, spacing: 12) {
@@ -33,6 +33,18 @@ struct AdvancedSearchView: View {
                                 }
                             )
                             .padding(.horizontal, 10)
+                            
+                            SearchOptions(
+                                selectedPart: $viewModel.searchPart,
+                                selectedPattern: $viewModel.searchPattern
+                            )
+                            .padding(.horizontal, 10)
+                            .onChange(of: viewModel.searchPart) { _ in
+                                viewModel.filterData(qry: searchText)
+                            }
+                            .onChange(of: viewModel.searchPattern) { _ in
+                                viewModel.filterData(qry: searchText)
+                            }
                             
                             CustomTabTitles(
                                 selectedTab: viewModel.homeTab,
@@ -57,12 +69,19 @@ struct AdvancedSearchView: View {
                     }
                 }
                 
-                ScrollToTopButton {
-                    withAnimation {
-                        scrollToTop()
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ScrollToTopButton {
+                            withAnimation {
+                                scrollToTop()
+                            }
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 100)
                     }
                 }
-                .padding()
             }
             .navigationTitle("Tafuta kwa Kina")
             .navigationBarTitleDisplayMode(.inline)
