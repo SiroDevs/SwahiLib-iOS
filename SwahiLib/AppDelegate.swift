@@ -20,6 +20,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             notifyService.scheduleDailyWordNotification(at: hour, minute: minute)
         }
         
+        WordsTaskManager.shared.setupBackgroundTask()
         return true
     }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        WordsTaskManager.shared.scheduleBackgroundSave()
+    }
+
 }

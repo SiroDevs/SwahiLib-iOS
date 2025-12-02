@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct InitView: View {
+    @StateObject private var wordsTaskManager = WordsTaskManager.shared
     @StateObject private var viewModel: InitViewModel = {
         DiContainer.shared.resolve(InitViewModel.self)
     }()
@@ -45,16 +46,6 @@ struct InitView: View {
                 fileName: "bar-loader"
             )
 
-        case .saving(let msg):
-            VStack {
-                LoadingState(
-                    title: msg ?? "Inahifadhi data ...",
-                    fileName: "opener-loading",
-                    showProgress: true,
-                    progressValue: viewModel.progress
-                )
-            }
-
         case .error(let msg):
             ErrorState(message: msg) {
                 viewModel.initializeData()
@@ -74,7 +65,3 @@ struct InitView: View {
         }
     }
 }
-//
-//#Preview {
-//    InitView()
-//}
