@@ -14,7 +14,7 @@ struct InitView: View {
     }()
 
     @State private var navigateToNextScreen = false
-
+    
     var body: some View {
         Group {
             if navigateToNextScreen {
@@ -23,17 +23,14 @@ struct InitView: View {
                 mainContent
             }
         }
+        .onAppear {
+            startInitialization()
+        }
     }
 
     private var mainContent: some View {
         VStack {
             stateContent
-        }
-        .onAppear {
-            viewModel.initializeData()
-        }
-        .onChange(of: viewModel.uiState) { state in
-            handleStateChange(state)
         }
     }
 
@@ -53,15 +50,25 @@ struct InitView: View {
 
         case .saved:
             EmptyState()
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        wordsTaskManager.scheduleBackgroundSave(immediately: true)
+                    }
+                    navigateToNextScreen = true
+                }
 
         default:
             EmptyState()
         }
     }
 
-    private func handleStateChange(_ state: UiState) {
-        if case .saved = state {
+    private func startInitialization() {
+        let prefsRepo = DiContainer.shared.resolve(PrefsRepo.self)
+        
+        if prefsRepo.isDataLoaded {
             navigateToNextScreen = true
+        } else {
+            viewModel.initializeData()
         }
     }
 }
