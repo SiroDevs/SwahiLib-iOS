@@ -4,16 +4,13 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.swahilib.wordsTask</string>
-	</array>
-	<key>UIApplicationBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>processing</string>
+		<string>com.swahilib.BgWordsTask.Refresh</string>
+		<string>com.swahilib.BgWordsTask.Processing</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 	</array>
 </dict>
 </plist>

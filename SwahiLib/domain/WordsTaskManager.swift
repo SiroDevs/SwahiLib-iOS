@@ -16,7 +16,7 @@ final class WordsTaskManager: ObservableObject {
     @Published var backgroundTaskError: String?
     
     private var cancellables = Set<AnyCancellable>()
-    private let taskIdentifier = "com.swahilib.wordsTask"
+    private let taskIdentifier = "com.swahilib.BgWordsTask.Processing"
     
     private init() {
         setupBackgroundTask()
@@ -33,7 +33,7 @@ final class WordsTaskManager: ObservableObject {
     
     func scheduleBackgroundSave(immediately: Bool = false) {
         let request = BGProcessingTaskRequest(identifier: taskIdentifier)
-        request.requiresNetworkConnectivity = false
+        request.requiresNetworkConnectivity = true
         request.requiresExternalPower = false
         request.earliestBeginDate = immediately ? Date() : Date(timeIntervalSinceNow: 1)
         do {

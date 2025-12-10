@@ -109,7 +109,6 @@ struct DependencyMap {
                 idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
-                wordRepo: resolver.resolve(WordRepoProtocol.self)!,
             )
         }.inObjectScope(.container)
         

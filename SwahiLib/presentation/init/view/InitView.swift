@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import BackgroundTasks
 
 struct InitView: View {
-    @StateObject private var wordsTaskManager = WordsTaskManager.shared
+    @StateObject private var wordsBgTask = WordsTaskManager.shared
     @StateObject private var viewModel: InitViewModel = {
         DiContainer.shared.resolve(InitViewModel.self)
     }()
@@ -25,6 +26,7 @@ struct InitView: View {
         }
         .onAppear {
             startInitialization()
+//            wordsBgTask.scheduleBackgroundSave()
         }
     }
 
@@ -52,7 +54,7 @@ struct InitView: View {
             EmptyState()
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        wordsTaskManager.scheduleBackgroundSave(immediately: true)
+                        wordsBgTask.scheduleBackgroundSave(immediately: true)
                     }
                     navigateToNextScreen = true
                 }
