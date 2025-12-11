@@ -49,7 +49,7 @@ class WordRepo: WordRepoProtocol {
                 allWords.append(contentsOf: mappedBatch)
 
                 if wordDTOs.count < pageSize {
-                    break // last batch
+                    break
                 }
 
                 offset += pageSize

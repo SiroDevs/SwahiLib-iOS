@@ -11,6 +11,7 @@ final class InitViewModel: ObservableObject {
     @Published var idioms: [Idiom] = []
     @Published var proverbs: [Proverb] = []
     @Published var sayings: [Saying] = []
+    @Published var words: [Word] = []
 
     @Published var uiState: UiState = .idle
 
@@ -18,17 +19,20 @@ final class InitViewModel: ObservableObject {
     private let idiomRepo: IdiomRepoProtocol
     private let proverbRepo: ProverbRepoProtocol
     private let sayingRepo: SayingRepoProtocol
+    private let wordRepo: WordRepoProtocol
 
     init(
         prefsRepo: PrefsRepo,
         idiomRepo: IdiomRepoProtocol,
         proverbRepo: ProverbRepoProtocol,
-        sayingRepo: SayingRepoProtocol
+        sayingRepo: SayingRepoProtocol,
+        wordRepo: WordRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
+        self.wordRepo = wordRepo
     }
 
     func initializeData() {
@@ -46,16 +50,19 @@ final class InitViewModel: ObservableObject {
             let fetchedIdioms = try await idiomRepo.fetchRemoteData()
             let fetchedProverbs = try await proverbRepo.fetchRemoteData()
             let fetchedSayings = try await sayingRepo.fetchRemoteData()
+            let fetchedWords = try await wordRepo.fetchRemoteData()
 
             await MainActor.run {
                 self.idioms = fetchedIdioms
                 self.proverbs = fetchedProverbs
                 self.sayings = fetchedSayings
+                self.words = fetchedWords
             }
 
             try await saveIdioms()
             try await saveProverbs()
             try await saveSayings()
+            try await saveWords()
 
             prefsRepo.isDataLoaded = true
 
@@ -95,5 +102,67 @@ final class InitViewModel: ObservableObject {
             sayingRepo.saveSaying(saying)
         }
         print("✅ Sayings saved successfully")
+    }
+    
+    private func saveWords() async throws {
+        let batchSize = 500
+        let totalWords = words.count
+        
+        print("📦 Saving \(totalWords) words with concurrency...")
+        let startTime = Date()
+        
+        let batches = stride(from: 0, to: totalWords, by: batchSize).map { startIndex -> [Word] in
+            let endIndex = min(startIndex + batchSize, totalWords)
+            return Array(words[startIndex..<endIndex])
+        }
+        
+        print("Created \(batches.count) batches of ~\(batchSize) words each")
+        
+        await withTaskGroup(of: Int.self) { group in
+            let optimalConcurrency = max(1, ProcessInfo.processInfo.activeProcessorCount - 1)
+            
+            print("Using \(optimalConcurrency) concurrent tasks")
+            
+            for batchIndex in 0..<min(optimalConcurrency, batches.count) {
+                let batch = batches[batchIndex]
+                group.addTask {
+                    let taskStart = Date()
+                    for word in batch {
+                        self.wordRepo.saveWord(word)
+                    }
+                    
+                    let taskTime = Date().timeIntervalSince(taskStart)
+                    print("Task \(batchIndex + 1): Saved \(batch.count) words in \(String(format: "%.2f", taskTime))s")
+                    return batch.count
+                }
+            }
+            
+            var nextBatchIndex = optimalConcurrency
+            var totalSaved = 0
+            
+            for await result in group {
+                totalSaved += result
+                
+                if nextBatchIndex < batches.count {
+                    let batch = batches[nextBatchIndex]
+                    let currentIndex = nextBatchIndex
+                    nextBatchIndex += 1
+                    
+                    group.addTask {
+                        let taskStart = Date()
+                        
+                        for word in batch {
+                            self.wordRepo.saveWord(word)
+                        }
+                        
+                        let taskTime = Date().timeIntervalSince(taskStart)
+                        print("Task \(currentIndex + 1): Saved \(batch.count) words in \(String(format: "%.2f", taskTime))s")
+                        return batch.count
+                    }
+                }
+            }
+            
+            print("Total words processed in tasks: \(totalSaved)")
+        }
     }
 }
