@@ -4,8 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.swahilib.BgWordsTask.Refresh</string>
-		<string>com.swahilib.BgWordsTask.Processing</string>
+		<string>com.swahilib.wordstask.refresh</string>
+		<string>com.swahilib.wordstask.processing</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

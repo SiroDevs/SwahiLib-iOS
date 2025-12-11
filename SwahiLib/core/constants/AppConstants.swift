@@ -15,6 +15,9 @@ struct AppConstants {
     static let entitlements = "swahilib_offering_1"
     static let appLink = "https://linktr.ee/SwahilibApp"
     static let supportEmail = "futuristicken@gmail.com"
+    
+    static let wordsRefreshTask = "com.swahilib.wordstask.refresh"
+    static let wordsProcessingTask = "com.swahilib.wordstask.processing"
 }
 
 struct PrefConstants {
