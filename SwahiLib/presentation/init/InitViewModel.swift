@@ -69,8 +69,6 @@ final class InitViewModel: ObservableObject {
             await MainActor.run {
                 self.uiState = .saved
             }
-
-            print("✅ Data fetched and saved successfully.")
         } catch {
             await MainActor.run {
                 self.uiState = .error("Imefeli: \(error.localizedDescription)")
@@ -81,47 +79,34 @@ final class InitViewModel: ObservableObject {
 
 
     private func saveIdioms() async throws {
-        print("Now saving idioms")
-        for (index, idiom) in idioms.enumerated() {
+        for (idiom) in idioms {
             idiomRepo.saveIdiom(idiom)
         }
-        print("✅ Idioms saved successfully")
     }
 
     private func saveProverbs() async throws {
-        print("Now saving proverbs")
-        for (index, proverb) in proverbs.enumerated() {
+        for (proverb) in proverbs {
             proverbRepo.saveProverb(proverb)
         }
-        print("✅ Proverbs saved successfully")
     }
 
     private func saveSayings() async throws {
-        print("Now saving sayings")
-        for (index, saying) in sayings.enumerated() {
+        for (saying) in sayings {
             sayingRepo.saveSaying(saying)
         }
-        print("✅ Sayings saved successfully")
     }
     
     private func saveWords() async throws {
-        let batchSize = 500
+        let batchSize = 1000
         let totalWords = words.count
-        
-        print("📦 Saving \(totalWords) words with concurrency...")
-        let startTime = Date()
         
         let batches = stride(from: 0, to: totalWords, by: batchSize).map { startIndex -> [Word] in
             let endIndex = min(startIndex + batchSize, totalWords)
             return Array(words[startIndex..<endIndex])
         }
         
-        print("Created \(batches.count) batches of ~\(batchSize) words each")
-        
         await withTaskGroup(of: Int.self) { group in
             let optimalConcurrency = max(1, ProcessInfo.processInfo.activeProcessorCount - 1)
-            
-            print("Using \(optimalConcurrency) concurrent tasks")
             
             for batchIndex in 0..<min(optimalConcurrency, batches.count) {
                 let batch = batches[batchIndex]
@@ -130,9 +115,6 @@ final class InitViewModel: ObservableObject {
                     for word in batch {
                         self.wordRepo.saveWord(word)
                     }
-                    
-                    let taskTime = Date().timeIntervalSince(taskStart)
-                    print("Task \(batchIndex + 1): Saved \(batch.count) words in \(String(format: "%.2f", taskTime))s")
                     return batch.count
                 }
             }
@@ -145,24 +127,16 @@ final class InitViewModel: ObservableObject {
                 
                 if nextBatchIndex < batches.count {
                     let batch = batches[nextBatchIndex]
-                    let currentIndex = nextBatchIndex
                     nextBatchIndex += 1
                     
                     group.addTask {
-                        let taskStart = Date()
-                        
                         for word in batch {
                             self.wordRepo.saveWord(word)
                         }
-                        
-                        let taskTime = Date().timeIntervalSince(taskStart)
-                        print("Task \(currentIndex + 1): Saved \(batch.count) words in \(String(format: "%.2f", taskTime))s")
                         return batch.count
                     }
                 }
             }
-            
-            print("Total words processed in tasks: \(totalSaved)")
         }
     }
 }

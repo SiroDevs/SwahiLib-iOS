@@ -90,7 +90,7 @@ struct MainView: View {
             
         default:
             LoadingState(
-                title: "Inapakia data ...",
+                title: "Kamusi ya Kiswahili ...",
                 fileName: "circle-loader"
             )
         }

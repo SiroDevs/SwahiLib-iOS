@@ -26,42 +26,49 @@ class WordRepo: WordRepoProtocol {
     }
     
     func fetchRemoteData() async throws -> [Word] {
-        var offset = 0
         let pageSize = 2000
-        var allWords: [Word] = []
         
-        do {
-            while true {
-                print("📥 Fetching words from \(offset) to \(offset + pageSize - 1)")
-
-                let wordDTOs: [WordDTO] = try await supabase.client
-                    .from("words")
-                    .select()
-                    .range(from: offset, to: offset + pageSize - 1)
-                    .execute()
-                    .value
-
-                if wordDTOs.isEmpty {
-                    break
-                }
-
-                let mappedBatch = wordDTOs.map { MapDtoToEntity.mapToEntity($0) }
-                allWords.append(contentsOf: mappedBatch)
-
-                if wordDTOs.count < pageSize {
-                    break
-                }
-
-                offset += pageSize
-            }
-
-            print("✅ Total words fetched: \(allWords.count)")
-            return allWords
-
-        } catch {
-            print("❌ Failed to fetch words: \(error.localizedDescription)")
-            throw error
+        let totalCount: Int = try await supabase.client
+            .from("words")
+            .select("rid", count: .exact)
+            .execute()
+            .count ?? 0
+        
+        if totalCount == 0 {
+            return []
         }
+        
+        let pageCount = (totalCount + pageSize - 1) / pageSize
+        
+        let pageOffsets = (0..<pageCount).map { $0 * pageSize }
+        
+        let allPages: [[Word]] = try await withThrowingTaskGroup(of: (Int, [Word]).self) { group in
+            for pageIndex in 0..<pageCount {
+                group.addTask { [pageSize] in
+                    let offset = pageIndex * pageSize
+                    let wordDTOs: [WordDTO] = try await self.supabase.client
+                        .from("words")
+                        .select()
+                        .range(from: offset, to: offset + pageSize - 1)
+                        .execute()
+                        .value
+                    
+                    let words = wordDTOs.map { MapDtoToEntity.mapToEntity($0) }
+                    return (pageIndex, words)
+                }
+            }
+            
+            var results = Array(repeating: [Word](), count: pageCount)
+            for try await (pageIndex, words) in group {
+                results[pageIndex] = words
+            }
+            
+            return results
+        }
+        
+        let allWords = allPages.flatMap { $0 }
+        print("✅ Total fetched: \(allWords.count) words")
+        return allWords
     }
     
     func fetchLocalData() -> [Word] {

@@ -40,7 +40,7 @@ struct InitView: View {
         case .loading(let msg):
             LoadingState(
                 title: msg ?? "Inapakia data ...",
-                fileName: "bar-loader"
+                fileName: "loading-carga-refresh"
             )
 
         case .error(let msg):
