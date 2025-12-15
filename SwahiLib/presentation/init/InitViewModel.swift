@@ -47,11 +47,18 @@ final class InitViewModel: ObservableObject {
         }
 
         do {
-            let fetchedIdioms = try await idiomRepo.fetchRemoteData()
-            let fetchedProverbs = try await proverbRepo.fetchRemoteData()
-            let fetchedSayings = try await sayingRepo.fetchRemoteData()
-            let fetchedWords = try await wordRepo.fetchRemoteData()
+            async let fetchedIdiomsTask = idiomRepo.fetchRemoteData()
+            async let fetchedProverbsTask = proverbRepo.fetchRemoteData()
+            async let fetchedSayingsTask = sayingRepo.fetchRemoteData()
+            async let fetchedWordsTask = wordRepo.fetchRemoteData()
 
+            let (fetchedIdioms, fetchedProverbs, fetchedSayings, fetchedWords) = try await (
+                fetchedIdiomsTask,
+                fetchedProverbsTask,
+                fetchedSayingsTask,
+                fetchedWordsTask
+            )
+            
             await MainActor.run {
                 self.idioms = fetchedIdioms
                 self.proverbs = fetchedProverbs
@@ -59,9 +66,9 @@ final class InitViewModel: ObservableObject {
                 self.words = fetchedWords
             }
 
-            try await saveIdioms()
-            try await saveProverbs()
-            try await saveSayings()
+            try saveIdioms()
+            try saveProverbs()
+            try saveSayings()
             try await saveWords()
 
             prefsRepo.isDataLoaded = true
@@ -78,26 +85,26 @@ final class InitViewModel: ObservableObject {
     }
 
 
-    private func saveIdioms() async throws {
-        for (idiom) in idioms {
+    private func saveIdioms() throws {
+        for idiom in idioms {
             idiomRepo.saveIdiom(idiom)
         }
     }
 
-    private func saveProverbs() async throws {
-        for (proverb) in proverbs {
+    private func saveProverbs() throws {
+        for proverb in proverbs {
             proverbRepo.saveProverb(proverb)
         }
     }
 
-    private func saveSayings() async throws {
-        for (saying) in sayings {
+    private func saveSayings() throws {
+        for saying in sayings {
             sayingRepo.saveSaying(saying)
         }
     }
     
     private func saveWords() async throws {
-        let batchSize = 1000
+        let batchSize = 500
         let totalWords = words.count
         
         let batches = stride(from: 0, to: totalWords, by: batchSize).map { startIndex -> [Word] in
@@ -127,9 +134,12 @@ final class InitViewModel: ObservableObject {
                 
                 if nextBatchIndex < batches.count {
                     let batch = batches[nextBatchIndex]
+                    let currentIndex = nextBatchIndex
                     nextBatchIndex += 1
                     
                     group.addTask {
+                        let taskStart = Date()
+                        
                         for word in batch {
                             self.wordRepo.saveWord(word)
                         }

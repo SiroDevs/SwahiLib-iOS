@@ -39,7 +39,7 @@ struct InitView: View {
         switch viewModel.uiState {
         case .loading(let msg):
             LoadingState(
-                title: msg ?? "Inapakia data ...",
+                title: msg ?? "Kuanzisha kwa mara ya kwanza ...",
                 fileName: "loading-carga-refresh"
             )
 
