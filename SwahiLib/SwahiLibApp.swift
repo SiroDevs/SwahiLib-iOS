@@ -10,6 +10,8 @@ import RevenueCat
 
 @main
 struct SwahiLibApp: App {
+    @Environment(\.scenePhase) var scenePhase
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var navCoordinator: NavigationCoordinator
     private let notifyService: NotificationServiceProtocol

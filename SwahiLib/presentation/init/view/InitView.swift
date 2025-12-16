@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct InitView: View {
+    @Environment(\.scenePhase) var scenePhase
     @StateObject private var viewModel: InitViewModel = {
         DiContainer.shared.resolve(InitViewModel.self)
     }()
-
+    
     @State private var navigateToNextScreen = false
-
+    
     var body: some View {
         Group {
             if navigateToNextScreen {
@@ -22,17 +23,14 @@ struct InitView: View {
                 mainContent
             }
         }
+        .onAppear {
+            startInitialization()
+        }
     }
 
     private var mainContent: some View {
         VStack {
             stateContent
-        }
-        .onAppear {
-            viewModel.initializeData()
-        }
-        .onChange(of: viewModel.uiState) { state in
-            handleStateChange(state)
         }
     }
 
@@ -41,19 +39,9 @@ struct InitView: View {
         switch viewModel.uiState {
         case .loading(let msg):
             LoadingState(
-                title: msg ?? "Inapakia data ...",
-                fileName: "bar-loader"
+                title: msg ?? "Kuanzisha kwa mara ya kwanza ...",
+                fileName: "loading-carga-refresh"
             )
-
-        case .saving(let msg):
-            VStack {
-                LoadingState(
-                    title: msg ?? "Inahifadhi data ...",
-                    fileName: "opener-loading",
-                    showProgress: true,
-                    progressValue: viewModel.progress
-                )
-            }
 
         case .error(let msg):
             ErrorState(message: msg) {
@@ -62,19 +50,22 @@ struct InitView: View {
 
         case .saved:
             EmptyState()
+                .onAppear {
+                    navigateToNextScreen = true
+                }
 
         default:
             EmptyState()
         }
     }
 
-    private func handleStateChange(_ state: UiState) {
-        if case .saved = state {
+    private func startInitialization() {
+        let prefsRepo = DiContainer.shared.resolve(PrefsRepo.self)
+        
+        if prefsRepo.isDataLoaded {
             navigateToNextScreen = true
+        } else {
+            viewModel.initializeData()
         }
     }
 }
-//
-//#Preview {
-//    InitView()
-//}

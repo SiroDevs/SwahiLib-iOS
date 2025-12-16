@@ -14,7 +14,6 @@ final class InitViewModel: ObservableObject {
     @Published var words: [Word] = []
 
     @Published var uiState: UiState = .idle
-    @Published var progress: Int = 0
 
     private let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
@@ -45,28 +44,31 @@ final class InitViewModel: ObservableObject {
     func fetchAndSaveData() async {
         await MainActor.run {
             self.uiState = .loading("Inapakia data ...")
-            self.progress = 0
         }
 
         do {
-            let fetchedIdioms = try await idiomRepo.fetchRemoteData()
-            let fetchedProverbs = try await proverbRepo.fetchRemoteData()
-            let fetchedSayings = try await sayingRepo.fetchRemoteData()
-            let fetchedWords = try await wordRepo.fetchRemoteData()
+            async let fetchedIdiomsTask = idiomRepo.fetchRemoteData()
+            async let fetchedProverbsTask = proverbRepo.fetchRemoteData()
+            async let fetchedSayingsTask = sayingRepo.fetchRemoteData()
+            async let fetchedWordsTask = wordRepo.fetchRemoteData()
 
+            let (fetchedIdioms, fetchedProverbs, fetchedSayings, fetchedWords) = try await (
+                fetchedIdiomsTask,
+                fetchedProverbsTask,
+                fetchedSayingsTask,
+                fetchedWordsTask
+            )
+            
             await MainActor.run {
                 self.idioms = fetchedIdioms
                 self.proverbs = fetchedProverbs
                 self.sayings = fetchedSayings
                 self.words = fetchedWords
-
-                self.uiState = .saving("Inahifadhi data ...")
-                self.progress = 0
             }
 
-            try await saveIdioms()
-            try await saveProverbs()
-            try await saveSayings()
+            try saveIdioms()
+            try saveProverbs()
+            try saveSayings()
             try await saveWords()
 
             prefsRepo.isDataLoaded = true
@@ -74,8 +76,6 @@ final class InitViewModel: ObservableObject {
             await MainActor.run {
                 self.uiState = .saved
             }
-
-            print("✅ Data fetched and saved successfully.")
         } catch {
             await MainActor.run {
                 self.uiState = .error("Imefeli: \(error.localizedDescription)")
@@ -85,76 +85,68 @@ final class InitViewModel: ObservableObject {
     }
 
 
-    private func saveIdioms() async throws {
-        print("Now saving idioms")
-        await MainActor.run {
-            self.progress = 0
-            self.uiState = .saving("Inahifadhi nahau \(idioms.count) ...")
-        }
-
-        for (index, idiom) in idioms.enumerated() {
+    private func saveIdioms() throws {
+        for idiom in idioms {
             idiomRepo.saveIdiom(idiom)
-            await MainActor.run {
-                self.updateProgress(current: index + 1, total: idioms.count)
-            }
         }
-        print("✅ Idioms saved successfully")
     }
 
-    private func saveProverbs() async throws {
-        print("Now saving proverbs")
-        await MainActor.run {
-            self.progress = 0
-            self.uiState = .saving("Inahifadhi methali \(proverbs.count) ...")
-        }
-
-        for (index, proverb) in proverbs.enumerated() {
+    private func saveProverbs() throws {
+        for proverb in proverbs {
             proverbRepo.saveProverb(proverb)
-            await MainActor.run {
-                self.updateProgress(current: index + 1, total: proverbs.count)
-            }
         }
-        print("✅ Proverbs saved successfully")
     }
 
-    private func saveSayings() async throws {
-        print("Now saving sayings")
-        await MainActor.run {
-            self.progress = 0
-            self.uiState = .saving("Inahifadhi misemo \(sayings.count) ...")
-        }
-
-        for (index, saying) in sayings.enumerated() {
+    private func saveSayings() throws {
+        for saying in sayings {
             sayingRepo.saveSaying(saying)
-            await MainActor.run {
-                self.updateProgress(current: index + 1, total: sayings.count)
-            }
         }
-        print("✅ Sayings saved successfully")
     }
-
+    
     private func saveWords() async throws {
-        print("Now saving words")
-        await MainActor.run {
-            self.progress = 0
-            self.uiState = .saving("Inahifadhi maneno \(words.count) ...")
+        let batchSize = 500
+        let totalWords = words.count
+        
+        let batches = stride(from: 0, to: totalWords, by: batchSize).map { startIndex -> [Word] in
+            let endIndex = min(startIndex + batchSize, totalWords)
+            return Array(words[startIndex..<endIndex])
         }
-
-        for (index, word) in words.enumerated() {
-            wordRepo.saveWord(word)
-            await MainActor.run {
-                self.updateProgress(current: index + 1, total: words.count)
+        
+        await withTaskGroup(of: Int.self) { group in
+            let optimalConcurrency = max(1, ProcessInfo.processInfo.activeProcessorCount - 1)
+            
+            for batchIndex in 0..<min(optimalConcurrency, batches.count) {
+                let batch = batches[batchIndex]
+                group.addTask {
+                    let taskStart = Date()
+                    for word in batch {
+                        self.wordRepo.saveWord(word)
+                    }
+                    return batch.count
+                }
             }
-        }
-        print("✅ Words saved successfully")
-    }
-
-    @MainActor
-    private func updateProgress(current: Int, total: Int) {
-        guard total > 0 else { return }
-        let newProgress = Int((Double(current) / Double(total)) * 100)
-        if newProgress > progress {
-            self.progress = newProgress
+            
+            var nextBatchIndex = optimalConcurrency
+            var totalSaved = 0
+            
+            for await result in group {
+                totalSaved += result
+                
+                if nextBatchIndex < batches.count {
+                    let batch = batches[nextBatchIndex]
+                    let currentIndex = nextBatchIndex
+                    nextBatchIndex += 1
+                    
+                    group.addTask {
+                        let taskStart = Date()
+                        
+                        for word in batch {
+                            self.wordRepo.saveWord(word)
+                        }
+                        return batch.count
+                    }
+                }
+            }
         }
     }
 }

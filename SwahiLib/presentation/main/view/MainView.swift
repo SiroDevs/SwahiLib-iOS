@@ -27,6 +27,7 @@ struct MainView: View {
         .edgesIgnoringSafeArea(.bottom)
         .task { viewModel.fetchData() }
         .onAppear {
+            #if !DEBUG
             if !viewModel.isProUser  {
                 if !viewModel.prefsRepo.shownParentalGate {
                     activeSheet = .parentalGate
@@ -34,6 +35,7 @@ struct MainView: View {
                     activeSheet = .paywall
                 }
             }
+            #endif
         }
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
@@ -48,9 +50,7 @@ struct MainView: View {
                     .interactiveDismissDisabled(true)
                 
                 case .paywall:
-                    #if !DEBUG
                     PaywallView(displayCloseButton: true)
-                    #endif
             }
         }
     }
@@ -90,7 +90,7 @@ struct MainView: View {
             
         default:
             LoadingState(
-                title: "Inapakia data ...",
+                title: "Kamusi ya Kiswahili ...",
                 fileName: "circle-loader"
             )
         }

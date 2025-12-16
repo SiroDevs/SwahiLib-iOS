@@ -8,6 +8,7 @@
 import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let prefsRepo = DiContainer.shared.resolve(PrefsRepo.self)
@@ -22,4 +23,5 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         return true
     }
+    
 }
