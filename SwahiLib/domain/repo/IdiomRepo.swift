@@ -33,7 +33,7 @@ class IdiomRepo: IdiomRepoProtocol {
                 .execute()
                 .value
             let idioms: [Idiom] = idiomsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ Idioms fetched: \(idioms.count)")
+            print("✅ \(idioms.count) idioms fetched")
             idiomData.saveIdioms(idioms)
         } catch {
             print("❌ Failed to fetch idioms: \(error.localizedDescription)")

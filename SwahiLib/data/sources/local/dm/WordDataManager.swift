@@ -9,6 +9,11 @@ import CoreData
 
 class WordDataManager {
     private let coreDataManager: CoreDataManager
+    lazy var backgroundContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = coreDataManager.viewContext
+        return context
+    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -18,28 +23,54 @@ class WordDataManager {
         coreDataManager.viewContext
     }
     
-    func saveWords(_ words: [Word], batchSize: Int = 1500) {
-        context.perform {
-            do {
-                let totalWords = words.count
-                let batchCount = (totalWords + batchSize - 1) / batchSize
-                
-                for batchIndex in 0..<batchCount {
-                    let start = batchIndex * batchSize
-                    let end = min(start + batchSize, totalWords)
-                    let batch = Array(words[start..<end])
-                    
-                    for word in batch {
-                        let cdWord = self.findOrCreateCd(by: word.rid)
-                        MapEntityToCd.mapToCd(word, cdWord)
+    func saveWords(_ cdWords: [CDWord], batchSize: Int = 1000) async throws {
+        let totalWords = cdWords.count
+        let batchCount = (totalWords + batchSize - 1) / batchSize
+        
+        for batchIndex in 0..<batchCount {
+            let start = batchIndex * batchSize
+            let end = min(start + batchSize, totalWords)
+            let batch = Array(cdWords[start..<end])
+            
+            try await self.processBatch(batch, batchIndex: batchIndex, totalBatches: batchCount)
+        }
+        
+        try await self.finalSave()
+    }
+    
+    private func processBatch(_ batch: [CDWord], batchIndex: Int, totalBatches: Int) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            backgroundContext.perform {
+                autoreleasepool {
+                    for cdWord in batch {
+                        if cdWord.managedObjectContext != self.backgroundContext {
+                            let newCdWord = CDWord(context: self.backgroundContext)
+                            newCdWord.rid = cdWord.rid
+                            newCdWord.title = cdWord.title
+                            newCdWord.meaning = cdWord.meaning
+                        }
                     }
                     
-                    try self.context.save()
-                    
-                    self.context.reset()
+                    do {
+                        try self.backgroundContext.save()
+                        continuation.resume()
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
                 }
-            } catch {
-                print("❌ Failed to save words: \(error)")
+            }
+        }
+    }
+    
+    private func finalSave() async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            context.perform {
+                do {
+                    try self.context.save()
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }

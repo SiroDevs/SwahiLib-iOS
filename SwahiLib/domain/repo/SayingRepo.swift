@@ -34,7 +34,7 @@ class SayingRepo: SayingRepoProtocol {
                 .value
             
             let sayings: [Saying] = sayingsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ Sayings fetched: \(sayings.count)")
+            print("✅ \(sayings.count) sayings fetched")
             sayingData.saveSayings(sayings)
         } catch {
             print("❌ Failed to fetch sayings: \(error.localizedDescription)")

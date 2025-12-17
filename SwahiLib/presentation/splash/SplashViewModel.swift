@@ -31,31 +31,37 @@ final class SplashViewModel: ObservableObject {
     }
     
     func initialize() {
-        Task { @MainActor in
+        Task {
             do {
                 let isOnline = await netUtils.checkNetworkAvailability()
+                
+                // Convert callback to async/await properly
                 #if !DEBUG
                 try await validateSubscription(isOnline: isOnline)
                 #endif
+                
+                try await wordRepo.fetchRemoteData()
+                
+                prefsRepo.updateAppOpenTime()
+                
+                await MainActor.run {
+                    isInitialized = true
+                }
             } catch {
-                print("Subscription check failed: \(error)")
+                print("Initialization failed: \(error)")
+                await MainActor.run {
+                    isInitialized = true
+                }
             }
-            prefsRepo.updateAppOpenTime()
         }
-        Task {
-            try await wordRepo.fetchRemoteData()
-        }
-        isInitialized = true
     }
-    
+
     private func validateSubscription(isOnline: Bool) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                subsRepo.isProUser(isOnline: isOnline) { isActive in
-                    Task { @MainActor in
-                        self.isProUser = isActive
-                        continuation.resume()
-                    }
+            subsRepo.isProUser(isOnline: isOnline) { isActive in
+                Task { @MainActor in
+                    self.isProUser = isActive
+                    continuation.resume()
                 }
             }
         }

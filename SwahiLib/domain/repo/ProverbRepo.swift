@@ -34,7 +34,7 @@ class ProverbRepo: ProverbRepoProtocol {
                 .value
             
             let proverbs: [Proverb] = proverbsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ Proverbs fetched: \(proverbs.count)")
+            print("✅ \(proverbs.count) proverbs fetched")
             proverbData.saveProverbs(proverbs)
         } catch {
             print("❌ Failed to fetch proverbs: \(error.localizedDescription)")

@@ -28,12 +28,9 @@ class WordRepo: WordRepoProtocol {
     func fetchRemoteData() async throws {
         let pageSize = 2000
         let totalCount = 16641
-        
         let pageCount = (totalCount + pageSize - 1) / pageSize
         
-        _ = (0..<pageCount).map { $0 * pageSize }
-        
-        let allPages: [[Word]] = try await withThrowingTaskGroup(of: (Int, [Word]).self) { group in
+        let allWords: [CDWord] = try await withThrowingTaskGroup(of: [CDWord].self) { group in
             for pageIndex in 0..<pageCount {
                 group.addTask { [pageSize] in
                     let offset = pageIndex * pageSize
@@ -44,22 +41,25 @@ class WordRepo: WordRepoProtocol {
                         .execute()
                         .value
                     
-                    let words = wordDTOs.map { MapDtoToEntity.mapToEntity($0) }
-                    return (pageIndex, words)
+                    return wordDTOs.map { dto in
+                        let cdWord = CDWord(context: self.wordData.backgroundContext)
+                        MapDtoToCd.mapToCd(dto, cdWord)
+                        return cdWord
+                    }
                 }
             }
             
-            var results = Array(repeating: [Word](), count: pageCount)
-            for try await (pageIndex, words) in group {
-                results[pageIndex] = words
+            var allResults: [CDWord] = []
+            for try await batch in group {
+                allResults.append(contentsOf: batch)
             }
             
-            return results
+            return allResults
         }
         
-        let allWords = allPages.flatMap { $0 }
-        print("✅ Total fetched: \(allWords.count) words")
-        wordData.saveWords(allWords)
+        print("✅ \(allWords.count) words fetched")
+        
+        try await wordData.saveWords(allWords)
         print("✅ Words saved successfully")
     }
     
@@ -84,5 +84,4 @@ class WordRepo: WordRepoProtocol {
     func deleteLocalData() {
         wordData.deleteAllWords()
     }
-    
 }
