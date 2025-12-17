@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WordRepoProtocol {
-    func fetchRemoteData() async throws -> [Word]
+    func fetchRemoteData() async throws
     func fetchLocalData() -> [Word]
     func getWordsByTitles(titles: [String]) -> [Word]
     func saveWord(_ word: Word)
@@ -25,24 +25,12 @@ class WordRepo: WordRepoProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteData() async throws -> [Word] {
+    func fetchRemoteData() async throws {
         let pageSize = 2000
-        
-        let totalCount: Int = try await supabase.client
-            .from("words")
-            .select("rid", count: .exact)
-            .execute()
-            .count ?? 0
-        
-        if totalCount == 0 {
-            return []
-        }
-        
+        let totalCount = 16641
         let pageCount = (totalCount + pageSize - 1) / pageSize
         
-        let pageOffsets = (0..<pageCount).map { $0 * pageSize }
-        
-        let allPages: [[Word]] = try await withThrowingTaskGroup(of: (Int, [Word]).self) { group in
+        let allWords: [CDWord] = try await withThrowingTaskGroup(of: [CDWord].self) { group in
             for pageIndex in 0..<pageCount {
                 group.addTask { [pageSize] in
                     let offset = pageIndex * pageSize
@@ -53,22 +41,26 @@ class WordRepo: WordRepoProtocol {
                         .execute()
                         .value
                     
-                    let words = wordDTOs.map { MapDtoToEntity.mapToEntity($0) }
-                    return (pageIndex, words)
+                    return wordDTOs.map { dto in
+                        let cdWord = CDWord(context: self.wordData.bgContext)
+                        MapDtoToCd.mapToCd(dto, cdWord)
+                        return cdWord
+                    }
                 }
             }
             
-            var results = Array(repeating: [Word](), count: pageCount)
-            for try await (pageIndex, words) in group {
-                results[pageIndex] = words
+            var allResults: [CDWord] = []
+            for try await batch in group {
+                allResults.append(contentsOf: batch)
             }
             
-            return results
+            return allResults
         }
         
-        let allWords = allPages.flatMap { $0 }
-        print("✅ Total fetched: \(allWords.count) words")
-        return allWords
+        print("✅ \(allWords.count) words fetched")
+        
+        try await wordData.saveWords(allWords)
+        print("✅ Words saved successfully")
     }
     
     func fetchLocalData() -> [Word] {
@@ -92,5 +84,4 @@ class WordRepo: WordRepoProtocol {
     func deleteLocalData() {
         wordData.deleteAllWords()
     }
-    
 }

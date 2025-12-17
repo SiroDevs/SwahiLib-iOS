@@ -39,7 +39,6 @@ struct LoadingState: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.onPrimary)
         .ignoresSafeArea()
     }
 }

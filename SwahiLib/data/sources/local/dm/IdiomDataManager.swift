@@ -9,6 +9,11 @@ import CoreData
 
 class IdiomDataManager {
     private let coreDataManager: CoreDataManager
+    lazy var bgContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = coreDataManager.viewContext
+        return context
+    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -18,17 +23,36 @@ class IdiomDataManager {
         coreDataManager.viewContext
     }
 
-    func saveIdioms(_ idioms: [Idiom]) {
-        context.perform {
-            do {
-                for idiom in idioms {
-                    let cdIdiom = self.findOrCreateCd(by: idiom.rid)
-                    MapEntityToCd.mapToCd(idiom, cdIdiom)
+    func saveIdioms(_ cdIdioms: [CDIdiom]) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            bgContext.perform {
+                do {
+                    for cdIdiom in cdIdioms {
+                        let newCdIdiom = CDIdiom(context: self.bgContext)
+                        newCdIdiom.rid = cdIdiom.rid
+                        newCdIdiom.title = cdIdiom.title ?? ""
+                        newCdIdiom.meaning = cdIdiom.meaning ?? ""
+                        newCdIdiom.views = cdIdiom.views
+                        newCdIdiom.likes = cdIdiom.likes
+                        newCdIdiom.liked = cdIdiom.liked
+                        newCdIdiom.createdAt = cdIdiom.createdAt
+                        newCdIdiom.updatedAt = cdIdiom.updatedAt
+                    }
+                    
+                    try self.bgContext.save()
+                    
+                    Task { @MainActor in
+                        do {
+                            try self.context.save()
+                            print("✅ \(cdIdioms.count) idioms saved successfully")
+                            continuation.resume()
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
                 }
-                try self.context.save()
-                print("✅ Idioms saved successfully")
-            } catch {
-                print("❌ Failed to save idioms: \(error)")
             }
         }
     }

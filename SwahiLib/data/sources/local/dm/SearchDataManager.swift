@@ -14,12 +14,10 @@ class SearchDataManager {
         self.coreDataManager = coreDataManager
     }
     
-    // Access to the view context
     private var context: NSManagedObjectContext {
         return coreDataManager.viewContext
     }
     
-    // Save records to Core Data
     func saveSearches(_ searchs: [Search]) {
         context.perform {
             do {
@@ -37,7 +35,6 @@ class SearchDataManager {
                         cdSearch = CDSearch(context: self.context)
                     }
 
-                    // Safely set values
                     cdSearch.id = Int32(search.id)
                     cdSearch.title = search.title
                     cdSearch.createdAt = search.createdAt
@@ -50,7 +47,6 @@ class SearchDataManager {
         }
     }
     
-    // Fetch all searchs or searchs for a specific book
     func fetchSearches() -> [Search] {
         let fetchRequest: NSFetchRequest<CDSearch> = CDSearch.fetchRequest()
         do {

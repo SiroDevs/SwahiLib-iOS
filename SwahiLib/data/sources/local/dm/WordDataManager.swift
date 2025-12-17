@@ -9,6 +9,11 @@ import CoreData
 
 class WordDataManager {
     private let coreDataManager: CoreDataManager
+    lazy var bgContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = coreDataManager.viewContext
+        return context
+    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -18,17 +23,57 @@ class WordDataManager {
         coreDataManager.viewContext
     }
     
-    func saveWords(_ words: [Word]) {
-        context.perform {
-            do {
-                for word in words {
-                    let cdWord = self.findOrCreateCd(by: word.rid)
-                    MapEntityToCd.mapToCd(word, cdWord)
+    func saveWords(_ cdWords: [CDWord], batchSize: Int = 1000) async throws {
+        let totalWords = cdWords.count
+        let batchCount = (totalWords + batchSize - 1) / batchSize
+        
+        for batchIndex in 0..<batchCount {
+            let start = batchIndex * batchSize
+            let end = min(start + batchSize, totalWords)
+            let batch = Array(cdWords[start..<end])
+            
+            try await self.processBatch(batch, batchIndex: batchIndex, totalBatches: batchCount)
+        }
+        try await self.finalSave()
+    }
+    
+    private func processBatch(_ batch: [CDWord], batchIndex: Int, totalBatches: Int) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            bgContext.perform {
+                autoreleasepool {
+                    for cdWord in batch {
+                        if cdWord.managedObjectContext != self.bgContext {
+                            let newCdWord = CDWord(context: self.bgContext)
+                            newCdWord.rid = cdWord.rid
+                            newCdWord.title = cdWord.title
+                            newCdWord.meaning = cdWord.meaning
+                            newCdWord.synonyms = cdWord.synonyms
+                            newCdWord.conjugation = cdWord.conjugation
+                            newCdWord.createdAt = cdWord.createdAt
+                            newCdWord.updatedAt = cdWord.updatedAt
+                        }
+                    }
+                    
+                    do {
+                        try self.bgContext.save()
+                        continuation.resume()
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
                 }
-                try self.context.save()
-                print("✅ Words saved successfully")
-            } catch {
-                print("❌ Failed to save words: \(error)")
+            }
+        }
+    }
+    
+    private func finalSave() async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            context.perform {
+                do {
+                    try self.context.save()
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }

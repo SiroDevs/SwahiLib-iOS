@@ -37,15 +37,17 @@ struct InitView: View {
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-        case .loading(let msg):
+        case .loading(_):
             LoadingState(
-                title: msg ?? "Kuanzisha kwa mara ya kwanza ...",
-                fileName: "loading-carga-refresh"
+                fileName: "opener-loading"
             )
 
         case .error(let msg):
             ErrorState(message: msg) {
                 viewModel.initializeData()
+            }
+            .onAppear {
+                navigateToNextScreen = true
             }
 
         case .saved:

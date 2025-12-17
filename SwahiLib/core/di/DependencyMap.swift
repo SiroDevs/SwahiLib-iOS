@@ -103,6 +103,13 @@ struct DependencyMap {
             SubsRepo()
         }.inObjectScope(.container)
         
+        container.register(SplashViewModel.self) { resolver in
+            SplashViewModel(
+                prefsRepo: resolver.resolve(PrefsRepo.self)!,
+                subsRepo: resolver.resolve(SubsRepoProtocol.self)!
+            )
+        }.inObjectScope(.container)
+        
         container.register(InitViewModel.self) { resolver in
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
@@ -110,13 +117,6 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!
-            )
-        }.inObjectScope(.container)
-        
-        container.register(SplashViewModel.self) { resolver in
-            SplashViewModel(
-                prefsRepo: resolver.resolve(PrefsRepo.self)!,
-                subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
             )
         }.inObjectScope(.container)
         

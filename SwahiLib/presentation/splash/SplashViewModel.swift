@@ -10,17 +10,17 @@ import SwiftUI
 import Network
 
 final class SplashViewModel: ObservableObject {
+    @Published var isInitialized = false
+    @Published var isProUser: Bool = false
+    
     private let netUtils: NetworkUtils
     let prefsRepo: PrefsRepo
     private let subsRepo: SubsRepoProtocol
     
-    @Published var isInitialized = false
-    @Published var isProUser: Bool = false
-
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
-        subsRepo: SubsRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
@@ -28,26 +28,33 @@ final class SplashViewModel: ObservableObject {
     }
     
     func initialize() {
-        Task { @MainActor in
+        Task {
             do {
                 let isOnline = await netUtils.checkNetworkAvailability()
+                #if !DEBUG
                 try await validateSubscription(isOnline: isOnline)
+                #endif
+                
+                prefsRepo.updateAppOpenTime()
+                
+                await MainActor.run {
+                    isInitialized = true
+                }
             } catch {
-                print("Subscription check failed: \(error)")
+                print("Initialization failed: \(error)")
+                await MainActor.run {
+                    isInitialized = true
+                }
             }
-            prefsRepo.updateAppOpenTime()
-            isInitialized = true
         }
     }
-    
+
     private func validateSubscription(isOnline: Bool) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                subsRepo.isProUser(isOnline: isOnline) { isActive in
-                    Task { @MainActor in
-                        self.isProUser = isActive
-                        continuation.resume()
-                    }
+            subsRepo.isProUser(isOnline: isOnline) { isActive in
+                Task { @MainActor in
+                    self.isProUser = isActive
+                    continuation.resume()
                 }
             }
         }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SayingRepoProtocol {
-    func fetchRemoteData() async throws -> [Saying]
+    func fetchRemoteData() async throws
     func fetchLocalData() -> [Saying]
     func getSayingsByTitles(titles: [String]) -> [Saying]
     func saveSaying(_ saying: Saying)
@@ -25,17 +25,23 @@ class SayingRepo: SayingRepoProtocol {
         self.sayingData = sayingData
     }
     
-    func fetchRemoteData() async throws -> [Saying] {
+    func fetchRemoteData() async throws {
         do {
-            let sayingsDtos: [SayingDTO] = try await supabase.client
+            let sayingDTOs: [SayingDTO] = try await supabase.client
                 .from("sayings")
                 .select()
                 .execute()
                 .value
             
-            let sayings: [Saying] = sayingsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ Sayings fetched: \(sayings.count)")
-            return sayings
+            let cdSayings: [CDSaying] = sayingDTOs.map { dto in
+                let cdSaying = CDSaying(context: self.sayingData.bgContext)
+                MapDtoToCd.mapToCd(dto, cdSaying)
+                return cdSaying
+            }
+            
+            print("✅ \(cdSayings.count) sayings fetched")
+            try await sayingData.saveSayings(cdSayings)
+            
         } catch {
             print("❌ Failed to fetch sayings: \(error.localizedDescription)")
             throw error

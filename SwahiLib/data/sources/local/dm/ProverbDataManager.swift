@@ -9,6 +9,11 @@ import CoreData
 
 class ProverbDataManager {
     private let coreDataManager: CoreDataManager
+    lazy var bgContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = coreDataManager.viewContext
+        return context
+    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -18,17 +23,38 @@ class ProverbDataManager {
         coreDataManager.viewContext
     }
 
-    func saveProverbs(_ proverbs: [Proverb]) {
-        context.perform {
-            do {
-                for proverb in proverbs {
-                    let cdProverb = self.findOrCreateCd(by: proverb.rid)
-                    MapEntityToCd.mapToCd(proverb, cdProverb)
+    func saveProverbs(_ cdProverbs: [CDProverb]) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            bgContext.perform {
+                do {
+                    for cdProverb in cdProverbs {
+                        let newCdProverb = CDProverb(context: self.bgContext)
+                        newCdProverb.rid = cdProverb.rid
+                        newCdProverb.title = cdProverb.title
+                        newCdProverb.meaning = cdProverb.meaning
+                        newCdProverb.conjugation = cdProverb.conjugation
+                        newCdProverb.synonyms = cdProverb.synonyms
+                        newCdProverb.views = cdProverb.views
+                        newCdProverb.likes = cdProverb.likes
+                        newCdProverb.liked = cdProverb.liked
+                        newCdProverb.createdAt = cdProverb.createdAt
+                        newCdProverb.updatedAt = cdProverb.updatedAt
+                    }
+                    
+                    try self.bgContext.save()
+                    
+                    Task { @MainActor in
+                        do {
+                            try self.context.save()
+                            print("✅ \(cdProverbs.count) proverbs saved successfully")
+                            continuation.resume()
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
                 }
-                try self.context.save()
-                print("✅ Proverbs saved successfully")
-            } catch {
-                print("❌ Failed to save proverbs: \(error)")
             }
         }
     }

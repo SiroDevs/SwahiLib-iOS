@@ -14,12 +14,10 @@ class HistoryDataManager {
         self.coreDataManager = coreDataManager
     }
     
-    // Access to the view context
     private var context: NSManagedObjectContext {
         return coreDataManager.viewContext
     }
     
-    // Save records to Core Data
     func saveHistories(_ histories: [History]) {
         context.perform {
             do {
@@ -37,7 +35,6 @@ class HistoryDataManager {
                         cdHistory = CDHistory(context: self.context)
                     }
 
-                    // Safely set values
                     cdHistory.id = Int32(history.id)
                     cdHistory.item = Int32(history.item)
                     cdHistory.type = history.type
@@ -51,7 +48,6 @@ class HistoryDataManager {
         }
     }
     
-    // Fetch all historys or histories for a specific item
     func fetchHistories() -> [History] {
         let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
         do {
@@ -70,7 +66,6 @@ class HistoryDataManager {
         }
     }
     
-    // Fetch a single record by ID
     func fetchHistory(withId id: Int) -> History? {
         let fetchRequest: NSFetchRequest<CDHistory> = CDHistory.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)

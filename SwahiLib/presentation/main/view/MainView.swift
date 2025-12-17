@@ -58,41 +58,39 @@ struct MainView: View {
     @ViewBuilder
     private var stateContent: some View {
         switch viewModel.uiState {
-        case .loading:
-            LoadingState(
-                title: "Inapakia data ...",
-                fileName: "opener-loading"
-            )
-            
-        case .filtered:
-            TabView {
-                HomeSearch(viewModel: viewModel)
-                    .tabItem {
-                        Label("Tafuta", systemImage: "magnifyingglass")
-                    }
+            case .loading:
+                LoadingState(
+                    fileName: "circle-loader"
+                )
                 
-                HomeLikes(viewModel: viewModel)
-                    .tabItem {
-                        Label("Vipendwa", systemImage: "heart.fill")
-                    }
+            case .filtered:
+                TabView {
+                    HomeSearch(viewModel: viewModel)
+                        .tabItem {
+                            Label("Tafuta", systemImage: "magnifyingglass")
+                        }
+                    
+                    HomeLikes(viewModel: viewModel)
+                        .tabItem {
+                            Label("Vipendwa", systemImage: "heart.fill")
+                        }
+                    
+                    SettingsView(viewModel: viewModel)
+                        .tabItem {
+                            Label("Mipangilio", systemImage: "gear")
+                        }
+                }
+                .environment(\.horizontalSizeClass, .compact)
                 
-                SettingsView(viewModel: viewModel)
-                    .tabItem {
-                        Label("Mipangilio", systemImage: "gear")
-                    }
-            }
-            .environment(\.horizontalSizeClass, .compact)
-            
-        case .error(let msg):
-            ErrorState(message: msg) {
-                Task { viewModel.fetchData() }
-            }
-            
-        default:
-            LoadingState(
-                title: "Kamusi ya Kiswahili ...",
-                fileName: "circle-loader"
-            )
+            case .error(let msg):
+                ErrorState(message: msg) {
+                    Task { viewModel.fetchData() }
+                }
+                
+            default:
+                LoadingState(
+                    fileName: "circle-loader"
+                )
         }
     }
 }

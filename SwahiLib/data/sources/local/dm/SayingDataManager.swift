@@ -9,6 +9,11 @@ import CoreData
 
 class SayingDataManager {
     private let coreDataManager: CoreDataManager
+    lazy var bgContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = coreDataManager.viewContext
+        return context
+    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -18,17 +23,36 @@ class SayingDataManager {
         coreDataManager.viewContext
     }
 
-    func saveSayings(_ sayings: [Saying]) {
-        context.perform {
-            do {
-                for saying in sayings {
-                    let cdSaying = self.findOrCreateCd(by: saying.rid)
-                    MapEntityToCd.mapToCd(saying, cdSaying)
+    func saveSayings(_ cdSayings: [CDSaying]) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            bgContext.perform {
+                do {
+                    for cdSaying in cdSayings {
+                        let newCdSaying = CDSaying(context: self.bgContext)
+                        newCdSaying.rid = cdSaying.rid
+                        newCdSaying.title = cdSaying.title ?? ""
+                        newCdSaying.meaning = cdSaying.meaning ?? ""
+                        newCdSaying.views = cdSaying.views
+                        newCdSaying.likes = cdSaying.likes
+                        newCdSaying.liked = cdSaying.liked
+                        newCdSaying.createdAt = cdSaying.createdAt
+                        newCdSaying.updatedAt = cdSaying.updatedAt
+                    }
+                    
+                    try self.bgContext.save()
+                    
+                    Task { @MainActor in
+                        do {
+                            try self.context.save()
+                            print("✅ \(cdSayings.count) sayings saved successfully")
+                            continuation.resume()
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
                 }
-                try self.context.save()
-                print("✅ Sayings saved successfully")
-            } catch {
-                print("❌ Failed to save sayings: \(error)")
             }
         }
     }
