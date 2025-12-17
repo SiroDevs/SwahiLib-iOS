@@ -43,7 +43,7 @@ final class SplashViewModel: ObservableObject {
             prefsRepo.updateAppOpenTime()
         }
         Task {
-            await wordRepo.fetchRemoteData()
+            try await wordRepo.fetchRemoteData()
         }
         isInitialized = true
     }

@@ -25,7 +25,7 @@ class WordRepo: WordRepoProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteData() async throws -> {
+    func fetchRemoteData() async throws {
         let pageSize = 2000
         let totalCount = 16641
         
@@ -59,7 +59,7 @@ class WordRepo: WordRepoProtocol {
         
         let allWords = allPages.flatMap { $0 }
         print("✅ Total fetched: \(allWords.count) words")
-        await wordData.saveWords(allWords)
+        wordData.saveWords(allWords)
         print("✅ Words saved successfully")
     }
     
