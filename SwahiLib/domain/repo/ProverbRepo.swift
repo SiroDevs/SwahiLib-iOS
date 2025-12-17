@@ -27,15 +27,21 @@ class ProverbRepo: ProverbRepoProtocol {
     
     func fetchRemoteData() async throws {
         do {
-            let proverbsDtos: [ProverbDTO] = try await supabase.client
+            let proverbDTOs: [ProverbDTO] = try await supabase.client
                 .from("proverbs")
                 .select()
                 .execute()
                 .value
             
-            let proverbs: [Proverb] = proverbsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ \(proverbs.count) proverbs fetched")
-            proverbData.saveProverbs(proverbs)
+            let cdProverbs: [CDProverb] = proverbDTOs.map { dto in
+                let cdProverb = CDProverb(context: self.proverbData.bgContext)
+                MapDtoToCd.mapToCd(dto, cdProverb)
+                return cdProverb
+            }
+            
+            print("✅ \(cdProverbs.count) proverbs fetched")
+            try await proverbData.saveProverbs(cdProverbs)
+            
         } catch {
             print("❌ Failed to fetch proverbs: \(error.localizedDescription)")
             throw error

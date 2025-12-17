@@ -42,7 +42,7 @@ class WordRepo: WordRepoProtocol {
                         .value
                     
                     return wordDTOs.map { dto in
-                        let cdWord = CDWord(context: self.wordData.backgroundContext)
+                        let cdWord = CDWord(context: self.wordData.bgContext)
                         MapDtoToCd.mapToCd(dto, cdWord)
                         return cdWord
                     }

@@ -9,7 +9,7 @@ import CoreData
 
 class WordDataManager {
     private let coreDataManager: CoreDataManager
-    lazy var backgroundContext: NSManagedObjectContext = {
+    lazy var bgContext: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         context.parent = coreDataManager.viewContext
         return context
@@ -34,25 +34,28 @@ class WordDataManager {
             
             try await self.processBatch(batch, batchIndex: batchIndex, totalBatches: batchCount)
         }
-        
         try await self.finalSave()
     }
     
     private func processBatch(_ batch: [CDWord], batchIndex: Int, totalBatches: Int) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            backgroundContext.perform {
+            bgContext.perform {
                 autoreleasepool {
                     for cdWord in batch {
-                        if cdWord.managedObjectContext != self.backgroundContext {
-                            let newCdWord = CDWord(context: self.backgroundContext)
+                        if cdWord.managedObjectContext != self.bgContext {
+                            let newCdWord = CDWord(context: self.bgContext)
                             newCdWord.rid = cdWord.rid
                             newCdWord.title = cdWord.title
                             newCdWord.meaning = cdWord.meaning
+                            newCdWord.synonyms = cdWord.synonyms
+                            newCdWord.conjugation = cdWord.conjugation
+                            newCdWord.createdAt = cdWord.createdAt
+                            newCdWord.updatedAt = cdWord.updatedAt
                         }
                     }
                     
                     do {
-                        try self.backgroundContext.save()
+                        try self.bgContext.save()
                         continuation.resume()
                     } catch {
                         continuation.resume(throwing: error)

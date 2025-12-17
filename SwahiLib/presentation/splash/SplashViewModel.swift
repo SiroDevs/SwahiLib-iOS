@@ -16,31 +16,24 @@ final class SplashViewModel: ObservableObject {
     private let netUtils: NetworkUtils
     let prefsRepo: PrefsRepo
     private let subsRepo: SubsRepoProtocol
-    private let wordRepo: WordRepoProtocol
     
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
-        subsRepo: SubsRepoProtocol,
-        wordRepo: WordRepoProtocol
+        subsRepo: SubsRepoProtocol
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.subsRepo = subsRepo
-        self.wordRepo = wordRepo
     }
     
     func initialize() {
         Task {
             do {
                 let isOnline = await netUtils.checkNetworkAvailability()
-                
-                // Convert callback to async/await properly
                 #if !DEBUG
                 try await validateSubscription(isOnline: isOnline)
                 #endif
-                
-                try await wordRepo.fetchRemoteData()
                 
                 prefsRepo.updateAppOpenTime()
                 

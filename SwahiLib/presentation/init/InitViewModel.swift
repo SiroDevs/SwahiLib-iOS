@@ -12,19 +12,22 @@ final class InitViewModel: ObservableObject {
 
     private let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
-    private let sayingRepo: SayingRepoProtocol
     private let proverbRepo: ProverbRepoProtocol
+    private let sayingRepo: SayingRepoProtocol
+    private let wordRepo: WordRepoProtocol
 
     init(
         prefsRepo: PrefsRepo,
         idiomRepo: IdiomRepoProtocol,
+        proverbRepo: ProverbRepoProtocol,
         sayingRepo: SayingRepoProtocol,
-        proverbRepo: ProverbRepoProtocol
+        wordRepo: WordRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
-        self.sayingRepo = sayingRepo
         self.proverbRepo = proverbRepo
+        self.sayingRepo = sayingRepo
+        self.wordRepo = wordRepo
     }
 
     func initializeData() {
@@ -40,8 +43,9 @@ final class InitViewModel: ObservableObject {
 
         do {
             try await idiomRepo.fetchRemoteData()
-            try await sayingRepo.fetchRemoteData()
             try await proverbRepo.fetchRemoteData()
+            try await sayingRepo.fetchRemoteData()
+            try await wordRepo.fetchRemoteData()
 
             prefsRepo.isDataLoaded = true
 

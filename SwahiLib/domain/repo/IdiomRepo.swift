@@ -27,14 +27,21 @@ class IdiomRepo: IdiomRepoProtocol {
     
     func fetchRemoteData() async throws {
         do {
-            let idiomsDtos: [IdiomDTO] = try await supabase.client
+            let idiomDTOs: [IdiomDTO] = try await supabase.client
                 .from("idioms")
                 .select()
                 .execute()
                 .value
-            let idioms: [Idiom] = idiomsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ \(idioms.count) idioms fetched")
-            idiomData.saveIdioms(idioms)
+            
+            let cdIdioms: [CDIdiom] = idiomDTOs.map { dto in
+                let cdIdiom = CDIdiom(context: self.idiomData.bgContext)
+                MapDtoToCd.mapToCd(dto, cdIdiom)
+                return cdIdiom
+            }
+            
+            print("✅ \(cdIdioms.count) idioms fetched")
+            try await idiomData.saveIdioms(cdIdioms)
+            
         } catch {
             print("❌ Failed to fetch idioms: \(error.localizedDescription)")
             throw error

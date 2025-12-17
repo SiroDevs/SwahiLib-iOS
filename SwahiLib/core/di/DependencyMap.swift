@@ -106,8 +106,7 @@ struct DependencyMap {
         container.register(SplashViewModel.self) { resolver in
             SplashViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
-                subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
-                wordRepo: resolver.resolve(WordRepoProtocol.self)!
+                subsRepo: resolver.resolve(SubsRepoProtocol.self)!
             )
         }.inObjectScope(.container)
         
@@ -115,8 +114,9 @@ struct DependencyMap {
             InitViewModel(
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
-                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!
             )
         }.inObjectScope(.container)
         

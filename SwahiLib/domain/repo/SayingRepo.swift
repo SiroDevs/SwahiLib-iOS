@@ -27,15 +27,21 @@ class SayingRepo: SayingRepoProtocol {
     
     func fetchRemoteData() async throws {
         do {
-            let sayingsDtos: [SayingDTO] = try await supabase.client
+            let sayingDTOs: [SayingDTO] = try await supabase.client
                 .from("sayings")
                 .select()
                 .execute()
                 .value
             
-            let sayings: [Saying] = sayingsDtos.map { MapDtoToEntity.mapToEntity($0) }
-            print("✅ \(sayings.count) sayings fetched")
-            sayingData.saveSayings(sayings)
+            let cdSayings: [CDSaying] = sayingDTOs.map { dto in
+                let cdSaying = CDSaying(context: self.sayingData.bgContext)
+                MapDtoToCd.mapToCd(dto, cdSaying)
+                return cdSaying
+            }
+            
+            print("✅ \(cdSayings.count) sayings fetched")
+            try await sayingData.saveSayings(cdSayings)
+            
         } catch {
             print("❌ Failed to fetch sayings: \(error.localizedDescription)")
             throw error
