@@ -8,7 +8,7 @@
 import Foundation
 
 protocol IdiomRepoProtocol {
-    func fetchRemoteData() async throws -> [Idiom]
+    func fetchRemoteData() async throws
     func fetchLocalData() -> [Idiom]
     func getIdiomsByTitles(titles: [String]) -> [Idiom]
     func saveIdiom(_ idiom: Idiom)
@@ -25,7 +25,7 @@ class IdiomRepo: IdiomRepoProtocol {
         self.idiomData = idiomData
     }
     
-    func fetchRemoteData() async throws -> [Idiom] {
+    func fetchRemoteData() async throws {
         do {
             let idiomsDtos: [IdiomDTO] = try await supabase.client
                 .from("idioms")
@@ -34,7 +34,7 @@ class IdiomRepo: IdiomRepoProtocol {
                 .value
             let idioms: [Idiom] = idiomsDtos.map { MapDtoToEntity.mapToEntity($0) }
             print("✅ Idioms fetched: \(idioms.count)")
-            return idioms
+            idiomData.saveIdioms(idioms)
         } catch {
             print("❌ Failed to fetch idioms: \(error.localizedDescription)")
             throw error

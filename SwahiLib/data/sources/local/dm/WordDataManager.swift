@@ -18,15 +18,26 @@ class WordDataManager {
         coreDataManager.viewContext
     }
     
-    func saveWords(_ words: [Word]) {
+    func saveWords(_ words: [Word], batchSize: Int = 1500) {
         context.perform {
             do {
-                for word in words {
-                    let cdWord = self.findOrCreateCd(by: word.rid)
-                    MapEntityToCd.mapToCd(word, cdWord)
+                let totalWords = words.count
+                let batchCount = (totalWords + batchSize - 1) / batchSize
+                
+                for batchIndex in 0..<batchCount {
+                    let start = batchIndex * batchSize
+                    let end = min(start + batchSize, totalWords)
+                    let batch = Array(words[start..<end])
+                    
+                    for word in batch {
+                        let cdWord = self.findOrCreateCd(by: word.rid)
+                        MapEntityToCd.mapToCd(word, cdWord)
+                    }
+                    
+                    try self.context.save()
+                    
+                    self.context.reset()
                 }
-                try self.context.save()
-                print("✅ Words saved successfully")
             } catch {
                 print("❌ Failed to save words: \(error)")
             }

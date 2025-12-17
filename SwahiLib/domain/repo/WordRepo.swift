@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WordRepoProtocol {
-    func fetchRemoteData() async throws -> [Word]
+    func fetchRemoteData() async throws
     func fetchLocalData() -> [Word]
     func getWordsByTitles(titles: [String]) -> [Word]
     func saveWord(_ word: Word)
@@ -25,22 +25,13 @@ class WordRepo: WordRepoProtocol {
         self.wordData = wordData
     }
     
-    func fetchRemoteData() async throws -> [Word] {
+    func fetchRemoteData() async throws -> {
         let pageSize = 2000
-        
-        let totalCount: Int = try await supabase.client
-            .from("words")
-            .select("rid", count: .exact)
-            .execute()
-            .count ?? 0
-        
-        if totalCount == 0 {
-            return []
-        }
+        let totalCount = 16641
         
         let pageCount = (totalCount + pageSize - 1) / pageSize
         
-        let pageOffsets = (0..<pageCount).map { $0 * pageSize }
+        _ = (0..<pageCount).map { $0 * pageSize }
         
         let allPages: [[Word]] = try await withThrowingTaskGroup(of: (Int, [Word]).self) { group in
             for pageIndex in 0..<pageCount {
@@ -68,7 +59,8 @@ class WordRepo: WordRepoProtocol {
         
         let allWords = allPages.flatMap { $0 }
         print("✅ Total fetched: \(allWords.count) words")
-        return allWords
+        await wordData.saveWords(allWords)
+        print("✅ Words saved successfully")
     }
     
     func fetchLocalData() -> [Word] {
