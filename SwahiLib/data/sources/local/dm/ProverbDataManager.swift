@@ -28,17 +28,18 @@ class ProverbDataManager {
             bgContext.perform {
                 do {
                     for cdProverb in cdProverbs {
-                        let newCdProverb = CDProverb(context: self.bgContext)
-                        newCdProverb.rid = cdProverb.rid
-                        newCdProverb.title = cdProverb.title
-                        newCdProverb.meaning = cdProverb.meaning
-                        newCdProverb.conjugation = cdProverb.conjugation
-                        newCdProverb.synonyms = cdProverb.synonyms
-                        newCdProverb.views = cdProverb.views
-                        newCdProverb.likes = cdProverb.likes
-                        newCdProverb.liked = cdProverb.liked
-                        newCdProverb.createdAt = cdProverb.createdAt
-                        newCdProverb.updatedAt = cdProverb.updatedAt
+                        let existingCdProverb = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdProverb.rid))
+                        
+                        existingCdProverb.rid = cdProverb.rid
+                        existingCdProverb.title = cdProverb.title
+                        existingCdProverb.meaning = cdProverb.meaning
+                        existingCdProverb.conjugation = cdProverb.conjugation
+                        existingCdProverb.synonyms = cdProverb.synonyms
+                        existingCdProverb.views = cdProverb.views
+                        existingCdProverb.likes = cdProverb.likes
+                        existingCdProverb.liked = cdProverb.liked
+                        existingCdProverb.createdAt = cdProverb.createdAt
+                        existingCdProverb.updatedAt = cdProverb.updatedAt
                     }
                     
                     try self.bgContext.save()
@@ -56,6 +57,20 @@ class ProverbDataManager {
                     continuation.resume(throwing: error)
                 }
             }
+        }
+    }
+
+    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDProverb {
+        let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
+        request.predicate = NSPredicate(format: "rid == %d", id)
+        request.fetchLimit = 1
+        
+        if let existing = try? context.fetch(request).first {
+            return existing
+        } else {
+            let new = CDProverb(context: context)
+            new.rid = Int32(id)
+            return new
         }
     }
 

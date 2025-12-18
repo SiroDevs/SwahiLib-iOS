@@ -50,7 +50,7 @@ class IdiomRepo: IdiomRepoProtocol {
     
     func fetchLocalData() -> [Idiom] {
         let idioms = idiomData.fetchIdioms()
-        return idioms.sorted { $0.id < $1.id }
+        return idioms.sorted { $0.rid < $1.rid }
     }
     
     func saveIdiom(_ idiom: Idiom) {
@@ -63,7 +63,7 @@ class IdiomRepo: IdiomRepoProtocol {
     
     func getIdiomsByTitles(titles: [String]) -> [Idiom] {
         let idioms = idiomData.getIdiomsByTitles(titles: titles)
-        return idioms.sorted { $0.id < $1.id }
+        return idioms.sorted { $0.rid < $1.rid }
     }
     
     func deleteLocalData() {

@@ -50,7 +50,7 @@ class SayingRepo: SayingRepoProtocol {
     
     func fetchLocalData() -> [Saying] {
         let sayings = sayingData.fetchSayings()
-        return sayings.sorted { $0.id < $1.id }
+        return sayings.sorted { $0.rid < $1.rid }
     }
     
     func saveSaying(_ saying: Saying) {
@@ -63,7 +63,7 @@ class SayingRepo: SayingRepoProtocol {
     
     func getSayingsByTitles(titles: [String]) -> [Saying] {
         let sayings = sayingData.getSayingsByTitles(titles: titles)
-        return sayings.sorted { $0.id < $1.id }
+        return sayings.sorted { $0.rid < $1.rid }
     }
     
     func deleteLocalData() {

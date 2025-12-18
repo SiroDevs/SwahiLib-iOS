@@ -86,17 +86,3 @@ struct WordItem: View {
         .padding(.vertical, 4)
     }
 }
-//
-//#Preview {
-//    WordItem(
-//        word: Word.sampleWords[3]
-//    )
-//    .padding()
-//}
-//
-//#Preview {
-//    WordsList(
-//        words: Word.sampleWords
-//    )
-//    .padding()
-//}

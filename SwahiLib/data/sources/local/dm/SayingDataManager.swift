@@ -28,15 +28,16 @@ class SayingDataManager {
             bgContext.perform {
                 do {
                     for cdSaying in cdSayings {
-                        let newCdSaying = CDSaying(context: self.bgContext)
-                        newCdSaying.rid = cdSaying.rid
-                        newCdSaying.title = cdSaying.title ?? ""
-                        newCdSaying.meaning = cdSaying.meaning ?? ""
-                        newCdSaying.views = cdSaying.views
-                        newCdSaying.likes = cdSaying.likes
-                        newCdSaying.liked = cdSaying.liked
-                        newCdSaying.createdAt = cdSaying.createdAt
-                        newCdSaying.updatedAt = cdSaying.updatedAt
+                        let existingCdSaying = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdSaying.rid))
+                        
+                        existingCdSaying.rid = cdSaying.rid
+                        existingCdSaying.title = cdSaying.title ?? ""
+                        existingCdSaying.meaning = cdSaying.meaning ?? ""
+                        existingCdSaying.views = cdSaying.views
+                        existingCdSaying.likes = cdSaying.likes
+                        existingCdSaying.liked = cdSaying.liked
+                        existingCdSaying.createdAt = cdSaying.createdAt
+                        existingCdSaying.updatedAt = cdSaying.updatedAt
                     }
                     
                     try self.bgContext.save()
@@ -56,7 +57,21 @@ class SayingDataManager {
             }
         }
     }
-    
+
+    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDSaying {
+        let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
+        request.predicate = NSPredicate(format: "rid == %d", id)
+        request.fetchLimit = 1
+        
+        if let existing = try? context.fetch(request).first {
+            return existing
+        } else {
+            let new = CDSaying(context: context)
+            new.rid = Int32(id)
+            return new
+        }
+    }
+
     func getSayingsByTitles(titles: [String]) -> [Saying] {
         let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
         request.predicate = NSPredicate(format: "title IN %@", titles)

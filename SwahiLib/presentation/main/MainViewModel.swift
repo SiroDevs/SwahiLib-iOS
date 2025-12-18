@@ -93,8 +93,20 @@ final class MainViewModel: ObservableObject {
             self.allSayings = sayingRepo.fetchLocalData()
             self.allWords = wordRepo.fetchLocalData()
             
+            checkForDuplicateIDs()
             self.filterData(qry: "")
             self.uiState = .filtered
+        }
+    }
+    
+    private func checkForDuplicateIDs() {
+        let idiomIDs = allIdioms.map { $0.rid }
+        let duplicateIdiomIDs = Dictionary(grouping: idiomIDs, by: { $0 })
+            .filter { $0.value.count > 1 }
+            .keys
+        
+        if !duplicateIdiomIDs.isEmpty {
+            print("⚠️ Found duplicate idiom IDs: \(duplicateIdiomIDs)")
         }
     }
     
@@ -131,7 +143,7 @@ final class MainViewModel: ObservableObject {
         
         self.uiState = .filtered
     }
-    
+
     func updateParentalGate(value: Bool) {
         prefsRepo.shownParentalGate = value
     }
