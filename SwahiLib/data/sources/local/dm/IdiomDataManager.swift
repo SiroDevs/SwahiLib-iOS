@@ -28,15 +28,16 @@ class IdiomDataManager {
             bgContext.perform {
                 do {
                     for cdIdiom in cdIdioms {
-                        let newCdIdiom = CDIdiom(context: self.bgContext)
-                        newCdIdiom.rid = cdIdiom.rid
-                        newCdIdiom.title = cdIdiom.title ?? ""
-                        newCdIdiom.meaning = cdIdiom.meaning ?? ""
-                        newCdIdiom.views = cdIdiom.views
-                        newCdIdiom.likes = cdIdiom.likes
-                        newCdIdiom.liked = cdIdiom.liked
-                        newCdIdiom.createdAt = cdIdiom.createdAt
-                        newCdIdiom.updatedAt = cdIdiom.updatedAt
+                        let existingCdIdiom = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdIdiom.rid))
+                        
+                        existingCdIdiom.rid = cdIdiom.rid
+                        existingCdIdiom.title = cdIdiom.title
+                        existingCdIdiom.meaning = cdIdiom.meaning
+                        existingCdIdiom.views = cdIdiom.views
+                        existingCdIdiom.likes = cdIdiom.likes
+                        existingCdIdiom.liked = cdIdiom.liked
+                        existingCdIdiom.createdAt = cdIdiom.createdAt
+                        existingCdIdiom.updatedAt = cdIdiom.updatedAt
                     }
                     
                     try self.bgContext.save()
@@ -54,6 +55,20 @@ class IdiomDataManager {
                     continuation.resume(throwing: error)
                 }
             }
+        }
+    }
+
+    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDIdiom {
+        let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
+        request.predicate = NSPredicate(format: "rid == %d", id)
+        request.fetchLimit = 1
+        
+        if let existing = try? context.fetch(request).first {
+            return existing
+        } else {
+            let new = CDIdiom(context: context)
+            new.rid = Int32(id)
+            return new
         }
     }
 

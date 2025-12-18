@@ -9,10 +9,10 @@ import SwiftUI
 
 struct IdiomsList: View {
     let idioms: [Idiom]
-
+    
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(idioms)) { idiom in
+            ForEach(idioms, id: \.rid) {idiom in
                 NavigationLink {
                     IdiomView(idiom: idiom)
                 } label: {
@@ -28,7 +28,7 @@ struct ProverbsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(proverbs)) { proverb in
+            ForEach(proverbs, id: \.rid) {proverb in
                 NavigationLink {
                     ProverbView(proverb: proverb)
                 } label: {
@@ -44,7 +44,7 @@ struct SayingsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(sayings)) { saying in
+            ForEach(sayings, id: \.rid) { saying in
                 NavigationLink {
                     SayingView(saying: saying)
                 } label: {
@@ -60,7 +60,7 @@ struct WordsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(words)) { word in
+            ForEach(words, id: \.rid) { word in
                 NavigationLink {
                     WordView(deepLinked: false, word: word)
                 } label: {
