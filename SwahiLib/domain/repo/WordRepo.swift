@@ -65,7 +65,7 @@ class WordRepo: WordRepoProtocol {
     
     func fetchLocalData() -> [Word] {
         let words = wordData.fetchWords()
-        return words.sorted { $0.id < $1.id }
+        return words.sorted { $0.rid < $1.rid }
     }
     
     func saveWord(_ word: Word) {
@@ -78,7 +78,7 @@ class WordRepo: WordRepoProtocol {
     
     func getWordsByTitles(titles: [String]) -> [Word] {
         let words = wordData.getWordsByTitles(titles: titles)
-        return words.sorted { $0.id < $1.id }
+        return words.sorted { $0.rid < $1.rid }
     }
     
     func deleteLocalData() {

@@ -12,7 +12,7 @@ struct IdiomsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(idioms.enumerated()), id: \.element.id) { index, idiom in
+            ForEach(Array(idioms)) { idiom in
                 NavigationLink {
                     IdiomView(idiom: idiom)
                 } label: {
@@ -28,7 +28,7 @@ struct ProverbsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(proverbs.enumerated()), id: \.element.id) { index, proverb in
+            ForEach(Array(proverbs)) { proverb in
                 NavigationLink {
                     ProverbView(proverb: proverb)
                 } label: {
@@ -44,7 +44,7 @@ struct SayingsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(sayings.enumerated()), id: \.element.id) { index, saying in
+            ForEach(Array(sayings)) { saying in
                 NavigationLink {
                     SayingView(saying: saying)
                 } label: {
@@ -60,7 +60,7 @@ struct WordsList: View {
 
     var body: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
+            ForEach(Array(words)) { word in
                 NavigationLink {
                     WordView(deepLinked: false, word: word)
                 } label: {

@@ -50,7 +50,7 @@ class ProverbRepo: ProverbRepoProtocol {
     
     func fetchLocalData() -> [Proverb] {
         let proverbs = proverbData.fetchProverbs()
-        return proverbs.sorted { $0.id < $1.id }
+        return proverbs.sorted { $0.rid < $1.rid }
     }
     
     func saveProverb(_ proverb: Proverb) {
@@ -63,7 +63,7 @@ class ProverbRepo: ProverbRepoProtocol {
     
     func getProverbsByTitles(titles: [String]) -> [Proverb] {
         let proverbs = proverbData.getProverbsByTitles(titles: titles)
-        return proverbs.sorted { $0.id < $1.id }
+        return proverbs.sorted { $0.rid < $1.rid }
     }
     
     func deleteLocalData() {
