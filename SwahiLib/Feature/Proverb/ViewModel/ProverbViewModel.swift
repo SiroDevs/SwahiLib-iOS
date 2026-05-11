@@ -51,11 +51,11 @@ class ProverbViewModel: ObservableObject {
         uiState = .loading()
         isLiked = proverb.liked
         title = proverb.title
-        explanations = cleanText(
-            proverb.conjugation.trimmingCharacters(in: .whitespacesAndNewlines)
-        ).components(separatedBy: "#")
         meanings = cleanText(
             proverb.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        ).components(separatedBy: "#")
+        explanations = cleanText(
+            proverb.conjugation.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "#")
         
         let synonymTitles = (proverb.synonyms)
