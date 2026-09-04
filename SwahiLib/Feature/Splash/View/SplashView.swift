@@ -75,7 +75,7 @@ struct SplashContent: View {
             Text(AppConstants.appTagline)
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.primary1)
-            .padding(.top, 10)
+            .padding(.bottom, 20)
             
             Divider()
                 .frame(height: 1)
@@ -85,7 +85,7 @@ struct SplashContent: View {
             Text(AppConstants.appCredits)
                 .font(.system(size: 16))
                 .foregroundColor(.primary1)
-            .padding(.top, 10)
+            .padding(.top, 20)
 
             Spacer().frame(height: 20)
         }.padding()

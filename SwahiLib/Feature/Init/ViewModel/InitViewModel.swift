@@ -58,7 +58,7 @@ final class InitViewModel: ObservableObject {
             await MainActor.run {
                 self.uiState = .error("Imefeli: \(error.localizedDescription)")
             }
-            print("❌ Initialization for idioms, saying and proverbs failed: \(error)")
+            print("❌ Initialization failed: \(error)")
         }
     }
 }
