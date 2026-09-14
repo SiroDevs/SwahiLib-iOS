@@ -151,7 +151,8 @@ struct DependencyMap {
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
                 notifyService: resolver.resolve(NotificationServiceProtocol.self)!,
-                syncManager: resolver.resolve(ContentSyncManagerProtocol.self)!
+                syncManager: resolver.resolve(ContentSyncManagerProtocol.self)!,
+                searchData: resolver.resolve(SearchDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -170,6 +171,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -178,6 +180,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -186,6 +189,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -195,6 +199,7 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -207,6 +212,17 @@ struct DependencyMap {
         
         container.register(NavigationCoordinator.self) { _ in
             NavigationCoordinator()
+        }.inObjectScope(.container)
+
+        container.register(HistoryViewModel.self) { resolver in
+            HistoryViewModel(
+                historyData: resolver.resolve(HistoryDataManager.self)!,
+                searchData: resolver.resolve(SearchDataManager.self)!,
+                idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!
+            )
         }.inObjectScope(.container)
 
     }

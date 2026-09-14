@@ -10,6 +10,9 @@ import RevenueCatUI
 
 struct HomeSearch: View {
     @ObservedObject var viewModel: HomeViewModel
+    @StateObject private var historyViewModel: HistoryViewModel = {
+        DiContainer.shared.resolve(HistoryViewModel.self)
+    }()
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
@@ -26,6 +29,7 @@ struct HomeSearch: View {
                     text: $searchText,
                     onSearch: { query in
                         viewModel.filterData(qry: query)
+                        viewModel.trackSearch(query)
                     }
                 )
                 .padding(.horizontal, 10)
@@ -109,6 +113,19 @@ struct HomeSearch: View {
             .navigationTitle("SwahiLib")
             .toolbarBackground(.regularMaterial, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        HistoryScreen(
+                            viewModel: historyViewModel,
+                            onSearchSelected: { query in
+                                searchText = query
+                                viewModel.filterData(qry: query)
+                            }
+                        )
+                    } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
                         HomeLikes(viewModel: viewModel)

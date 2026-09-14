@@ -134,4 +134,15 @@ class HistoryDataManager {
         }
     }
 
+    /// Logs a single "viewed this" event — a new row every time, not an
+    /// upsert by content, matching Android's behavior of inserting a fresh
+    /// history row (with auto-generated id) on every view so repeated
+    /// visits at different times all show up. `id` isn't auto-incremented
+    /// by Core Data, so it's computed here from the current max.
+    func addHistory(item: Int, type: String) {
+        let nextId = (fetchHistories().map(\.id).max() ?? 0) + 1
+        let createdAt = String(Int(Date().timeIntervalSince1970 * 1000))
+        saveHistories([History(id: nextId, item: item, type: type, createdAt: createdAt)])
+    }
+
 }

@@ -18,6 +18,8 @@ final class HomeViewModel: ObservableObject {
     private let subsRepo: SubsRepoProtocol
     private let notifyService: NotificationServiceProtocol
     private let syncManager: ContentSyncManagerProtocol
+    private let searchData: SearchDataManager
+    private var searchTrackingTask: Task<Void, Never>? = nil
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -49,7 +51,8 @@ final class HomeViewModel: ObservableObject {
         wordRepo: WordRepoProtocol,
         subsRepo: SubsRepoProtocol,
         notifyService: NotificationServiceProtocol,
-        syncManager: ContentSyncManagerProtocol
+        syncManager: ContentSyncManagerProtocol,
+        searchData: SearchDataManager
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -59,6 +62,7 @@ final class HomeViewModel: ObservableObject {
         self.subsRepo = subsRepo
         self.notifyService = notifyService
         self.syncManager = syncManager
+        self.searchData = searchData
         
         let savedHour = prefsRepo.notificationHour
         let savedMinute = prefsRepo.notificationMinute
@@ -187,6 +191,23 @@ final class HomeViewModel: ObservableObject {
             : allWords.filter { $0.title.lowercased().hasPrefix(trimmedQuery) }
 
         self.uiState = .filtered
+    }
+
+    /// Debounced so live-filter-as-you-type keystrokes don't each become a
+    /// history row — mirrors Android's SearchHistoryController.trackSearch.
+    /// Called from HomeSearch's search field only, never from tab switches
+    /// or letter-jump taps (which also call filterData(qry:) but aren't
+    /// user searches).
+    func trackSearch(_ rawQuery: String) {
+        let trimmed = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        searchTrackingTask?.cancel()
+        guard trimmed.count >= 2 else { return }
+
+        searchTrackingTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 900_000_000)
+            guard !Task.isCancelled else { return }
+            searchData.addSearch(title: trimmed)
+        }
     }
 
     func updateParentalGate(value: Bool) {
