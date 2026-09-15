@@ -47,8 +47,6 @@ struct DailyContentScaffold<FullDetail: View>: View {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
                             CollapsingHeader(title: heroTitle, subtitle: heroSubtitle)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .padding(.horizontal, 16)
                                 .padding(.top, 16)
 
                             if !meaning.isEmpty {

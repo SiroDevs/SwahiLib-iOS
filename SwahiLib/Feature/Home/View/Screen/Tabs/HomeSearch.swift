@@ -111,6 +111,7 @@ struct HomeSearch: View {
                 PaywallView(displayCloseButton: true)
             }
             .navigationTitle("SwahiLib")
+            .toolbarTitleDisplayMode(.inline)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

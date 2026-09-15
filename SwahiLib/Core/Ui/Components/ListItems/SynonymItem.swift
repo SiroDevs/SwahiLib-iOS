@@ -4,6 +4,9 @@
 //
 //  Created by @sirodevs on 02/08/2025.
 //
+//  Restyled to match Android's core/ui SynonymItem.kt: title on the left
+//  in the primary color, a single forward chevron on the right, laid out
+//  space-between on a flat card.
 
 import SwiftUI
 
@@ -13,29 +16,23 @@ struct SynonymItem: View {
 
     var body: some View {
         Button(action: onClick) {
-            HStack(alignment: .center) {
-                Image(systemName: "arrow.right.circle")
-                    .foregroundColor(Color(.onPrimaryContainer))
-
-                Spacer().frame(width: 12)
-
+            HStack {
                 Text(title)
-                    .font(.system(size: 18))
-                    .foregroundColor(Color(.onPrimaryContainer))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundColor(.primary2)
 
-                Image(systemName: "arrow.forward")
-                    .foregroundColor(Color(.onPrimaryContainer))
+                Spacer()
+
+                Image(systemName: "chevron.forward")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.primary2)
             }
-            .padding(.vertical, 20)
             .padding(.horizontal, 16)
-            .background(.background1)
-            .cornerRadius(8)
-            .shadow(radius: 2)
+            .padding(.vertical, 12)
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.background1))
         }
-        .frame(maxWidth: .infinity)
-        .buttonStyle(PlainButtonStyle())
-        .padding(.vertical, 4)
+        .buttonStyle(.plain)
+        .padding(.vertical, 3)
     }
 }
 

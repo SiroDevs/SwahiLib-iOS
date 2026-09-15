@@ -28,6 +28,7 @@ struct LibraryCollectionsView: View {
                 .padding(16)
             }
             .navigationTitle("Maktaba")
+            .toolbarTitleDisplayMode(.inline)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
         }
     }
