@@ -1,5 +1,5 @@
 //
-//  HomeLikes.swift
+//  LikesView.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 05/07/2025.
@@ -8,9 +8,11 @@
 import SwiftUI
 import RevenueCatUI
 
-struct HomeLikes: View {
-    @ObservedObject var viewModel: HomeViewModel
-    
+struct LikesView: View {
+    @StateObject private var viewModel: LikesViewModel = {
+        DiContainer.shared.resolve(LikesViewModel.self)
+    }()
+
     @State private var showPaywall: Bool = false
     
     var body: some View {
@@ -50,5 +52,8 @@ struct HomeLikes: View {
         .navigationTitle("Vipendwa")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.regularMaterial, for: .navigationBar)
+        .onAppear {
+            viewModel.loadLikes()
+        }
     }
 }

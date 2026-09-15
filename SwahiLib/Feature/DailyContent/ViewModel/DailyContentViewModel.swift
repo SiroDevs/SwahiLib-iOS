@@ -2,7 +2,7 @@
 //  DailyContentViewModel.swift
 //  SwahiLib
 //
-//  Mirrors Android's feature/daily_content/viewmodel/DailyContentViewModel.kt.
+//  Created by @sirodevs on 07/09/2026.
 //
 
 import Foundation
@@ -59,8 +59,8 @@ final class DailyContentViewModel: ObservableObject {
         guard !historyLoaded else { return }
         historyLoaded = true
 
-        let words = Dictionary(uniqueKeysWithValues: wordRepo.fetchLocalData().map { ($0.rid, $0) })
-        let proverbs = Dictionary(uniqueKeysWithValues: proverbRepo.fetchLocalData().map { ($0.rid, $0) })
+        let words = wordRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
+        let proverbs = proverbRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
 
         history = dailyContentData.fetchAll().map { content in
             DailyContentHistoryEntry(

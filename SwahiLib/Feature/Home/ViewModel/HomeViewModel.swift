@@ -9,12 +9,22 @@ import Foundation
 import WidgetKit
 import StoreKit
 
-enum DrawerDestination: Int, Identifiable {
+/// Destinations reached from the nav drawer, presented from HomeView as a
+/// fullScreenCover (not a per-tab NavigationLink push) since they need to
+/// be reachable from either tab and cover the tab bar. Each cover wraps
+/// its own fresh NavigationStack, styled with a back-chevron rather than a
+/// "Funga"/close button so it still reads as a normal screen — a *shared*
+/// NavigationStack wrapping the whole TabView was tried instead and had
+/// to be reverted: nesting a NavigationStack inside another one (even
+/// through a TabView) makes SwiftUI drop the inner stacks' navigation
+/// bars, which is why HomeSearch's and Maktaba's title bars/toolbars went
+/// missing.
+enum HomeDestination: Hashable, Identifiable {
     case dailyWord
     case dailyProverb
     case settings
 
-    var id: Int { rawValue }
+    var id: Self { self }
 }
 
 final class HomeViewModel: ObservableObject {
@@ -48,7 +58,7 @@ final class HomeViewModel: ObservableObject {
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
     @Published var isDrawerOpen: Bool = false
-    @Published var drawerDestination: DrawerDestination? = nil
+    @Published var homeDestination: HomeDestination? = nil
     @Published var isProUser: Bool = false
     @Published var notificationsEnabled: Bool = false
     @Published var notificationTime: Date
@@ -168,13 +178,6 @@ final class HomeViewModel: ObservableObject {
         if !wordDupes.isEmpty { print("⚠️ Found duplicate word IDs: \(wordDupes)") }
     }
 
-    /// Filters and sorts all four content types every time, regardless of
-    /// which type is currently selected — `homeTab` only controls what's
-    /// displayed (Search's single-type view, Likes' single-type view), not
-    /// what gets computed. Previously this only updated the selected tab's
-    /// arrays, so `likedIdioms`/`likedProverbs`/`likedSayings` (what
-    /// HomeLikes reads) could be stale or empty if that type was never
-    /// selected in Search since the last fetch.
     func filterData(qry: String) {
         let trimmedQuery = qry.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
@@ -203,11 +206,6 @@ final class HomeViewModel: ObservableObject {
         self.uiState = .filtered
     }
 
-    /// Debounced so live-filter-as-you-type keystrokes don't each become a
-    /// history row — mirrors Android's SearchHistoryController.trackSearch.
-    /// Called from HomeSearch's search field only, never from tab switches
-    /// or letter-jump taps (which also call filterData(qry:) but aren't
-    /// user searches).
     func trackSearch(_ rawQuery: String) {
         let trimmed = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
         searchTrackingTask?.cancel()

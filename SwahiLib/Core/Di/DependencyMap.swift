@@ -233,6 +233,16 @@ struct DependencyMap {
             )
         }.inObjectScope(.container)
 
+        container.register(LikesViewModel.self) { resolver in
+            LikesViewModel(
+                idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!,
+                subsRepo: resolver.resolve(SubsRepoProtocol.self)!
+            )
+        }.inObjectScope(.container)
+
         container.register(DailyContentViewModel.self) { resolver in
             DailyContentViewModel(
                 dailyContentData: resolver.resolve(DailyContentDataManager.self)!,

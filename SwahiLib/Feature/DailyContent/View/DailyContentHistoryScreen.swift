@@ -2,8 +2,7 @@
 //  DailyContentHistoryScreen.swift
 //  SwahiLib
 //
-//  Mirrors Android's Daily Content history (accessed from both Daily Word
-//  and Daily Proverb via the same history icon).
+//  Created by @sirodevs on 07/09/2026.
 //
 
 import SwiftUI

@@ -2,35 +2,16 @@
 //  KamusiApiService.swift
 //  SwahiLib
 //
-//  Replaces SupabaseService as the content backend. Mirrors the Android
-//  `KamusiApi`: the content endpoints are static JSON files (not a
-//  paginated/queryable REST API), fronted by ETag caching so unchanged
-//  content never needs to be re-downloaded.
-//
 
 import Foundation
 
 protocol KamusiApiServiceProtocol {
-    /// Checks whether an endpoint's content has changed since `storedETag`.
-    /// Returns the new ETag if it changed (HTTP 200), or `nil` if unchanged
-    /// (HTTP 304) or the check failed.
     func fetchETag(_ endpoint: KamusiEndpoint, storedETag: String?) async -> String?
 
-    /// Fetches and decodes an endpoint's full JSON array.
-    /// Returns `nil` on any network/decoding failure.
     func fetchJson<T: Decodable>(_ endpoint: KamusiEndpoint) async -> [T]?
-
-    /// Fetches an endpoint's raw JSON body without decoding it into a typed
-    /// list. Used for Library collections, whose shapes vary (flat array vs.
-    /// grouped object, nested fields, ...) and are parsed per-collection by
-    /// `LibraryMapper`.
     func fetchRawJson(_ endpoint: KamusiEndpoint) async -> String?
 }
 
-/// Content + maktaba (library) endpoints, all served as flat static JSON
-/// files. `libraryCollectionKey` is set only for the 9 maktaba endpoints —
-/// it's how ContentSyncManager/LibraryRepo know which ones route to
-/// LibraryRepo instead of the word/idiom/proverb/saying repos.
 enum KamusiEndpoint: CaseIterable {
     case words
     case idioms
@@ -65,7 +46,6 @@ enum KamusiEndpoint: CaseIterable {
         }
     }
 
-    /// Key used to persist this endpoint's ETag in PrefsRepo.
     var prefKey: String {
         switch self {
         case .words: return "etag_words"
@@ -84,8 +64,6 @@ enum KamusiEndpoint: CaseIterable {
         }
     }
 
-    /// Non-nil only for maktaba endpoints — the LibraryKeys value LibraryRepo
-    /// should store this content under.
     var libraryCollectionKey: String? {
         switch self {
         case .libraryCaps: return LibraryKeys.caps

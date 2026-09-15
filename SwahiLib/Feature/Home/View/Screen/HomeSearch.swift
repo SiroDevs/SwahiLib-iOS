@@ -138,7 +138,7 @@ struct HomeSearch: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
-                        HomeLikes(viewModel: viewModel)
+                        LikesView()
                     } label: {
                         Image(systemName: "heart.fill")
                     }

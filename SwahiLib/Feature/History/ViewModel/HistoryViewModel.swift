@@ -50,10 +50,10 @@ final class HistoryViewModel: ObservableObject {
     }
 
     func refreshHistory() {
-        let words = Dictionary(uniqueKeysWithValues: wordRepo.fetchLocalData().map { ($0.rid, $0) })
-        let idioms = Dictionary(uniqueKeysWithValues: idiomRepo.fetchLocalData().map { ($0.rid, $0) })
-        let proverbs = Dictionary(uniqueKeysWithValues: proverbRepo.fetchLocalData().map { ($0.rid, $0) })
-        let sayings = Dictionary(uniqueKeysWithValues: sayingRepo.fetchLocalData().map { ($0.rid, $0) })
+        let words = wordRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
+        let idioms = idiomRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
+        let proverbs = proverbRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
+        let sayings = sayingRepo.fetchLocalData().keyedByID { ($0.rid, $0) }
 
         let rows = historyData.fetchHistories()
             .sorted { (Double($0.createdAt ?? "") ?? 0) > (Double($1.createdAt ?? "") ?? 0) }
