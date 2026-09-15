@@ -28,6 +28,10 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             DispatchQueue.main.async {
                 self.navCoordinator.navigateToWord(word)
             }
+        } else if let proverb = notifyService.handleProverbNotificationTap(userInfo) {
+            DispatchQueue.main.async {
+                self.navCoordinator.navigateToProverb(proverb)
+            }
         }
         
         completionHandler()

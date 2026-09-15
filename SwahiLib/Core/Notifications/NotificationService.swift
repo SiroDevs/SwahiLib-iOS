@@ -10,15 +10,25 @@ import UserNotifications
 protocol NotificationServiceProtocol {
     func checkNotificationPermission()
     func scheduleDailyWordNotification(at hour: Int, minute: Int)
+    func scheduleDailyProverbNotification(at hour: Int, minute: Int)
     func cancelDailyNotifications()
     func handleNotificationTap(_ userInfo: [AnyHashable: Any]) -> Word?
+    func handleProverbNotificationTap(_ userInfo: [AnyHashable: Any]) -> Proverb?
 }
 
 class NotificationService: NotificationServiceProtocol {
     private let wordDataManager: WordDataManager
-    
-    init(wordDataManager: WordDataManager) {
+    private let proverbDataManager: ProverbDataManager
+    private let dailyContentData: DailyContentDataManager
+
+    init(
+        wordDataManager: WordDataManager,
+        proverbDataManager: ProverbDataManager,
+        dailyContentData: DailyContentDataManager
+    ) {
         self.wordDataManager = wordDataManager
+        self.proverbDataManager = proverbDataManager
+        self.dailyContentData = dailyContentData
     }
     
     func checkNotificationPermission() {
@@ -41,7 +51,7 @@ class NotificationService: NotificationServiceProtocol {
         let truncatedTitle = truncateText(todaysWord?.title ?? "", maxLength: 20)
         
         content.title = "📖 Neno la Siku: \(truncatedTitle)"
-        content.body = formatNotificationBody(for: todaysWord)
+        content.body = formatWordNotificationBody(for: todaysWord)
         content.sound = .default
         content.userInfo = ["wordId": todaysWord?.rid ?? 0]
         
@@ -63,22 +73,70 @@ class NotificationService: NotificationServiceProtocol {
             }
         }
     }
+
+    func scheduleDailyProverbNotification(at hour: Int = 6, minute: Int = 0) {
+        let center = UNUserNotificationCenter.current()
+
+        center.removePendingNotificationRequests(withIdentifiers: ["proverbOfTheDay"])
+
+        let todaysProverb = getTodaysProverb()
+
+        let content = UNMutableNotificationContent()
+
+        let truncatedTitle = truncateText(todaysProverb?.title ?? "", maxLength: 20)
+
+        content.title = "📜 Methali ya Siku: \(truncatedTitle)"
+        content.body = formatProverbNotificationBody(for: todaysProverb)
+        content.sound = .default
+        content.userInfo = ["proverbId": todaysProverb?.rid ?? 0]
+
+        var dateComponents = DateComponents()
+        dateComponents.hour = hour
+        dateComponents.minute = minute
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+
+        let request = UNNotificationRequest(
+            identifier: "proverbOfTheDay",
+            content: content,
+            trigger: trigger
+        )
+
+        center.add(request) { error in
+            if let error = error {
+                print("❌ Error scheduling notification: \(error.localizedDescription)")
+            }
+        }
+    }
     
     func cancelDailyNotifications() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["wordOfTheDay"])
+        UNUserNotificationCenter.current().removePendingNotificationRequests(
+            withIdentifiers: ["wordOfTheDay", "proverbOfTheDay"]
+        )
         print("🗑️ Daily notifications cancelled")
     }
     
+    /// Sourced from the same persisted daily-content row the Daily Word
+    /// screen reads, so the notification and the screen always agree —
+    /// previously this picked a word deterministically from the day of
+    /// year without persisting anything, which could drift once a real
+    /// Daily Word screen existed.
     private func getTodaysWord() -> Word? {
-        let allWords = wordDataManager.fetchWords()
-        
-        guard !allWords.isEmpty else { return nil }
-        
-        let calendar = Calendar.current
-        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: Date()) ?? 0
-        let index = dayOfYear % allWords.count
-        
-        return allWords[index]
+        let words = wordDataManager.fetchWords()
+        let proverbs = proverbDataManager.fetchProverbs()
+        guard !words.isEmpty else { return nil }
+
+        let today = dailyContentData.getOrCreateToday(words: words, proverbs: proverbs)
+        return words.first { $0.rid == today.wordRid }
+    }
+
+    private func getTodaysProverb() -> Proverb? {
+        let words = wordDataManager.fetchWords()
+        let proverbs = proverbDataManager.fetchProverbs()
+        guard !proverbs.isEmpty else { return nil }
+
+        let today = dailyContentData.getOrCreateToday(words: words, proverbs: proverbs)
+        return proverbs.first { $0.rid == today.proverbRid }
     }
     
     func handleNotificationTap(_ userInfo: [AnyHashable: Any]) -> Word? {
@@ -88,7 +146,14 @@ class NotificationService: NotificationServiceProtocol {
         return nil
     }
 
-    private func formatNotificationBody(for word: Word?) -> String {
+    func handleProverbNotificationTap(_ userInfo: [AnyHashable: Any]) -> Proverb? {
+        if let proverbId = userInfo["proverbId"] as? Int {
+            return proverbDataManager.fetchProverb(withId: proverbId)
+        }
+        return nil
+    }
+
+    private func formatWordNotificationBody(for word: Word?) -> String {
         guard let word = word else {
             return "Tazama neno la siku ya leo!"
         }
@@ -97,6 +162,14 @@ class NotificationService: NotificationServiceProtocol {
         let formattedSynonyms = !word.synonyms.isEmpty ? "\nVisawe: \(truncateText(word.meaning, maxLength: 20))" : ""
         
         return "\(truncatedMeaning)\(formattedSynonyms)"
+    }
+
+    private func formatProverbNotificationBody(for proverb: Proverb?) -> String {
+        guard let proverb = proverb else {
+            return "Tazama methali ya siku ya leo!"
+        }
+
+        return truncateText(proverb.meaning, maxLength: 120)
     }
     
     private func truncateText(_ text: String, maxLength: Int) -> String {

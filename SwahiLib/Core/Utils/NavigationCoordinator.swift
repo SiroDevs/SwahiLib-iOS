@@ -11,6 +11,8 @@ class NavigationCoordinator: ObservableObject {
     @Published var navigationPath = NavigationPath()
     @Published var presentedWord: Word?
     @Published var isPresentingWord = false
+    @Published var presentedProverb: Proverb?
+    @Published var isPresentingProverb = false
     
     func navigateToWord(_ word: Word) {
         presentedWord = word
@@ -20,5 +22,15 @@ class NavigationCoordinator: ObservableObject {
     func dismissWord() {
         isPresentingWord = false
         presentedWord = nil
+    }
+
+    func navigateToProverb(_ proverb: Proverb) {
+        presentedProverb = proverb
+        isPresentingProverb = true
+    }
+
+    func dismissProverb() {
+        isPresentingProverb = false
+        presentedProverb = nil
     }
 }

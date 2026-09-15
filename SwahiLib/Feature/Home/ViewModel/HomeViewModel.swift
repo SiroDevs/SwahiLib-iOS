@@ -249,6 +249,10 @@ final class HomeViewModel: ObservableObject {
             at: components.hour ?? 6,
             minute: components.minute ?? 0
         )
+        notifyService.scheduleDailyProverbNotification(
+            at: components.hour ?? 6,
+            minute: components.minute ?? 0
+        )
     }
 
     func clearAllData() {

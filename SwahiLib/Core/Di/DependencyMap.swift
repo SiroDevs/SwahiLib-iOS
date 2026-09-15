@@ -19,7 +19,9 @@ struct DependencyMap {
         
         container.register(NotificationServiceProtocol.self) { resolver in
             NotificationService(
-                wordDataManager: resolver.resolve(WordDataManager.self)!
+                wordDataManager: resolver.resolve(WordDataManager.self)!,
+                proverbDataManager: resolver.resolve(ProverbDataManager.self)!,
+                dailyContentData: resolver.resolve(DailyContentDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -37,6 +39,12 @@ struct DependencyMap {
         
         container.register(HistoryDataManager.self) { resolver in
             HistoryDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+
+        container.register(DailyContentDataManager.self) { resolver in
+            DailyContentDataManager(
                 coreDataManager: resolver.resolve(CoreDataManager.self)!,
             )
         }.inObjectScope(.container)
@@ -222,6 +230,14 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!
+            )
+        }.inObjectScope(.container)
+
+        container.register(DailyContentViewModel.self) { resolver in
+            DailyContentViewModel(
+                dailyContentData: resolver.resolve(DailyContentDataManager.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!
             )
         }.inObjectScope(.container)
 
