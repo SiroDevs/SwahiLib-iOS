@@ -4,6 +4,12 @@
 //
 //  Created by @sirodevs on 02/08/2025.
 //
+//  Restyled to match Android's ProverbDetails.kt: same literal/figurative
+//  meaning split and first/second-explanation logic as before (unchanged),
+//  now sharing the same MeaningsView card component Word uses (Android
+//  reuses core/ui's MeaningsView for proverbs too, rather than a
+//  proverb-specific card), and explanation badges as filled pills
+//  instead of plain colored text.
 
 import SwiftUI
 
@@ -42,87 +48,69 @@ struct ProverbDetails: View {
     
     private var synonymsTitle: String {
         if synonyms.count == 1 {
-            return L10n.synonym
+            return L10n.synonym.uppercased()
         } else {
-            return "\(L10n.synonyms) \(synonyms.count)"
+            return "\(L10n.synonyms.uppercased()) \(synonyms.count)"
         }
-    }
-    
-    private enum Constants {
-        static let sizeXSmall: CGFloat = 2
-        static let sizeSmall: CGFloat = 5
-        static let sizeMedium: CGFloat = 10
-        static let sizeLarge: CGFloat = 15
-        static let fontSizeTitle: CGFloat = 20
-        static let fontSizeBody: CGFloat = 16
     }
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Constants.sizeMedium) {
+            VStack(alignment: .leading, spacing: 12) {
                 CollapsingHeader(title: title)
-                
-                if hasFirstExplanation {
-                    firstExplanationView
-                }
-                
-                if !synonyms.isEmpty {
-                    synonymsSection
-                }
-                
-                if !meanings.isEmpty {
-                    if hasLiteralAndFigurativeMeanings {
-                        Spacer().frame(height: Constants.sizeXSmall)
-                        Text("MAANA HALISI \(literalMeanings.count)")
-                            .bold()
-                            .font(.system(size: Constants.fontSizeTitle))
-                            .padding(.horizontal, Constants.sizeLarge)
-                        ProverbMeaning(meanings: literalMeanings)
-                        
-                        Spacer().frame(height: Constants.sizeXSmall)
-                        Text("MAANA YA KIFALSAFA/KIMAFUMBO \(figurativeMeanings.count)")
-                            .bold()
-                            .font(.system(size: Constants.fontSizeTitle))
-                            .padding(.leading, Constants.sizeLarge)
-                        ProverbMeaning(meanings: figurativeMeanings)
-                    } else {
-                        Text("MAANA YA METHALI \(literalMeanings.count)")
-                            .bold()
-                            .font(.system(size: Constants.fontSizeTitle))
-                            .padding(.leading, Constants.sizeLarge)
-                        ProverbMeaning(meanings: literalMeanings)
+
+                VStack(alignment: .leading, spacing: 12) {
+                    if hasFirstExplanation {
+                        explanationBadge(text: "ni methali \(explanations[0])", italic: false)
+                    }
+
+                    if !synonyms.isEmpty {
+                        synonymsSection
+                    }
+
+                    if !meanings.isEmpty {
+                        if hasLiteralAndFigurativeMeanings {
+                            sectionHeader("MAANA HALISI")
+                            MeaningsView(meanings: literalMeanings)
+
+                            sectionHeader("MAANA YA KIFALSAFA/KIMAFUMBO")
+                            MeaningsView(meanings: figurativeMeanings)
+                        } else {
+                            sectionHeader("MAANA YA METHALI")
+                            MeaningsView(meanings: literalMeanings)
+                        }
+                    }
+
+                    if hasSecondExplanation {
+                        explanationBadge(text: explanations[1], italic: true)
                     }
                 }
-                
-                if hasSecondExplanation {
-                    secondExplanationView
-                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
             }
         }
     }
-    
-    private var firstExplanationView: some View {
-        Text("ni methali \(explanations[0])")
-            .bold()
-            .font(.system(size: Constants.fontSizeBody))
+
+    private func sectionHeader(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 18, weight: .bold))
             .foregroundColor(.primary1)
-            .padding(.horizontal, Constants.sizeMedium)
-            .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
-    private var secondExplanationView: some View {
-        Text(explanations[1])
-            .italic()
-            .font(.system(size: Constants.fontSizeBody))
-            .foregroundColor(.primary1)
-            .padding(.horizontal, Constants.sizeMedium)
-            .frame(maxWidth: .infinity, alignment: .leading)
+
+    private func explanationBadge(text: String, italic: Bool) -> some View {
+        Text(text)
+            .font(.system(size: 15, weight: .semibold))
+            .italic(italic)
+            .foregroundColor(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(RoundedRectangle(cornerRadius: 8).fill(Color.primary2))
     }
     
     private var synonymsSection: some View {
-        VStack(alignment: .leading, spacing: Constants.sizeMedium) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(synonymsTitle)
-                .font(.system(size: Constants.fontSizeTitle, weight: .bold))
+                .font(.system(size: 18, weight: .bold))
                 .foregroundColor(.primary1)
             
             VStack(spacing: 0) {
@@ -135,7 +123,6 @@ struct ProverbDetails: View {
                     )
                 }
             }
-            .padding(.horizontal, Constants.sizeMedium)
         }
     }
     

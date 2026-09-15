@@ -23,17 +23,20 @@ class ProverbViewModel: ObservableObject {
     let prefsRepo: PrefsRepo
     private let proverbRepo: ProverbRepoProtocol
     private let subsRepo: SubsRepoProtocol
+    private let historyData: HistoryDataManager
 
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
         proverbRepo: ProverbRepoProtocol,
         subsRepo: SubsRepoProtocol,
+        historyData: HistoryDataManager
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.proverbRepo = proverbRepo
         self.subsRepo = subsRepo
+        self.historyData = historyData
     }
     
     private func verifySubscription(isOnline: Bool) async throws {
@@ -57,6 +60,8 @@ class ProverbViewModel: ObservableObject {
         explanations = cleanText(
             proverb.conjugation.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "#")
+
+        historyData.addHistory(item: proverb.rid, type: "proverb")
         
         let synonymTitles = (proverb.synonyms)
             .split(separator: ",")

@@ -4,6 +4,14 @@
 //
 //  Created by @sirodevs on 02/08/2025.
 //
+//  Restyled to match Android's feature/word WordView.kt: meanings render
+//  directly under the header with no extra "MAANA" label (Android only
+//  labels sections when there's more than one meaning category, which a
+//  single word never has), and the conjugation is now a labelled card
+//  ("MNYAMBULIKO") instead of plain text.
+//
+//  "METHALI AMBATANISHI" (related proverbs) has no Android equivalent —
+//  it's a pre-existing iOS-only addition, kept as-is.
 
 import SwiftUI
 
@@ -17,73 +25,71 @@ struct WordDetails: View {
     var english: String?
     var onFeatureLocked: () -> Void
     
-    private enum Constants {
-        static let sizeXSmall: CGFloat = 2
-        static let sizeSmall: CGFloat = 5
-        static let sizeMedium: CGFloat = 10
-        static let sizeLarge: CGFloat = 15
-        static let fontSizeTitle: CGFloat = 20
-        static let fontSizeBody: CGFloat = 16
-    }
-    
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 16) {
                 CollapsingHeader(title: title, subtitle: english)
 
-                if !meanings.isEmpty {
-                    Text("MAANA \(meanings.count)")
-                        .bold()
-                        .font(.system(size: Constants.fontSizeTitle))
-                        .padding(.horizontal, Constants.sizeLarge)
-                    MeaningsView(meanings: meanings)
-                }
+                VStack(alignment: .leading, spacing: 16) {
+                    if !meanings.isEmpty {
+                        MeaningsView(meanings: meanings)
+                    }
 
-                if !conjugation.isEmpty {
-                    Spacer().frame(height: 5)
-                    Text("MNYAMBULIKO")
-                        .bold()
-                        .font(.system(size: Constants.fontSizeTitle))
-                        .padding(.horizontal, Constants.sizeLarge)
-                    Text(conjugation)
-                        .italic()
-                        .padding(.leading, Constants.sizeLarge)
-                        .font(.system(size: Constants.fontSizeTitle))
-                        .foregroundColor(Color(.primary1))
-                }
+                    if !conjugation.isEmpty {
+                        conjugationCard
+                    }
 
-                if !synonyms.isEmpty {
-                    Spacer().frame(height: 5)
+                    if !synonyms.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(synonyms.count == 1 ? L10n.synonym.uppercased() : "\(L10n.synonyms.uppercased()) (\(synonyms.count))")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.primary1)
 
-                    Text(synonyms.count == 1 ? L10n.synonym.uppercased() : "\(L10n.synonyms.uppercased()) \(synonyms.count)")
-                        .bold()
-                        .font(.system(size: Constants.fontSizeTitle))
-                        .padding(.horizontal, Constants.sizeLarge)
-
-                    WordSynonyms(
-                        synonyms: synonyms,
-                        onSynonymClicked: { synonym in
-                            if viewModel.isProUser {
-                                viewModel.loadWord(synonym)
-                            } else {
-                                onFeatureLocked()
-                            }
+                            WordSynonyms(
+                                synonyms: synonyms,
+                                onSynonymClicked: { synonym in
+                                    if viewModel.isProUser {
+                                        viewModel.loadWord(synonym)
+                                    } else {
+                                        onFeatureLocked()
+                                    }
+                                }
+                            )
                         }
-                    )
+                    }
+
+                    if !proverbs.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("METHALI AMBATANISHI \(proverbs.count)")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.primary1)
+
+                            ProverbsList(proverbs: proverbs)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
                 }
-                
-                if !proverbs.isEmpty {
-                    Spacer().frame(height: 5)
-                    Text("METHALI AMBATANISHI \(proverbs.count)")
-                        .bold()
-                        .font(.system(size: Constants.fontSizeTitle))
-                        .padding(.horizontal, Constants.sizeLarge)
-                    
-                    ProverbsList(proverbs: proverbs)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
             }
         }
+    }
+
+    private var conjugationCard: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("MNYAMBULIKO")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.primary2)
+                .tracking(1.5)
+
+            Text(conjugation)
+                .italic()
+                .font(.system(size: 17))
+                .foregroundColor(.onSurface)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color.background1))
     }
 }
 
@@ -102,7 +108,6 @@ struct WordSynonyms: View {
                 )
             }
         }
-        .padding(.horizontal, 20)
     }
 }
 

@@ -21,17 +21,20 @@ class IdiomViewModel: ObservableObject {
     let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
     private let subsRepo: SubsRepoProtocol
+    private let historyData: HistoryDataManager
 
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
         idiomRepo: IdiomRepoProtocol,
-        subsRepo: SubsRepoProtocol
+        subsRepo: SubsRepoProtocol,
+        historyData: HistoryDataManager
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.subsRepo = subsRepo
+        self.historyData = historyData
     }
     
     private func verifySubscription(isOnline: Bool) async throws {
@@ -52,6 +55,8 @@ class IdiomViewModel: ObservableObject {
         meanings = cleanText(
             idiom.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
+
+        historyData.addHistory(item: idiom.rid, type: "idiom")
 
         uiState = .loaded
     }

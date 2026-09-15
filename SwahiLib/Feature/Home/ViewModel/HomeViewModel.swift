@@ -9,6 +9,14 @@ import Foundation
 import WidgetKit
 import StoreKit
 
+enum DrawerDestination: Int, Identifiable {
+    case dailyWord
+    case dailyProverb
+    case settings
+
+    var id: Int { rawValue }
+}
+
 final class HomeViewModel: ObservableObject {
     let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
@@ -18,6 +26,8 @@ final class HomeViewModel: ObservableObject {
     private let subsRepo: SubsRepoProtocol
     private let notifyService: NotificationServiceProtocol
     private let syncManager: ContentSyncManagerProtocol
+    private let searchData: SearchDataManager
+    private var searchTrackingTask: Task<Void, Never>? = nil
     
     @Published var allIdioms: [Idiom] = []
     @Published var likedIdioms: [Idiom] = []
@@ -37,6 +47,8 @@ final class HomeViewModel: ObservableObject {
     
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
+    @Published var isDrawerOpen: Bool = false
+    @Published var drawerDestination: DrawerDestination? = nil
     @Published var isProUser: Bool = false
     @Published var notificationsEnabled: Bool = false
     @Published var notificationTime: Date
@@ -49,7 +61,8 @@ final class HomeViewModel: ObservableObject {
         wordRepo: WordRepoProtocol,
         subsRepo: SubsRepoProtocol,
         notifyService: NotificationServiceProtocol,
-        syncManager: ContentSyncManagerProtocol
+        syncManager: ContentSyncManagerProtocol,
+        searchData: SearchDataManager
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
@@ -59,6 +72,7 @@ final class HomeViewModel: ObservableObject {
         self.subsRepo = subsRepo
         self.notifyService = notifyService
         self.syncManager = syncManager
+        self.searchData = searchData
         
         let savedHour = prefsRepo.notificationHour
         let savedMinute = prefsRepo.notificationMinute
@@ -189,6 +203,23 @@ final class HomeViewModel: ObservableObject {
         self.uiState = .filtered
     }
 
+    /// Debounced so live-filter-as-you-type keystrokes don't each become a
+    /// history row — mirrors Android's SearchHistoryController.trackSearch.
+    /// Called from HomeSearch's search field only, never from tab switches
+    /// or letter-jump taps (which also call filterData(qry:) but aren't
+    /// user searches).
+    func trackSearch(_ rawQuery: String) {
+        let trimmed = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        searchTrackingTask?.cancel()
+        guard trimmed.count >= 2 else { return }
+
+        searchTrackingTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 900_000_000)
+            guard !Task.isCancelled else { return }
+            searchData.addSearch(title: trimmed)
+        }
+    }
+
     func updateParentalGate(value: Bool) {
         prefsRepo.shownParentalGate = value
     }
@@ -225,6 +256,10 @@ final class HomeViewModel: ObservableObject {
     private func scheduleNotifications() {
         let components = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
         notifyService.scheduleDailyWordNotification(
+            at: components.hour ?? 6,
+            minute: components.minute ?? 0
+        )
+        notifyService.scheduleDailyProverbNotification(
             at: components.hour ?? 6,
             minute: components.minute ?? 0
         )

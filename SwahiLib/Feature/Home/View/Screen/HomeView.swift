@@ -57,6 +57,20 @@ struct HomeView: View {
                     PaywallView(displayCloseButton: true)
             }
         }
+        .fullScreenCover(item: $viewModel.drawerDestination) { destination in
+            switch destination {
+            case .dailyWord:
+                NavigationStack {
+                    DailyWordScreen()
+                }
+            case .dailyProverb:
+                NavigationStack {
+                    DailyProverbScreen()
+                }
+            case .settings:
+                SettingsView(viewModel: viewModel)
+            }
+        }
     }
     
     @ViewBuilder
@@ -66,23 +80,24 @@ struct HomeView: View {
                 HomeSkeleton()
                 
             case .filtered:
-                TabView {
-                    HomeSearch(viewModel: viewModel)
-                        .tabItem {
-                            Label("Tafuta", systemImage: "magnifyingglass")
-                        }
-                    
-                    LibraryCollectionsView(viewModel: libraryViewModel)
-                        .tabItem {
-                            Label("Maktaba", systemImage: "books.vertical.fill")
-                        }
-                    
-                    SettingsView(viewModel: viewModel)
-                        .tabItem {
-                            Label("Mipangilio", systemImage: "gear")
-                        }
+                ZStack(alignment: .leading) {
+                    TabView {
+                        HomeSearch(viewModel: viewModel)
+                            .tabItem {
+                                Label("Tafuta", systemImage: "magnifyingglass")
+                            }
+                        
+                        LibraryCollectionsView(viewModel: libraryViewModel)
+                            .tabItem {
+                                Label("Maktaba", systemImage: "books.vertical.fill")
+                            }
+                    }
+                    .environment(\.horizontalSizeClass, .compact)
+
+                    NavDrawer(isOpen: $viewModel.isDrawerOpen) { destination in
+                        viewModel.drawerDestination = destination
+                    }
                 }
-                .environment(\.horizontalSizeClass, .compact)
                 
             case .error(let msg):
                 ErrorState(message: msg) {

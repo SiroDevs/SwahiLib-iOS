@@ -78,7 +78,7 @@ struct AdvancedSearchView: View {
                 }
             }
         }
-        .navigationTitle("Tafuta kwa Kina")
+        .navigationTitle("Tafuta Kamusi kwa Kina")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .toolbarBackground(.regularMaterial, for: .navigationBar)

@@ -19,7 +19,9 @@ struct DependencyMap {
         
         container.register(NotificationServiceProtocol.self) { resolver in
             NotificationService(
-                wordDataManager: resolver.resolve(WordDataManager.self)!
+                wordDataManager: resolver.resolve(WordDataManager.self)!,
+                proverbDataManager: resolver.resolve(ProverbDataManager.self)!,
+                dailyContentData: resolver.resolve(DailyContentDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -37,6 +39,12 @@ struct DependencyMap {
         
         container.register(HistoryDataManager.self) { resolver in
             HistoryDataManager(
+                coreDataManager: resolver.resolve(CoreDataManager.self)!,
+            )
+        }.inObjectScope(.container)
+
+        container.register(DailyContentDataManager.self) { resolver in
+            DailyContentDataManager(
                 coreDataManager: resolver.resolve(CoreDataManager.self)!,
             )
         }.inObjectScope(.container)
@@ -151,7 +159,8 @@ struct DependencyMap {
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
                 notifyService: resolver.resolve(NotificationServiceProtocol.self)!,
-                syncManager: resolver.resolve(ContentSyncManagerProtocol.self)!
+                syncManager: resolver.resolve(ContentSyncManagerProtocol.self)!,
+                searchData: resolver.resolve(SearchDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -170,6 +179,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -178,6 +188,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -186,6 +197,7 @@ struct DependencyMap {
                 prefsRepo: resolver.resolve(PrefsRepo.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -195,6 +207,7 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
                 subsRepo: resolver.resolve(SubsRepoProtocol.self)!,
+                historyData: resolver.resolve(HistoryDataManager.self)!
             )
         }.inObjectScope(.container)
         
@@ -207,6 +220,25 @@ struct DependencyMap {
         
         container.register(NavigationCoordinator.self) { _ in
             NavigationCoordinator()
+        }.inObjectScope(.container)
+
+        container.register(HistoryViewModel.self) { resolver in
+            HistoryViewModel(
+                historyData: resolver.resolve(HistoryDataManager.self)!,
+                searchData: resolver.resolve(SearchDataManager.self)!,
+                idiomRepo: resolver.resolve(IdiomRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
+                sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!
+            )
+        }.inObjectScope(.container)
+
+        container.register(DailyContentViewModel.self) { resolver in
+            DailyContentViewModel(
+                dailyContentData: resolver.resolve(DailyContentDataManager.self)!,
+                wordRepo: resolver.resolve(WordRepoProtocol.self)!,
+                proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!
+            )
         }.inObjectScope(.container)
 
     }

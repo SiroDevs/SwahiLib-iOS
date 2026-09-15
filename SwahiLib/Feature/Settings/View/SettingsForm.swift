@@ -26,7 +26,7 @@ struct SettingsForm: View {
                 }
             }
             
-            Section(header: Text("Neno la Siku")) {
+            Section(header: Text("Neno na Methali ya Siku")) {
                 Toggle("Wezesha Notifications", isOn: Binding(
                     get: { viewModel.notificationsEnabled },
                     set: { viewModel.toggleNotifications($0) }

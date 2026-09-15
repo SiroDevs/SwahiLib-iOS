@@ -11,6 +11,7 @@ import RevenueCatUI
 struct SettingsView: View {
     @ObservedObject var viewModel: HomeViewModel
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.dismiss) private var dismiss
     
     @State private var showPaywall: Bool = false
     @State private var showResetAlert: Bool = false
@@ -45,7 +46,15 @@ struct SettingsView: View {
                 PaywallView(displayCloseButton: true)
             }
             .navigationTitle("Mipangilio")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Funga") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

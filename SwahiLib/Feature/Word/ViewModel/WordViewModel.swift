@@ -26,19 +26,22 @@ class WordViewModel: ObservableObject {
     private let proverbRepo: ProverbRepoProtocol
     private let wordRepo: WordRepoProtocol
     private let subsRepo: SubsRepoProtocol
+    private let historyData: HistoryDataManager
     
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
         proverbRepo: ProverbRepoProtocol,
         wordRepo: WordRepoProtocol,
-        subsRepo: SubsRepoProtocol
+        subsRepo: SubsRepoProtocol,
+        historyData: HistoryDataManager
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.proverbRepo = proverbRepo
         self.wordRepo = wordRepo
         self.subsRepo = subsRepo
+        self.historyData = historyData
     }
     
     private func verifySubscription(isOnline: Bool) async throws {
@@ -65,6 +68,8 @@ class WordViewModel: ObservableObject {
         meanings = cleanText(
             word.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
+        
+        historyData.addHistory(item: word.rid, type: "word")
         
         let synonymTitles = (word.synonyms)
             .split(separator: ",")

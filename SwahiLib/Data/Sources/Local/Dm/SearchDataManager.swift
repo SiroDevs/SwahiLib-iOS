@@ -133,4 +133,13 @@ class SearchDataManager {
         }
     }
 
+    /// Logs a single search-term event — a new row every time, matching
+    /// `addHistory`'s behavior. `id` isn't auto-incremented by Core Data,
+    /// so it's computed here from the current max.
+    func addSearch(title: String) {
+        let nextId = (fetchSearches().map(\.id).max() ?? 0) + 1
+        let createdAt = String(Int(Date().timeIntervalSince1970 * 1000))
+        saveSearches([Search(id: nextId, title: title, createdAt: createdAt)])
+    }
+
 }

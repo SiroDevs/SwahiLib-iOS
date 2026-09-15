@@ -69,7 +69,7 @@ struct EmptySearchPrompt: View {
                 .font(.system(size: 17, weight: .medium))
                 .foregroundColor(.onSurface.opacity(0.7))
 
-            Text("Andika neno, maana, example au chochote katika kisanduku")
+            Text("Andika neno, maana, mfano au chochote katika kisanduku")
                 .font(.system(size: 12))
                 .foregroundColor(.onSurface.opacity(0.5))
                 .multilineTextAlignment(.center)

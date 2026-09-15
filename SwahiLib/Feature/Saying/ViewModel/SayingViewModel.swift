@@ -21,17 +21,20 @@ class SayingViewModel: ObservableObject {
     let prefsRepo: PrefsRepo
     private let sayingRepo: SayingRepoProtocol
     private let subsRepo: SubsRepoProtocol
+    private let historyData: HistoryDataManager
 
     init(
         netUtils: NetworkUtils = .shared,
         prefsRepo: PrefsRepo,
         sayingRepo: SayingRepoProtocol,
-        subsRepo: SubsRepoProtocol
+        subsRepo: SubsRepoProtocol,
+        historyData: HistoryDataManager
     ) {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.sayingRepo = sayingRepo
         self.subsRepo = subsRepo
+        self.historyData = historyData
     }
     
     private func verifySubscription(isOnline: Bool) async throws {
@@ -53,6 +56,8 @@ class SayingViewModel: ObservableObject {
             saying.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
         ).components(separatedBy: "|")
         
+        historyData.addHistory(item: saying.rid, type: "saying")
+
         uiState = .loaded
     }
     

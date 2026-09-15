@@ -49,6 +49,9 @@ final class DiContainer {
             { self.container.resolve(SplashViewModel.self) },
             { self.container.resolve(SearchViewModel.self) },
             { self.container.resolve(NavigationCoordinator.self) },
+            { self.container.resolve(HistoryViewModel.self) },
+            { self.container.resolve(DailyContentDataManager.self) },
+            { self.container.resolve(DailyContentViewModel.self) },
         ]
 
         for resolve in dependencies {
