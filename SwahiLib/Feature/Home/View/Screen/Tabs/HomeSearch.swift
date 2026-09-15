@@ -113,6 +113,15 @@ struct HomeSearch: View {
             .navigationTitle("SwahiLib")
             .toolbarBackground(.regularMaterial, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            viewModel.isDrawerOpen = true
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
                         HistoryScreen(

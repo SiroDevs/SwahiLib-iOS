@@ -9,6 +9,14 @@ import Foundation
 import WidgetKit
 import StoreKit
 
+enum DrawerDestination: Int, Identifiable {
+    case dailyWord
+    case dailyProverb
+    case settings
+
+    var id: Int { rawValue }
+}
+
 final class HomeViewModel: ObservableObject {
     let prefsRepo: PrefsRepo
     private let idiomRepo: IdiomRepoProtocol
@@ -39,6 +47,8 @@ final class HomeViewModel: ObservableObject {
     
     @Published var uiState: UiState = .idle
     @Published var homeTab: HomeTab = .words
+    @Published var isDrawerOpen: Bool = false
+    @Published var drawerDestination: DrawerDestination? = nil
     @Published var isProUser: Bool = false
     @Published var notificationsEnabled: Bool = false
     @Published var notificationTime: Date
