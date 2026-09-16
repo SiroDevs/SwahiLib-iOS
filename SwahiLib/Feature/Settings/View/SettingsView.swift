@@ -4,15 +4,6 @@
 //
 //  Created by @sirodevs on 05/08/2025.
 //
-//  Presented from HomeView as a fullScreenCover (wrapped in a fresh
-//  NavigationStack there) rather than pushed onto a shared stack spanning
-//  the whole TabView — that was tried and reverted, since nesting a
-//  NavigationStack inside another one (even through a TabView) makes
-//  SwiftUI drop the inner stacks' navigation bars, which broke Home
-//  Search's and Maktaba's title bars. This view has no NavigationStack of
-//  its own (the fullScreenCover call site provides one) and uses a
-//  back-chevron button rather than a "Funga"/close button so it still
-//  reads as a normal screen.
 
 import SwiftUI
 import RevenueCatUI
@@ -40,7 +31,6 @@ struct SettingsView: View {
         SettingsForm(
             viewModel: viewModel,
             showPaywall: $showPaywall,
-            showResetAlert: $showResetAlert
         )
         .alert(L10n.resetDataAlert, isPresented: $showResetAlert) {
             Button(L10n.cancel, role: .cancel) { }
@@ -62,6 +52,18 @@ struct SettingsView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.backward")
+                }
+            }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Menu {
+                    Button {
+                        showResetAlert = true
+                    } label: {
+                        Label(L10n.resetData, systemImage: "exclamationmark.triangle.fill")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundColor(.primary1)
                 }
             }
         }
