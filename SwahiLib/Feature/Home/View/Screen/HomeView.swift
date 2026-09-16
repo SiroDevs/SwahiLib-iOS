@@ -57,18 +57,16 @@ struct HomeView: View {
                     PaywallView(displayCloseButton: true)
             }
         }
-        .fullScreenCover(item: $viewModel.drawerDestination) { destination in
-            switch destination {
-            case .dailyWord:
-                NavigationStack {
+        .fullScreenCover(item: $viewModel.homeDestination) { destination in
+            NavigationStack {
+                switch destination {
+                case .dailyWord:
                     DailyWordScreen()
-                }
-            case .dailyProverb:
-                NavigationStack {
+                case .dailyProverb:
                     DailyProverbScreen()
+                case .settings:
+                    SettingsView(viewModel: viewModel)
                 }
-            case .settings:
-                SettingsView(viewModel: viewModel)
             }
         }
     }
@@ -87,7 +85,7 @@ struct HomeView: View {
                                 Label("Tafuta", systemImage: "magnifyingglass")
                             }
                         
-                        LibraryCollectionsView(viewModel: libraryViewModel)
+                        LibraryCollectionsView(viewModel: libraryViewModel, homeViewModel: viewModel)
                             .tabItem {
                                 Label("Maktaba", systemImage: "books.vertical.fill")
                             }
@@ -95,7 +93,7 @@ struct HomeView: View {
                     .environment(\.horizontalSizeClass, .compact)
 
                     NavDrawer(isOpen: $viewModel.isDrawerOpen) { destination in
-                        viewModel.drawerDestination = destination
+                        viewModel.homeDestination = destination
                     }
                 }
                 

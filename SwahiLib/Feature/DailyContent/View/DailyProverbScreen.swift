@@ -2,8 +2,7 @@
 //  DailyProverbScreen.swift
 //  SwahiLib
 //
-//  Mirrors Android's Daily Proverb screen (feature/daily_content), built
-//  on the shared DailyContentScaffold.
+//  Created by @sirodevs on 07/09/2026.
 //
 
 import SwiftUI

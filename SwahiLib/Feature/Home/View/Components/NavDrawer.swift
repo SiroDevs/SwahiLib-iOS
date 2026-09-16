@@ -17,7 +17,7 @@ struct NavDrawerItem: Identifiable {
     let id = UUID()
     let icon: String
     let label: String
-    let destination: DrawerDestination
+    let destination: HomeDestination
 }
 
 private let navDrawerItems: [NavDrawerItem] = [
@@ -27,7 +27,7 @@ private let navDrawerItems: [NavDrawerItem] = [
 
 struct NavDrawer: View {
     @Binding var isOpen: Bool
-    var onSelect: (DrawerDestination) -> Void
+    var onSelect: (HomeDestination) -> Void
 
     private let drawerWidth: CGFloat = 300
 
@@ -117,7 +117,7 @@ struct NavDrawer: View {
         .buttonStyle(.plain)
     }
 
-    private func select(_ destination: DrawerDestination) {
+    private func select(_ destination: HomeDestination) {
         withAnimation(.easeInOut(duration: 0.25)) {
             isOpen = false
         }

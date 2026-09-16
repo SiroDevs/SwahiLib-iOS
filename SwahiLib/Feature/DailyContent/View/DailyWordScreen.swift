@@ -2,8 +2,7 @@
 //  DailyWordScreen.swift
 //  SwahiLib
 //
-//  Mirrors Android's Daily Word screen (feature/daily_content), built on
-//  the shared DailyContentScaffold.
+//  Created by @sirodevs on 07/09/2026.
 //
 
 import SwiftUI

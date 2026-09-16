@@ -2,16 +2,7 @@
 //  DailyContentScaffold.swift
 //  SwahiLib
 //
-//  The scaffold shared by Daily Word and Daily Proverb: top bar with a
-//  history icon, loading/empty/loaded states, a hero header, a "MAANA"
-//  card, and a "Tazama Maelezo Zaidi" button that opens the real detail
-//  screen as a sheet. Mirrors the core of Android's
-//  feature/daily_content/view/components/DailyContentScaffold.kt.
-//
-//  Not ported: the streak badge, notification-reminder banner, and share
-//  sheet Android's scaffold also includes — each is its own subsystem
-//  (activity-streak tracking, screenshot detection, share-image
-//  rendering) with no iOS counterpart yet.
+//  Created by @sirodevs on 07/09/2026.
 //
 
 import SwiftUI
@@ -27,6 +18,7 @@ struct DailyContentScaffold<FullDetail: View>: View {
     let meaning: String
     @ViewBuilder let fullDetail: () -> FullDetail
 
+    @Environment(\.dismiss) private var dismiss
     @State private var showFullDetail = false
 
     var body: some View {
@@ -88,6 +80,13 @@ struct DailyContentScaffold<FullDetail: View>: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.regularMaterial, for: .navigationBar)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.backward")
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
                     DailyContentHistoryScreen(viewModel: viewModel)

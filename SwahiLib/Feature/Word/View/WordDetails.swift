@@ -4,14 +4,6 @@
 //
 //  Created by @sirodevs on 02/08/2025.
 //
-//  Restyled to match Android's feature/word WordView.kt: meanings render
-//  directly under the header with no extra "MAANA" label (Android only
-//  labels sections when there's more than one meaning category, which a
-//  single word never has), and the conjugation is now a labelled card
-//  ("MNYAMBULIKO") instead of plain text.
-//
-//  "METHALI AMBATANISHI" (related proverbs) has no Android equivalent —
-//  it's a pre-existing iOS-only addition, kept as-is.
 
 import SwiftUI
 

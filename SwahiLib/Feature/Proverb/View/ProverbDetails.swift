@@ -4,12 +4,6 @@
 //
 //  Created by @sirodevs on 02/08/2025.
 //
-//  Restyled to match Android's ProverbDetails.kt: same literal/figurative
-//  meaning split and first/second-explanation logic as before (unchanged),
-//  now sharing the same MeaningsView card component Word uses (Android
-//  reuses core/ui's MeaningsView for proverbs too, rather than a
-//  proverb-specific card), and explanation badges as filled pills
-//  instead of plain colored text.
 
 import SwiftUI
 

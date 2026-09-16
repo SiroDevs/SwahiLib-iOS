@@ -28,31 +28,42 @@ struct SettingsView: View {
     }
 
     private var mainContent: some View {
-        NavigationStack {
-            SettingsForm(
-                viewModel: viewModel,
-                showPaywall: $showPaywall,
-                showResetAlert: $showResetAlert
-            )
-            .alert(L10n.resetDataAlert, isPresented: $showResetAlert) {
-                Button(L10n.cancel, role: .cancel) { }
-                Button(L10n.okay, role: .destructive) {
-                    viewModel.clearAllData()
+        SettingsForm(
+            viewModel: viewModel,
+            showPaywall: $showPaywall,
+        )
+        .alert(L10n.resetDataAlert, isPresented: $showResetAlert) {
+            Button(L10n.cancel, role: .cancel) { }
+            Button(L10n.okay, role: .destructive) {
+                viewModel.clearAllData()
+            }
+        } message: {
+            Text(L10n.resetDataAlertDesc)
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(displayCloseButton: true)
+        }
+        .navigationTitle("Mipangilio")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.regularMaterial, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.backward")
                 }
-            } message: {
-                Text(L10n.resetDataAlertDesc)
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView(displayCloseButton: true)
-            }
-            .navigationTitle("Mipangilio")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.regularMaterial, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Funga") {
-                        dismiss()
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Menu {
+                    Button {
+                        showResetAlert = true
+                    } label: {
+                        Label(L10n.resetData, systemImage: "exclamationmark.triangle.fill")
                     }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundColor(.primary1)
                 }
             }
         }
