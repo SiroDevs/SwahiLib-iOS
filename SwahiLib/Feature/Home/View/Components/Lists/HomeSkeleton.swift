@@ -22,7 +22,7 @@ struct HomeSkeleton: View {
 
             HStack(alignment: .top, spacing: 10) {
                 VStack(spacing: 10) {
-                    ForEach(0..<6, id: \.self) { _ in
+                    ForEach(0..<10, id: \.self) { _ in
                         SkeletonBlock(width: 55, height: 55, cornerRadius: 15)
                     }
                 }

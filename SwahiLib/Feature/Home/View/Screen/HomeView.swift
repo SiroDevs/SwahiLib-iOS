@@ -85,7 +85,7 @@ struct HomeView: View {
                                 Label("Tafuta", systemImage: "magnifyingglass")
                             }
                         
-                        LibraryCollectionsView(viewModel: libraryViewModel, homeViewModel: viewModel)
+                        LibraryView(viewModel: libraryViewModel, homeViewModel: viewModel)
                             .tabItem {
                                 Label("Maktaba", systemImage: "books.vertical.fill")
                             }

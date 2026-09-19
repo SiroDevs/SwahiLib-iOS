@@ -4,8 +4,6 @@
 //
 //  Created by @sirodevs on 05/07/2025.
 //
-//  UpgradeBanner1 now renders inline as the 4th list item (same as Home
-//  Search and Advanced Search) instead of floating as a separate overlay.
 
 import SwiftUI
 import RevenueCatUI

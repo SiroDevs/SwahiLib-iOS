@@ -132,6 +132,13 @@ struct HomeSearch: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
+                        LikesView()
+                    } label: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
                         HistoryScreen(
                             viewModel: historyViewModel,
                             onSearchSelected: { query in
@@ -141,13 +148,6 @@ struct HomeSearch: View {
                         )
                     } label: {
                         Image(systemName: "clock.arrow.circlepath")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        LikesView()
-                    } label: {
-                        Image(systemName: "heart.fill")
                     }
                 }
             }

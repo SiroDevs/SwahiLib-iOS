@@ -106,11 +106,23 @@ final class HomeViewModel: ObservableObject {
         Task { @MainActor in
             try await validateSubscription(isOnline: false)
             loadAllContent()
-            self.filterData(qry: "")
-            self.uiState = .filtered
 
-            refreshContentInBackground()
+            if hasAllContent {
+                self.filterData(qry: "")
+                refreshContentInBackground()
+            } else {
+                await syncManager.syncAll()
+                loadAllContent()
+                self.filterData(qry: "")
+            }
         }
+    }
+
+    private var hasAllContent: Bool {
+        !allWords.isEmpty
+            && !allIdioms.isEmpty
+            && !allSayings.isEmpty
+            && !allProverbs.isEmpty
     }
 
     private func loadAllContent() {
@@ -137,19 +149,11 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    /// Removes entries that share the same `rid`. `ForEach(..., id: \.rid)`
-    /// in IdiomsList/ProverbsList/SayingsList/WordsList relies on `rid`
-    /// being unique — a duplicate causes SwiftUI to misplace/collapse rows,
-    /// which shows up as a large blank gap between two visible items.
     private func dedupeByID<T: Identifiable>(_ items: [T]) -> [T] where T.ID: Hashable {
         var seen = Set<T.ID>()
         return items.filter { seen.insert($0.id).inserted }
     }
 
-    /// Best-effort sanity check, kept around from earlier debugging. Should
-    /// never fire now that loadAllContent() dedupes, but leaving it in place
-    /// makes a regression in the sync/decode layer visible in the console
-    /// again instead of silently reintroducing the gap bug.
     private func logDuplicateIDsIfAny() {
         func duplicates<T: Identifiable>(in items: [T]) -> [T.ID] where T.ID: Hashable {
             Dictionary(grouping: items.map(\.id), by: { $0 })

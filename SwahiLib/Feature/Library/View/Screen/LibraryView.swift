@@ -1,15 +1,13 @@
 //
-//  LibraryCollectionsView.swift
+//  LibraryView.swift
 //  SwahiLib
 //
 //  Created by @sirodevs on 07/09/2026.
 //
-//  Now carries the same hamburger/history/likes toolbar HomeSearch has,
-//  so both tabs offer the same menus.
 
 import SwiftUI
 
-struct LibraryCollectionsView: View {
+struct LibraryView: View {
     @ObservedObject var viewModel: LibraryViewModel
     @ObservedObject var homeViewModel: HomeViewModel
     @StateObject private var historyViewModel: HistoryViewModel = {
@@ -48,19 +46,19 @@ struct LibraryCollectionsView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
+                        LikesView()
+                    } label: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
                         HistoryScreen(
                             viewModel: historyViewModel,
                             onSearchSelected: { _ in }
                         )
                     } label: {
                         Image(systemName: "clock.arrow.circlepath")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        LikesView()
-                    } label: {
-                        Image(systemName: "heart.fill")
                     }
                 }
             }
