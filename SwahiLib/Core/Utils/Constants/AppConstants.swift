@@ -36,6 +36,7 @@ struct PrefConstants {
     static let notificationsEnabled = "notificationsEnabledKey"
     static let notificationHour = "notificationHourKey"
     static let notificationMinute = "notificationMinuteKey"
+    static let trialUsagePrefix = "trialUsageKey_"
 }
 
 struct AppSecrets {

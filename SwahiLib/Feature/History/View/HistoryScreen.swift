@@ -2,9 +2,7 @@
 //  HistoryScreen.swift
 //  SwahiLib
 //
-//  Mirrors Android's feature/history/view/HistoryScreen.kt (minus the
-//  spaced-repetition review nudge — there's no tracking on iOS yet to
-//  derive it from).
+//  Created by @sirodevs on 12/09/2026.
 //
 
 import SwiftUI
@@ -16,9 +14,6 @@ private enum HistoryChip: String, CaseIterable {
 
 struct HistoryScreen: View {
     @ObservedObject var viewModel: HistoryViewModel
-    /// Hands a tapped search-history row back to Home's search field, then
-    /// pops this screen — mirrors Android's savedStateHandle bridge back to
-    /// HomeSearch.
     var onSearchSelected: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -92,8 +87,8 @@ struct HistoryScreen: View {
         } message: {
             Text(
                 selectedChip == .usomaji
-                    ? "Utaondoa maneno, nahau, misemo na methali ulizoangalia hivi karibuni."
-                    : "Utaondoa maneno uliyotafuta hivi karibuni."
+                    ? "Utaondoa usomaji wako wa hivi karibuni."
+                    : "Utaondoa utafutaji wako wa hivi karibuni."
             )
         }
         .onAppear {
@@ -152,7 +147,6 @@ struct HistoryScreen: View {
                     if let content = resolved.content {
                         readingRow(for: content)
                     }
-                    // content == nil means the underlying item was deleted since — skip.
                 }
             }
         }

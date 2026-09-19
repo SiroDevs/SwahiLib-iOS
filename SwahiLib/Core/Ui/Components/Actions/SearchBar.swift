@@ -9,26 +9,44 @@ import SwiftUI
 
 struct SearchBar: View {
     @Binding var text: String
+    var placeholder: String = "Tafuta kwenye Kamusi ..."
+    var isListening: Bool = false
     var onSearch: (String) -> Void
     var onClear: (() -> Void)? = nil
+    var onVoiceSearch: (() -> Void)? = nil
 
     var body: some View {
-        HStack {
-            TextField("Tafuta ...", text: $text)
-                .padding(.horizontal)
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(Color.onPrimaryContainer.opacity(0.7))
+
+            TextField(isListening ? "Sema unachotafuta ..." : placeholder, text: $text)
                 .onChange(of: text) { newValue in
                     onSearch(newValue)
                 }
-            Button(action: {
-                text = ""
-                onSearch("")
-                onClear?()
-            }) {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.onPrimaryContainer)
-                    .imageScale(.large)
+
+            if !text.isEmpty {
+                Button {
+                    text = ""
+                    onClear?()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.onPrimaryContainer)
+                        .imageScale(.large)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Futa")
             }
-            .buttonStyle(.plain)
+
+            if let onVoiceSearch {
+                Button(action: onVoiceSearch) {
+                    Image(systemName: isListening ? "mic.fill" : "mic")
+                        .foregroundColor(isListening ? .red : .onPrimaryContainer)
+                        .imageScale(.large)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Tafuta kwa Sauti")
+            }
         }
         .padding(10)
         .background(

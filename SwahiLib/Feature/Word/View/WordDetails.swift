@@ -16,6 +16,7 @@ struct WordDetails: View {
     var proverbs: [Proverb]
     var english: String?
     var onFeatureLocked: () -> Void
+    var onUpgrade: () -> Void
     
     var body: some View {
         ScrollView {
@@ -47,6 +48,10 @@ struct WordDetails: View {
                                     }
                                 }
                             )
+
+                            if !viewModel.isProUser {
+                                UpgradeBanner1(onUpgrade: onUpgrade)
+                            }
                         }
                     }
 
@@ -56,7 +61,7 @@ struct WordDetails: View {
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.primary1)
 
-                            ProverbsList(proverbs: proverbs)
+                            ProverbsList(proverbs: proverbs, isProUser: viewModel.isProUser, onUpgrade: onUpgrade)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }

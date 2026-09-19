@@ -11,9 +11,12 @@ struct VerticalLetters: View {
     let selectedLetter: String?
     let onLetterSelected: (String) -> Void
     
-    private let letters: [String] = (65...90)
-        .map { String(UnicodeScalar($0)!) }
-        .filter { $0 != "Q" && $0 != "X" }
+    private let letters: [String] = {
+        let alphabet = (65...90)
+            .map { String(UnicodeScalar($0)!) }
+            .filter { $0 != "Q" && $0 != "X" }
+        return ["-"] + alphabet
+    }()
     
     var body: some View {
         ScrollView {

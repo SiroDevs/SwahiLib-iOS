@@ -21,8 +21,8 @@ enum HomeTab: String, CaseIterable, Identifiable {
         case .all: return "yote"
         case .words: return "maneno"
         case .idioms: return "nahau"
-        case .sayings: return "misemo"
         case .proverbs: return "methali"
+        case .sayings: return "misemo"
         }
     }
 }
@@ -30,10 +30,7 @@ enum HomeTab: String, CaseIterable, Identifiable {
 let homeTabs: [HomeTab] = [
     .words,
     .idioms,
-    .sayings,
-    .proverbs
+    .proverbs,
+    .sayings
 ]
-
-/// Used only by Advanced Search's type filter, which additionally offers
-/// an "all types" option ("YOTE") ahead of the four specific types.
 let advancedSearchTypes: [HomeTab] = [.all] + homeTabs

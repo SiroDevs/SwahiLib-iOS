@@ -3,8 +3,6 @@
 //  SwahiLib
 //
 //  Created by @sirodevs on 30/04/2025.
-//  Updated to delegate content sync to ContentSyncManager (ETag-aware)
-//  instead of calling each repo's fetchRemoteData() directly.
 //
 
 import Foundation

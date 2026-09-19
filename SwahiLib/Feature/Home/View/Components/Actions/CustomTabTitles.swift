@@ -39,11 +39,11 @@ struct TabItem: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 10)
                     .fill(isSelected ? .primary2 : .white)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 10)
                     .stroke(.primary1, lineWidth: isSelected ? 0 : 1)
             )
             .onTapGesture {

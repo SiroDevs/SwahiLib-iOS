@@ -171,6 +171,7 @@ struct DependencyMap {
                 proverbRepo: resolver.resolve(ProverbRepoProtocol.self)!,
                 sayingRepo: resolver.resolve(SayingRepoProtocol.self)!,
                 wordRepo: resolver.resolve(WordRepoProtocol.self)!,
+                subsRepo: resolver.resolve(SubsRepoProtocol.self)!
             )
         }.inObjectScope(.container)
         

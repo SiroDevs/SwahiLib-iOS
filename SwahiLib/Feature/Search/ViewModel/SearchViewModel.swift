@@ -15,8 +15,8 @@ final class SearchViewModel: ObservableObject {
     private let proverbRepo: ProverbRepoProtocol
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
-    @Published var showAlertDialog: Bool = false
     @Published var isProUser: Bool = false
 
     @Published var searchMode: SearchMode = .beginning {
@@ -48,13 +48,15 @@ final class SearchViewModel: ObservableObject {
         idiomRepo: IdiomRepoProtocol,
         proverbRepo: ProverbRepoProtocol,
         sayingRepo: SayingRepoProtocol,
-        wordRepo: WordRepoProtocol
+        wordRepo: WordRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
+        self.subsRepo = subsRepo
     }
 
     func fetchData() {
@@ -67,12 +69,17 @@ final class SearchViewModel: ObservableObject {
             self.allWords = wordRepo.fetchLocalData()
 
             self.filterData(qry: "")
+
+            subsRepo.isProUser(isOnline: false) { isActive in
+                Task { @MainActor in
+                    self.isProUser = isActive
+                }
+            }
+
             self.uiState = .filtered
         }
     }
 
-    /// Total result count across whichever type(s) are currently selected —
-    /// mirrors Android's `totalResults` computation in AdvancedSearchScreen.
     func totalResults(for tab: HomeTab) -> Int {
         switch tab {
         case .words: return filteredWords.count
@@ -88,10 +95,6 @@ final class SearchViewModel: ObservableObject {
         filterData(qry: lastQuery)
     }
 
-    /// Filters and sorts all four content types at once, regardless of the
-    /// currently selected type filter — matching Android's
-    /// `filterData(query, sortOrder, searchMode)`, where `selectedType` only
-    /// controls which sections are *displayed*, not what gets filtered.
     func filterData(qry: String) {
         lastQuery = qry
         let trimmedQuery = qry.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -140,9 +143,6 @@ final class SearchViewModel: ObservableObject {
 protocol SearchableItem {
     var title: String { get }
     var liked: Bool { get }
-    /// Every field that should be matched against the search query for this
-    /// type — mirrors the field lists Android passes into `matchStart` /
-    /// `matchContains` / `matchEnd` for each entity.
     var searchFields: [String] { get }
 }
 

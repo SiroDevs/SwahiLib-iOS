@@ -4,11 +4,6 @@
 //
 //  Created by @sirodevs on 07/09/2026.
 //
-//  Mirrors Android's LibraryViewModel: the catalog itself is static, one
-//  collection's items are loaded lazily the first time its screen is
-//  opened (ensureLoaded), and the user can pull to refresh a single
-//  collection explicitly (refresh).
-//
 
 import Foundation
 

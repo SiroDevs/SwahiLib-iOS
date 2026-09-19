@@ -3,6 +3,7 @@
 //  SwahiLib
 //
 //  Created by @sirodevs on 01/08/2025.
+//
 
 import SwiftUI
 import RevenueCat
@@ -20,6 +21,7 @@ struct WordView: View {
     @State private var showToast = false
     @State private var showAlert = false
     @State private var showPaywall = false
+    @State private var trialDialog: TrialDialogKind? = nil
 
     var body: some View {
         ZStack {
@@ -50,6 +52,7 @@ struct WordView: View {
 
             }
         )
+        .trialGateAlert($trialDialog, onUpgrade: { showPaywall = true })
         .sheet(isPresented: $showPaywall) {
             #if !DEBUG
                 PaywallView(displayCloseButton: true)
@@ -95,16 +98,26 @@ struct WordView: View {
     }
     
     private var mainContent: some View {
-        WordDetails(
-            viewModel: viewModel,
-            title: viewModel.title,
-            meanings: viewModel.meanings,
-            synonyms: viewModel.synonyms,
-            conjugation: viewModel.conjugation,
-            proverbs: viewModel.proverbs,
-            english: viewModel.english,
-            onFeatureLocked: { showAlert = true }
-        )
+        ZStack(alignment: .bottomTrailing) {
+            WordDetails(
+                viewModel: viewModel,
+                title: viewModel.title,
+                meanings: viewModel.meanings,
+                synonyms: viewModel.synonyms,
+                conjugation: viewModel.conjugation,
+                proverbs: viewModel.proverbs,
+                english: viewModel.english,
+                onFeatureLocked: { showAlert = true },
+                onUpgrade: { showPaywall = true }
+            )
+
+            ShareFAB(
+                shareText: viewModel.shareText(word: word),
+                isProUser: viewModel.isProUser,
+                prefsRepo: viewModel.prefsRepo,
+                trialDialog: $trialDialog
+            )
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -116,18 +129,11 @@ struct WordView: View {
                 } label: { Image(systemName: "chevron.backward") }
             }
 
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeWord(word: word)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
-                        .foregroundColor(.primary1)
-                }
-
-                ShareLink(
-                    item: viewModel.shareText(word: word),
-                ) {
-                    Image(systemName: "square.and.arrow.up")
                         .foregroundColor(.primary1)
                 }
             }

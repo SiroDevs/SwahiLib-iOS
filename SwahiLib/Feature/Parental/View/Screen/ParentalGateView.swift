@@ -177,9 +177,3 @@ struct ParentalGateView: View {
         generator.notificationOccurred(.error)
     }
 }
-
-//#Preview {
-//    ParentalGateView(onSuccess: {
-//        print("Success!")
-//    })
-//}

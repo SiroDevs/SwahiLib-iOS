@@ -13,12 +13,14 @@ struct HomeSearch: View {
     @StateObject private var historyViewModel: HistoryViewModel = {
         DiContainer.shared.resolve(HistoryViewModel.self)
     }()
+    @StateObject private var voice = VoiceSearchManager()
     @State private var searchText: String = ""
     @State private var selectedLetter: String? = nil
     @State private var isSearching: Bool = true
     @State private var showPaywall: Bool = false
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isAtTop: Bool = true
+    @State private var trialDialog: TrialDialogKind? = nil
 
     private let scrollSpace = "homeSearchScroll"
 
@@ -27,19 +29,38 @@ struct HomeSearch: View {
             VStack(spacing: 0) {
                 SearchBar(
                     text: $searchText,
+                    isListening: voice.isListening,
                     onSearch: { query in
+                        if query != selectedLetter { selectedLetter = nil }
                         viewModel.filterData(qry: query)
                         viewModel.trackSearch(query)
+                    },
+                    onVoiceSearch: {
+                        selectedLetter = nil
+                        voice.toggle { spoken in
+                            searchText = spoken
+                        }
                     }
                 )
                 .padding(.horizontal, 10)
                 .padding(.top, 8)
+                .alert(voiceAlertTitle, isPresented: showVoiceAlert) {
+                    if voice.problem == .permissionDenied {
+                        Button("Fungua Mipangilio") { VoiceSearchManager.openSettings() }
+                        Button("Ghairi", role: .cancel) {}
+                    } else {
+                        Button("Sawa", role: .cancel) {}
+                    }
+                } message: {
+                    Text(voiceAlertMessage)
+                }
+                .onDisappear { voice.stop() }
 
                 CustomTabTitles(
                     selectedTab: viewModel.homeTab,
                     onSelect: { homeTab in
                         viewModel.homeTab = homeTab
-                        viewModel.filterData(qry: "")
+                        viewModel.filterData(qry: searchText)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             scrollToTop()
                         }
@@ -50,17 +71,23 @@ struct HomeSearch: View {
 
                 ZStack(alignment: .bottomTrailing) {
                     HStack(alignment: .top, spacing: 10) {
-                        if viewModel.isProUser {
-                            VerticalLetters(
-                                selectedLetter: selectedLetter,
-                                onLetterSelected: { letter in
+                        VerticalLetters(
+                            selectedLetter: selectedLetter,
+                            onLetterSelected: { letter in
+                                trialDialog = TrialGate.attempt(
+                                    .verticalLetters,
+                                    prefsRepo: viewModel.prefsRepo,
+                                    isProUser: viewModel.isProUser
+                                ) {
+                                    // Setting the text triggers the filter via SearchBar's onChange.
                                     selectedLetter = letter
-                                    viewModel.filterData(qry: letter)
+                                    searchText = letter
+                                    scrollToTop()
                                 }
-                            )
-                            .frame(width: 60)
-                            .padding(.top, 12)
-                        }
+                            }
+                        )
+                        .frame(width: 60)
+                        .padding(.top, 12)
 
                         ScrollViewReader { proxy in
                             ScrollView {
@@ -72,7 +99,7 @@ struct HomeSearch: View {
                                             isAtTop = offset >= -5
                                         }
 
-                                    HomeResultsList(viewModel: viewModel)
+                                    HomeSearchResults(viewModel: viewModel, onUpgrade: { showPaywall = true })
                                 }
                                 .onAppear {
                                     self.scrollViewProxy = proxy
@@ -97,16 +124,18 @@ struct HomeSearch: View {
                             .transition(.opacity)
                         }
 
-                        AdvancedSearchFAB(expanded: isAtTop)
+                        AdvancedSearchFAB(
+                            expanded: isAtTop,
+                            isProUser: viewModel.isProUser,
+                            prefsRepo: viewModel.prefsRepo,
+                            trialDialog: $trialDialog
+                        )
                     }
                     .animation(.easeInOut(duration: 0.2), value: isAtTop)
                     .padding()
-
-                    if !viewModel.isProUser {
-                        UpgradeBanner1 { showPaywall = true }
-                    }
                 }
             }
+            .trialGateAlert($trialDialog, onUpgrade: { showPaywall = true })
             .sheet(isPresented: $showPaywall) {
                 PaywallView(displayCloseButton: true)
             }
@@ -114,6 +143,15 @@ struct HomeSearch: View {
             .toolbarTitleDisplayMode(.inline)
             .toolbarBackground(.regularMaterial, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 0) {
+                        Text("SwahiLib")
+                            .font(.headline)
+                        Text("Kamusi ya Kiswahili")
+                            .font(.caption)
+                            .foregroundColor(Color.onPrimaryContainer.opacity(0.7))
+                    }
+                }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         withAnimation(.easeInOut(duration: 0.25)) {
@@ -125,22 +163,23 @@ struct HomeSearch: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
+                        LikesView()
+                    } label: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
                         HistoryScreen(
                             viewModel: historyViewModel,
                             onSearchSelected: { query in
+                                selectedLetter = nil
                                 searchText = query
                                 viewModel.filterData(qry: query)
                             }
                         )
                     } label: {
                         Image(systemName: "clock.arrow.circlepath")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        LikesView()
-                    } label: {
-                        Image(systemName: "heart.fill")
                     }
                 }
             }
@@ -152,31 +191,24 @@ struct HomeSearch: View {
             scrollViewProxy?.scrollTo("top", anchor: .top)
         }
     }
-}
 
-struct HomeResultsList: View {
-    @ObservedObject var viewModel: HomeViewModel
+    // MARK: Voice search alert
 
-    var body: some View {
-        switch viewModel.homeTab {
-            case .all:
-                EmptyView()
+    private var showVoiceAlert: Binding<Bool> {
+        Binding(
+            get: { voice.problem != nil },
+            set: { if !$0 { voice.problem = nil } }
+        )
+    }
 
-            case .idioms:
-                IdiomsList(idioms: viewModel.filteredIdioms)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+    private var voiceAlertTitle: String {
+        voice.problem == .permissionDenied ? "Ruhusa Inahitajika" : "Utafutaji kwa Sauti"
+    }
 
-            case .proverbs:
-                ProverbsList(proverbs: viewModel.filteredProverbs)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            case .sayings:
-                SayingsList(sayings: viewModel.filteredSayings)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-            case .words:
-                WordsList(words: viewModel.filteredWords)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-        }
+    private var voiceAlertMessage: String {
+        voice.problem == .permissionDenied
+            ? "Ruhusu Maikrofoni na Utambuzi wa Usemi kwenye Mipangilio ili kutafuta kwa sauti."
+            : "Utafutaji kwa sauti haupatikani kwa sasa. Jaribu tena baadaye."
     }
 }
 

@@ -2,11 +2,7 @@
 //  HistoryViewModel.swift
 //  SwahiLib
 //
-//  Owns the "Historia" screen: reading history (resolved to actual
-//  word/idiom/proverb/saying content) and search-text history. Mirrors
-//  Android's feature/history/viewmodel/HistoryViewModel.kt, minus the
-//  spaced-repetition review nudge (there's no equivalent tracking on iOS
-//  yet to derive it from).
+//  Created by @sirodevs on 12/09/2026.
 //
 
 import Foundation

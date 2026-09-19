@@ -2,9 +2,7 @@
 //  HomeSkeleton.swift
 //  SwahiLib
 //
-//  Full-screen skeleton shown while Home's initial data loads, mirroring
-//  Android's HomeSkeleton (search field + type chips + vertical letters +
-//  result rows), instead of the old Lottie loading animation.
+//  Created by @sirodevs on 12/09/2026.
 //
 
 import SwiftUI
@@ -24,7 +22,7 @@ struct HomeSkeleton: View {
 
             HStack(alignment: .top, spacing: 10) {
                 VStack(spacing: 10) {
-                    ForEach(0..<6, id: \.self) { _ in
+                    ForEach(0..<10, id: \.self) { _ in
                         SkeletonBlock(width: 55, height: 55, cornerRadius: 15)
                     }
                 }

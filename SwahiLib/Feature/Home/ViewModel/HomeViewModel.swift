@@ -9,16 +9,6 @@ import Foundation
 import WidgetKit
 import StoreKit
 
-/// Destinations reached from the nav drawer, presented from HomeView as a
-/// fullScreenCover (not a per-tab NavigationLink push) since they need to
-/// be reachable from either tab and cover the tab bar. Each cover wraps
-/// its own fresh NavigationStack, styled with a back-chevron rather than a
-/// "Funga"/close button so it still reads as a normal screen — a *shared*
-/// NavigationStack wrapping the whole TabView was tried instead and had
-/// to be reverted: nesting a NavigationStack inside another one (even
-/// through a TabView) makes SwiftUI drop the inner stacks' navigation
-/// bars, which is why HomeSearch's and Maktaba's title bars/toolbars went
-/// missing.
 enum HomeDestination: Hashable, Identifiable {
     case dailyWord
     case dailyProverb
@@ -116,11 +106,23 @@ final class HomeViewModel: ObservableObject {
         Task { @MainActor in
             try await validateSubscription(isOnline: false)
             loadAllContent()
-            self.filterData(qry: "")
-            self.uiState = .filtered
 
-            refreshContentInBackground()
+            if hasAllContent {
+                self.filterData(qry: "")
+                refreshContentInBackground()
+            } else {
+                await syncManager.syncAll()
+                loadAllContent()
+                self.filterData(qry: "")
+            }
         }
+    }
+
+    private var hasAllContent: Bool {
+        !allWords.isEmpty
+            && !allIdioms.isEmpty
+            && !allSayings.isEmpty
+            && !allProverbs.isEmpty
     }
 
     private func loadAllContent() {
@@ -147,19 +149,11 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    /// Removes entries that share the same `rid`. `ForEach(..., id: \.rid)`
-    /// in IdiomsList/ProverbsList/SayingsList/WordsList relies on `rid`
-    /// being unique — a duplicate causes SwiftUI to misplace/collapse rows,
-    /// which shows up as a large blank gap between two visible items.
     private func dedupeByID<T: Identifiable>(_ items: [T]) -> [T] where T.ID: Hashable {
         var seen = Set<T.ID>()
         return items.filter { seen.insert($0.id).inserted }
     }
 
-    /// Best-effort sanity check, kept around from earlier debugging. Should
-    /// never fire now that loadAllContent() dedupes, but leaving it in place
-    /// makes a regression in the sync/decode layer visible in the console
-    /// again instead of silently reintroducing the gap bug.
     private func logDuplicateIDsIfAny() {
         func duplicates<T: Identifiable>(in items: [T]) -> [T.ID] where T.ID: Hashable {
             Dictionary(grouping: items.map(\.id), by: { $0 })
