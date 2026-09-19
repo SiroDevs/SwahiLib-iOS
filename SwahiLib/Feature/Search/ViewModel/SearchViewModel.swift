@@ -15,8 +15,8 @@ final class SearchViewModel: ObservableObject {
     private let proverbRepo: ProverbRepoProtocol
     private let sayingRepo: SayingRepoProtocol
     private let wordRepo: WordRepoProtocol
+    private let subsRepo: SubsRepoProtocol
 
-    @Published var showAlertDialog: Bool = false
     @Published var isProUser: Bool = false
 
     @Published var searchMode: SearchMode = .beginning {
@@ -48,13 +48,15 @@ final class SearchViewModel: ObservableObject {
         idiomRepo: IdiomRepoProtocol,
         proverbRepo: ProverbRepoProtocol,
         sayingRepo: SayingRepoProtocol,
-        wordRepo: WordRepoProtocol
+        wordRepo: WordRepoProtocol,
+        subsRepo: SubsRepoProtocol
     ) {
         self.prefsRepo = prefsRepo
         self.idiomRepo = idiomRepo
         self.proverbRepo = proverbRepo
         self.sayingRepo = sayingRepo
         self.wordRepo = wordRepo
+        self.subsRepo = subsRepo
     }
 
     func fetchData() {
@@ -67,6 +69,13 @@ final class SearchViewModel: ObservableObject {
             self.allWords = wordRepo.fetchLocalData()
 
             self.filterData(qry: "")
+
+            subsRepo.isProUser(isOnline: false) { isActive in
+                Task { @MainActor in
+                    self.isProUser = isActive
+                }
+            }
+
             self.uiState = .filtered
         }
     }

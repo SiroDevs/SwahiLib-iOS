@@ -19,6 +19,7 @@ struct HomeSearch: View {
     @State private var showPaywall: Bool = false
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isAtTop: Bool = true
+    @State private var trialDialog: TrialDialogKind? = nil
 
     private let scrollSpace = "homeSearchScroll"
 
@@ -50,17 +51,21 @@ struct HomeSearch: View {
 
                 ZStack(alignment: .bottomTrailing) {
                     HStack(alignment: .top, spacing: 10) {
-                        if viewModel.isProUser {
-                            VerticalLetters(
-                                selectedLetter: selectedLetter,
-                                onLetterSelected: { letter in
+                        VerticalLetters(
+                            selectedLetter: selectedLetter,
+                            onLetterSelected: { letter in
+                                trialDialog = TrialGate.attempt(
+                                    .verticalLetters,
+                                    prefsRepo: viewModel.prefsRepo,
+                                    isProUser: viewModel.isProUser
+                                ) {
                                     selectedLetter = letter
                                     viewModel.filterData(qry: letter)
                                 }
-                            )
-                            .frame(width: 60)
-                            .padding(.top, 12)
-                        }
+                            }
+                        )
+                        .frame(width: 60)
+                        .padding(.top, 12)
 
                         ScrollViewReader { proxy in
                             ScrollView {
@@ -72,7 +77,7 @@ struct HomeSearch: View {
                                             isAtTop = offset >= -5
                                         }
 
-                                    HomeResultsList(viewModel: viewModel)
+                                    HomeResultsList(viewModel: viewModel, onUpgrade: { showPaywall = true })
                                 }
                                 .onAppear {
                                     self.scrollViewProxy = proxy
@@ -97,16 +102,18 @@ struct HomeSearch: View {
                             .transition(.opacity)
                         }
 
-                        AdvancedSearchFAB(expanded: isAtTop)
+                        AdvancedSearchFAB(
+                            expanded: isAtTop,
+                            isProUser: viewModel.isProUser,
+                            prefsRepo: viewModel.prefsRepo,
+                            trialDialog: $trialDialog
+                        )
                     }
                     .animation(.easeInOut(duration: 0.2), value: isAtTop)
                     .padding()
-
-                    if !viewModel.isProUser {
-                        UpgradeBanner1 { showPaywall = true }
-                    }
                 }
             }
+            .trialGateAlert($trialDialog, onUpgrade: { showPaywall = true })
             .sheet(isPresented: $showPaywall) {
                 PaywallView(displayCloseButton: true)
             }
@@ -156,6 +163,7 @@ struct HomeSearch: View {
 
 struct HomeResultsList: View {
     @ObservedObject var viewModel: HomeViewModel
+    var onUpgrade: () -> Void
 
     var body: some View {
         switch viewModel.homeTab {
@@ -163,18 +171,34 @@ struct HomeResultsList: View {
                 EmptyView()
 
             case .idioms:
-                IdiomsList(idioms: viewModel.filteredIdioms)
+                IdiomsList(
+                    idioms: viewModel.filteredIdioms,
+                    isProUser: viewModel.isProUser,
+                    onUpgrade: onUpgrade
+                )
                     .frame(maxWidth: .infinity, alignment: .leading)
 
             case .proverbs:
-                ProverbsList(proverbs: viewModel.filteredProverbs)
+                ProverbsList(
+                    proverbs: viewModel.filteredProverbs,
+                    isProUser: viewModel.isProUser,
+                    onUpgrade: onUpgrade
+                )
                     .frame(maxWidth: .infinity, alignment: .leading)
             case .sayings:
-                SayingsList(sayings: viewModel.filteredSayings)
+                SayingsList(
+                    sayings: viewModel.filteredSayings,
+                    isProUser: viewModel.isProUser,
+                    onUpgrade: onUpgrade
+                )
                     .frame(maxWidth: .infinity, alignment: .leading)
 
             case .words:
-                WordsList(words: viewModel.filteredWords)
+                WordsList(
+                    words: viewModel.filteredWords,
+                    isProUser: viewModel.isProUser,
+                    onUpgrade: onUpgrade
+                )
                     .frame(maxWidth: .infinity, alignment: .leading)
         }
     }

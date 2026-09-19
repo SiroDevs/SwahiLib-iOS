@@ -2,15 +2,28 @@
 //  AdvancedSearchFAB.swift
 //  SwahiLib
 //
+//  Created by @sirodevs on 12/09/2026.
+//
 
 import SwiftUI
 
 struct AdvancedSearchFAB: View {
     var expanded: Bool
+    var isProUser: Bool
+    var prefsRepo: PrefsRepo
+    @Binding var trialDialog: TrialDialogKind?
+
+    @State private var navigate = false
 
     var body: some View {
-        NavigationLink {
-            AdvancedSearch()
+        Button {
+            trialDialog = TrialGate.attempt(
+                .advancedSearch,
+                prefsRepo: prefsRepo,
+                isProUser: isProUser
+            ) {
+                navigate = true
+            }
         } label: {
             HStack(spacing: expanded ? 8 : 0) {
                 Image(systemName: "text.magnifyingglass")
@@ -35,12 +48,8 @@ struct AdvancedSearchFAB: View {
         }
         .buttonStyle(ScaleButtonStyle())
         .animation(.easeInOut(duration: 0.2), value: expanded)
-    }
-}
-
-#Preview {
-    VStack(spacing: 16) {
-        AdvancedSearchFAB(expanded: true)
-        AdvancedSearchFAB(expanded: false)
+        .navigationDestination(isPresented: $navigate) {
+            AdvancedSearch()
+        }
     }
 }

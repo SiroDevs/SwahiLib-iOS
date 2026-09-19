@@ -11,12 +11,14 @@
 //
 
 import SwiftUI
+import RevenueCatUI
 
 struct AdvancedSearchView: View {
     @ObservedObject var viewModel: SearchViewModel
     @State private var searchText: String = ""
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isAtTop: Bool = true
+    @State private var showPaywall: Bool = false
 
     private let scrollSpace = "advancedSearchScroll"
 
@@ -87,6 +89,9 @@ struct AdvancedSearchView: View {
                 SearchModeMenu(searchMode: $viewModel.searchMode)
             }
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(displayCloseButton: true)
+        }
         .animation(.easeInOut(duration: 0.2), value: isAtTop)
     }
 
@@ -99,7 +104,7 @@ struct AdvancedSearchView: View {
 
         if showWords {
             if !viewModel.filteredWords.isEmpty {
-                WordsList(words: viewModel.filteredWords)
+                WordsList(words: viewModel.filteredWords, isProUser: viewModel.isProUser, onUpgrade: { showPaywall = true })
             } else {
                 EmptySection(category: "maneno")
             }
@@ -107,7 +112,7 @@ struct AdvancedSearchView: View {
 
         if showIdioms {
             if !viewModel.filteredIdioms.isEmpty {
-                IdiomsList(idioms: viewModel.filteredIdioms)
+                IdiomsList(idioms: viewModel.filteredIdioms, isProUser: viewModel.isProUser, onUpgrade: { showPaywall = true })
             } else {
                 EmptySection(category: "nahau")
             }
@@ -115,7 +120,7 @@ struct AdvancedSearchView: View {
 
         if showProverbs {
             if !viewModel.filteredProverbs.isEmpty {
-                ProverbsList(proverbs: viewModel.filteredProverbs)
+                ProverbsList(proverbs: viewModel.filteredProverbs, isProUser: viewModel.isProUser, onUpgrade: { showPaywall = true })
             } else {
                 EmptySection(category: "methali")
             }
@@ -123,7 +128,7 @@ struct AdvancedSearchView: View {
 
         if showSayings {
             if !viewModel.filteredSayings.isEmpty {
-                SayingsList(sayings: viewModel.filteredSayings)
+                SayingsList(sayings: viewModel.filteredSayings, isProUser: viewModel.isProUser, onUpgrade: { showPaywall = true })
             } else {
                 EmptySection(category: "misemo")
             }

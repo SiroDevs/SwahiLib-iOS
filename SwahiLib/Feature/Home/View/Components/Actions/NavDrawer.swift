@@ -2,13 +2,7 @@
 //  NavDrawer.swift
 //  SwahiLib
 //
-//  A custom slide-in drawer (SwiftUI has no built-in equivalent to
-//  Android's ModalNavigationDrawer). Mirrors the core of
-//  feature/home/view/components/HomeNavDrawer.kt: header with app icon +
-//  title + tagline, then menu items. Scoped down to what was asked for —
-//  Neno la Siku, Methali ya Siku, Mipangilio ya SwahiLib — the rest of
-//  Android's items (Jamii ya SwahiLib, Maendeleo Yangu, Jinsi ya Kutumia,
-//  Usaidizi na Maoni, Donate) are intentionally left out for now.
+//  Created by @sirodevs on 12/09/2026.
 //
 
 import SwiftUI

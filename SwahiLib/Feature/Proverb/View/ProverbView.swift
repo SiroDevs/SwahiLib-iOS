@@ -3,6 +3,7 @@
 //  SwahiLib
 //
 //  Created by @sirodevs on 01/08/2025.
+//
 
 import SwiftUI
 import RevenueCat
@@ -19,6 +20,7 @@ struct ProverbView: View {
     @State private var showToast = false
     @State private var showAlert = false
     @State private var showPaywall = false
+    @State private var trialDialog: TrialDialogKind? = nil
 
     var body: some View {
         ZStack {
@@ -50,6 +52,7 @@ struct ProverbView: View {
 
             }
         )
+        .trialGateAlert($trialDialog, onUpgrade: { showPaywall = true })
         .sheet(isPresented: $showPaywall) {
             #if !DEBUG
                 PaywallView(displayCloseButton: true)
@@ -92,14 +95,24 @@ struct ProverbView: View {
     }
     
     private var mainContent: some View {
-        ProverbDetails(
-            viewModel: viewModel,
-            title: viewModel.title,
-            meanings: viewModel.meanings,
-            synonyms: viewModel.synonyms,
-            explanations: viewModel.explanations,
-            onFeatureLocked: { showAlert = true }
-        )
+        ZStack(alignment: .bottomTrailing) {
+            ProverbDetails(
+                viewModel: viewModel,
+                title: viewModel.title,
+                meanings: viewModel.meanings,
+                synonyms: viewModel.synonyms,
+                explanations: viewModel.explanations,
+                onFeatureLocked: { showAlert = true },
+                onUpgrade: { showPaywall = true }
+            )
+
+            ShareFAB(
+                shareText: viewModel.shareText(proverb: proverb),
+                isProUser: viewModel.isProUser,
+                prefsRepo: viewModel.prefsRepo,
+                trialDialog: $trialDialog
+            )
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -107,18 +120,11 @@ struct ProverbView: View {
                 } label: { Image(systemName: "chevron.backward") }
             }
 
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeProverb(proverb: proverb)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
-                        .foregroundColor(.primary1)
-                }
-
-                ShareLink(
-                    item: viewModel.shareText(proverb: proverb),
-                ) {
-                    Image(systemName: "square.and.arrow.up")
                         .foregroundColor(.primary1)
                 }
             }

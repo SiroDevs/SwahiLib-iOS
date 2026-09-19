@@ -14,6 +14,7 @@ struct ProverbDetails: View {
     let synonyms: [Proverb]
     let explanations: [String]
     let onFeatureLocked: () -> Void
+    let onUpgrade: () -> Void
     
     private var hasLiteralAndFigurativeMeanings: Bool {
         meanings.indices.contains(1) && !meanings[1].isEmpty
@@ -116,6 +117,10 @@ struct ProverbDetails: View {
                         }
                     )
                 }
+            }
+
+            if !viewModel.isProUser {
+                UpgradeBanner1(onUpgrade: onUpgrade)
             }
         }
     }

@@ -2,9 +2,7 @@
 //  HomeSkeleton.swift
 //  SwahiLib
 //
-//  Full-screen skeleton shown while Home's initial data loads, mirroring
-//  Android's HomeSkeleton (search field + type chips + vertical letters +
-//  result rows), instead of the old Lottie loading animation.
+//  Created by @sirodevs on 12/09/2026.
 //
 
 import SwiftUI

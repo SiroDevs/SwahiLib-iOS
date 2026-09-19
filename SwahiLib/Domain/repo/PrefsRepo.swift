@@ -96,4 +96,13 @@ class PrefsRepo {
             userDefaults.removeObject(forKey: AppConstants.etagKeyPrefix + $0.prefKey)
         }
     }
+
+    func trialUsageCount(for feature: TrialFeature) -> Int {
+        userDefaults.integer(forKey: PrefConstants.trialUsagePrefix + feature.rawValue)
+    }
+
+    func incrementTrialUsage(for feature: TrialFeature) {
+        let key = PrefConstants.trialUsagePrefix + feature.rawValue
+        userDefaults.set(userDefaults.integer(forKey: key) + 1, forKey: key)
+    }
 }

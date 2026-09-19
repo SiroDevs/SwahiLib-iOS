@@ -9,16 +9,6 @@ import Foundation
 import WidgetKit
 import StoreKit
 
-/// Destinations reached from the nav drawer, presented from HomeView as a
-/// fullScreenCover (not a per-tab NavigationLink push) since they need to
-/// be reachable from either tab and cover the tab bar. Each cover wraps
-/// its own fresh NavigationStack, styled with a back-chevron rather than a
-/// "Funga"/close button so it still reads as a normal screen — a *shared*
-/// NavigationStack wrapping the whole TabView was tried instead and had
-/// to be reverted: nesting a NavigationStack inside another one (even
-/// through a TabView) makes SwiftUI drop the inner stacks' navigation
-/// bars, which is why HomeSearch's and Maktaba's title bars/toolbars went
-/// missing.
 enum HomeDestination: Hashable, Identifiable {
     case dailyWord
     case dailyProverb

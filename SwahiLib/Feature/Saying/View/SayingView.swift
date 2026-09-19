@@ -3,8 +3,10 @@
 //  SwahiLib
 //
 //  Created by @sirodevs on 01/08/2025.
+//
 
 import SwiftUI
+import RevenueCatUI
 
 struct SayingView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -15,6 +17,8 @@ struct SayingView: View {
     let saying: Saying
     
     @State private var showToast = false
+    @State private var showPaywall = false
+    @State private var trialDialog: TrialDialogKind? = nil
 
     var body: some View {
         ZStack {
@@ -28,6 +32,10 @@ struct SayingView: View {
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(1)
             }
+        }
+        .trialGateAlert($trialDialog, onUpgrade: { showPaywall = true })
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(displayCloseButton: true)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbarTitleDisplayMode(.inline)
@@ -67,10 +75,19 @@ struct SayingView: View {
     }
     
     private var mainContent: some View {
-        SayingDetails(
-            title: viewModel.title,
-            meanings: viewModel.meanings,
-        )
+        ZStack(alignment: .bottomTrailing) {
+            SayingDetails(
+                title: viewModel.title,
+                meanings: viewModel.meanings,
+            )
+
+            ShareFAB(
+                shareText: viewModel.shareText(saying: saying),
+                isProUser: viewModel.isProUser,
+                prefsRepo: viewModel.prefsRepo,
+                trialDialog: $trialDialog
+            )
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -78,18 +95,11 @@ struct SayingView: View {
                 } label: { Image(systemName: "chevron.backward") }
             }
 
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.likeSaying(saying: saying)
                 } label: {
                     Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
-                        .foregroundColor(.primary1)
-                }
-
-                ShareLink(
-                    item: viewModel.shareText(saying: saying),
-                ) {
-                    Image(systemName: "square.and.arrow.up")
                         .foregroundColor(.primary1)
                 }
             }

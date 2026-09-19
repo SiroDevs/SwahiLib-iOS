@@ -6,15 +6,11 @@
 //
 
 import SwiftUI
-import RevenueCatUI
 
 struct AdvancedSearch: View {
     @StateObject private var viewModel: SearchViewModel = {
         DiContainer.shared.resolve(SearchViewModel.self)
     }()
-    @Environment(\.dismiss) private var dismiss
-    @State private var showAlertDialog = false
-    @State private var showPaywall: Bool = false
     
     var body: some View {
         stateContent
@@ -32,18 +28,6 @@ struct AdvancedSearch: View {
             
         case .filtered:
             AdvancedSearchView(viewModel: viewModel)
-                .alert("Kipengele hiki ni cha PRO",
-                       isPresented: $viewModel.showAlertDialog
-                ) {
-                    proLimitAlertButtons
-                } message: {
-                    Text("Tafadhali jiunge na SwahiLib Pro ili uweze kutumia kipengele hiki.")
-                }
-                .sheet(isPresented: $showPaywall) {
-                #if !DEBUG
-                PaywallView(displayCloseButton: true)
-                #endif
-                }
             
         case .error(let msg):
             ErrorState(message: msg) {
@@ -56,16 +40,4 @@ struct AdvancedSearch: View {
             )
         }
     }
-    
-    private var proLimitAlertButtons: some View {
-        Group {
-            Button("GHAIRI", role: .cancel) {
-                dismiss()
-            }
-            Button("SAWA") {
-                showPaywall = true
-            }
-        }
-    }
-    
 }
