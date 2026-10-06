@@ -23,7 +23,15 @@ struct HomeSearch: View {
     @State private var trialDialog: TrialDialogKind? = nil
 
     private let scrollSpace = "homeSearchScroll"
-
+    
+    private var canShowReviewPrompt: Bool {
+        !showPaywall
+            && trialDialog == nil
+            && voice.problem == nil
+            && !voice.isListening
+            && !viewModel.isDrawerOpen
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -79,7 +87,6 @@ struct HomeSearch: View {
                                     prefsRepo: viewModel.prefsRepo,
                                     isProUser: viewModel.isProUser
                                 ) {
-                                    // Setting the text triggers the filter via SearchBar's onChange.
                                     selectedLetter = letter
                                     searchText = letter
                                     scrollToTop()
@@ -183,6 +190,7 @@ struct HomeSearch: View {
                     }
                 }
             }
+            .reviewPrompt(isEnabled: canShowReviewPrompt)
         }
     }
     
@@ -191,8 +199,6 @@ struct HomeSearch: View {
             scrollViewProxy?.scrollTo("top", anchor: .top)
         }
     }
-
-    // MARK: Voice search alert
 
     private var showVoiceAlert: Binding<Bool> {
         Binding(

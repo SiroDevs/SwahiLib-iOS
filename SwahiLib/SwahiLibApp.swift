@@ -18,6 +18,9 @@ struct SwahiLibApp: App {
     @StateObject private var themeManager = ThemeManager()
     
     init() {
+        _ = DiContainer.shared
+        ReviewPromptManager.shared.configure()
+        
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
