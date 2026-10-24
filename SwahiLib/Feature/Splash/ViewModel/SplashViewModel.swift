@@ -12,6 +12,10 @@ import Network
 final class SplashViewModel: ObservableObject {
     @Published var isInitialized = false
     @Published var isProUser: Bool = false
+    /// True until the parent has passed the gate once. Drives the first screen shown.
+    @Published private(set) var needsParentalGate: Bool
+    /// True only for the session in which the gate was just passed (used to follow it with the paywall).
+    private(set) var passedGateThisSession = false
     
     private let netUtils: NetworkUtils
     let prefsRepo: PrefsRepo
@@ -25,6 +29,13 @@ final class SplashViewModel: ObservableObject {
         self.netUtils = netUtils
         self.prefsRepo = prefsRepo
         self.subsRepo = subsRepo
+        self.needsParentalGate = !prefsRepo.shownParentalGate
+    }
+    
+    func completeParentalGate() {
+        prefsRepo.shownParentalGate = true
+        passedGateThisSession = true
+        needsParentalGate = false
     }
     
     func initialize() {
