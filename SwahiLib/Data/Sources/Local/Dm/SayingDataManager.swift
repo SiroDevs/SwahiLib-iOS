@@ -9,11 +9,6 @@ import CoreData
 
 class SayingDataManager {
     private let coreDataManager: CoreDataManager
-    lazy var bgContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = coreDataManager.viewContext
-        return context
-    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -23,52 +18,12 @@ class SayingDataManager {
         coreDataManager.viewContext
     }
 
-    func saveSayings(_ cdSayings: [CDSaying]) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            bgContext.perform {
-                do {
-                    for cdSaying in cdSayings {
-                        let existingCdSaying = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdSaying.rid))
-                        
-                        existingCdSaying.rid = cdSaying.rid
-                        existingCdSaying.title = cdSaying.title ?? ""
-                        existingCdSaying.meaning = cdSaying.meaning ?? ""
-                        existingCdSaying.views = cdSaying.views
-                        existingCdSaying.likes = cdSaying.likes
-                        existingCdSaying.liked = cdSaying.liked
-                        existingCdSaying.createdAt = cdSaying.createdAt
-                        existingCdSaying.updatedAt = cdSaying.updatedAt
-                    }
-                    
-                    try self.bgContext.save()
-                    
-                    Task { @MainActor in
-                        do {
-                            try self.context.save()
-                            print("✅ \(cdSayings.count) sayings saved successfully")
-                            continuation.resume()
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                } catch {
-                    continuation.resume(throwing: error)
-                }
+    // Inserts or updates every saying on the shared sync context.
+    func upsertSayings(_ sayingDTOs: [SayingDTO]) async throws {
+        try await coreDataManager.performSyncWrite { syncContext in
+            try CoreDataUpsert.upsert(sayingDTOs, into: syncContext, entityType: CDSaying.self, remoteId: { $0.rid }) {
+                MapDtoToCd.mapToCd($0, $1)
             }
-        }
-    }
-
-    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDSaying {
-        let request: NSFetchRequest<CDSaying> = CDSaying.fetchRequest()
-        request.predicate = NSPredicate(format: "rid == %d", id)
-        request.fetchLimit = 1
-        
-        if let existing = try? context.fetch(request).first {
-            return existing
-        } else {
-            let new = CDSaying(context: context)
-            new.rid = Int32(id)
-            return new
         }
     }
 

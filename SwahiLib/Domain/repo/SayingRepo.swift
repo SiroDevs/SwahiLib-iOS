@@ -31,14 +31,8 @@ class SayingRepo: SayingRepoProtocol {
             throw KamusiApiError.fetchFailed(.sayings)
         }
 
-        let cdSayings: [CDSaying] = sayingDTOs.map { dto in
-            let cdSaying = CDSaying(context: self.sayingData.bgContext)
-            MapDtoToCd.mapToCd(dto, cdSaying)
-            return cdSaying
-        }
-
-        print("✅ \(cdSayings.count) sayings fetched")
-        try await sayingData.saveSayings(cdSayings)
+        print("✅ \(sayingDTOs.count) sayings fetched")
+        try await sayingData.upsertSayings(sayingDTOs)
     }
 
     func fetchLocalData() -> [Saying] {

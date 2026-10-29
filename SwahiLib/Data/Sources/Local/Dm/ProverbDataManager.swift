@@ -9,11 +9,6 @@ import CoreData
 
 class ProverbDataManager {
     private let coreDataManager: CoreDataManager
-    lazy var bgContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = coreDataManager.viewContext
-        return context
-    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -23,54 +18,12 @@ class ProverbDataManager {
         coreDataManager.viewContext
     }
 
-    func saveProverbs(_ cdProverbs: [CDProverb]) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            bgContext.perform {
-                do {
-                    for cdProverb in cdProverbs {
-                        let existingCdProverb = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdProverb.rid))
-                        
-                        existingCdProverb.rid = cdProverb.rid
-                        existingCdProverb.title = cdProverb.title
-                        existingCdProverb.meaning = cdProverb.meaning
-                        existingCdProverb.conjugation = cdProverb.conjugation
-                        existingCdProverb.synonyms = cdProverb.synonyms
-                        existingCdProverb.views = cdProverb.views
-                        existingCdProverb.likes = cdProverb.likes
-                        existingCdProverb.liked = cdProverb.liked
-                        existingCdProverb.createdAt = cdProverb.createdAt
-                        existingCdProverb.updatedAt = cdProverb.updatedAt
-                    }
-                    
-                    try self.bgContext.save()
-                    
-                    Task { @MainActor in
-                        do {
-                            try self.context.save()
-                            print("✅ \(cdProverbs.count) proverbs saved successfully")
-                            continuation.resume()
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                } catch {
-                    continuation.resume(throwing: error)
-                }
+    // Inserts or updates every proverb on the shared sync context.
+    func upsertProverbs(_ proverbDTOs: [ProverbDTO]) async throws {
+        try await coreDataManager.performSyncWrite { syncContext in
+            try CoreDataUpsert.upsert(proverbDTOs, into: syncContext, entityType: CDProverb.self, remoteId: { $0.rid }) {
+                MapDtoToCd.mapToCd($0, $1)
             }
-        }
-    }
-
-    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDProverb {
-        let request: NSFetchRequest<CDProverb> = CDProverb.fetchRequest()
-        request.predicate = NSPredicate(format: "rid == %d", id)
-        request.fetchLimit = 1
-        
-        if let existing = try? context.fetch(request).first {
-            return existing
-        } else {
-            let new = CDProverb(context: context)
-            new.rid = Int32(id)
-            return new
         }
     }
 

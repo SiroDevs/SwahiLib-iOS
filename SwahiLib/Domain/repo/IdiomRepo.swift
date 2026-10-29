@@ -31,14 +31,8 @@ class IdiomRepo: IdiomRepoProtocol {
             throw KamusiApiError.fetchFailed(.idioms)
         }
 
-        let cdIdioms: [CDIdiom] = idiomDTOs.map { dto in
-            let cdIdiom = CDIdiom(context: self.idiomData.bgContext)
-            MapDtoToCd.mapToCd(dto, cdIdiom)
-            return cdIdiom
-        }
-
-        print("✅ \(cdIdioms.count) idioms fetched")
-        try await idiomData.saveIdioms(cdIdioms)
+        print("✅ \(idiomDTOs.count) idioms fetched")
+        try await idiomData.upsertIdioms(idiomDTOs)
     }
 
     func fetchLocalData() -> [Idiom] {

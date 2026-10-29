@@ -12,20 +12,30 @@ struct SplashView: View {
         DiContainer.shared.resolve(SplashViewModel.self)
     }()
     @State private var navigateToNextScreen = false
+    @State private var didStartInit = false
     
     let deepLinked: Bool
     let word: Word
     
     var body: some View {
         Group {
-            if navigateToNextScreen {
+            // The parental gate is always the very first screen for a user who
+            // hasn't passed it yet, regardless of launch path (normal, deep link,
+            // notification) and without waiting for init or the data sync.
+            if viewModel.needsParentalGate {
+                ParentalGateView {
+                    viewModel.completeParentalGate()
+                }
+            } else if navigateToNextScreen {
                 destinationView
             } else {
                 SplashContent()
-                    .onAppear {
-                        viewModel.initialize()
-                    }
             }
+        }
+        .onAppear {
+            guard !didStartInit else { return }
+            didStartInit = true
+            viewModel.initialize()
         }
         .onReceive(viewModel.$isInitialized) { initialized in
             if initialized {
@@ -37,16 +47,21 @@ struct SplashView: View {
         .animation(.easeInOut, value: navigateToNextScreen)
     }
     
+    /// First-time, non-PRO users get the paywall right after the gate.
+    private var showLaunchPaywall: Bool {
+        viewModel.passedGateThisSession && !viewModel.isProUser
+    }
+    
     @ViewBuilder
     private var destinationView: some View {
         if viewModel.prefsRepo.isDataLoaded {
             if deepLinked {
                 WordView(deepLinked: true, word: word)
             } else {
-                HomeView()
+                HomeView(showPaywallOnLaunch: showLaunchPaywall)
             }
         } else {
-            InitView()
+            InitView(showPaywallOnLaunch: showLaunchPaywall)
         }
     }
 }

@@ -31,15 +31,9 @@ class WordRepo: WordRepoProtocol {
             throw KamusiApiError.fetchFailed(.words)
         }
 
-        let cdWords: [CDWord] = wordDTOs.map { dto in
-            let cdWord = CDWord(context: self.wordData.bgContext)
-            MapDtoToCd.mapToCd(dto, cdWord)
-            return cdWord
-        }
+        print("✅ \(wordDTOs.count) words fetched")
 
-        print("✅ \(cdWords.count) words fetched")
-
-        try await wordData.saveWords(cdWords)
+        try await wordData.upsertWords(wordDTOs)
         print("✅ Words saved successfully")
     }
 

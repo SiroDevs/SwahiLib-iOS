@@ -15,10 +15,12 @@ struct InitView: View {
     
     @State private var navigateToNextScreen = false
     
+    var showPaywallOnLaunch: Bool = false
+    
     var body: some View {
         Group {
             if navigateToNextScreen {
-                HomeView()
+                HomeView(showPaywallOnLaunch: showPaywallOnLaunch)
             } else {
                 mainContent
             }
