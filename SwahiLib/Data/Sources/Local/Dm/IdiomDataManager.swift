@@ -9,11 +9,6 @@ import CoreData
 
 class IdiomDataManager {
     private let coreDataManager: CoreDataManager
-    lazy var bgContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = coreDataManager.viewContext
-        return context
-    }()
     
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -23,52 +18,12 @@ class IdiomDataManager {
         coreDataManager.viewContext
     }
 
-    func saveIdioms(_ cdIdioms: [CDIdiom]) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            bgContext.perform {
-                do {
-                    for cdIdiom in cdIdioms {
-                        let existingCdIdiom = self.findOrCreateCdInContext(context: self.bgContext, by: Int(cdIdiom.rid))
-                        
-                        existingCdIdiom.rid = cdIdiom.rid
-                        existingCdIdiom.title = cdIdiom.title
-                        existingCdIdiom.meaning = cdIdiom.meaning
-                        existingCdIdiom.views = cdIdiom.views
-                        existingCdIdiom.likes = cdIdiom.likes
-                        existingCdIdiom.liked = cdIdiom.liked
-                        existingCdIdiom.createdAt = cdIdiom.createdAt
-                        existingCdIdiom.updatedAt = cdIdiom.updatedAt
-                    }
-                    
-                    try self.bgContext.save()
-                    
-                    Task { @MainActor in
-                        do {
-                            try self.context.save()
-                            print("✅ \(cdIdioms.count) idioms saved successfully")
-                            continuation.resume()
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                } catch {
-                    continuation.resume(throwing: error)
-                }
+    // Inserts or updates every idiom on the shared sync context.
+    func upsertIdioms(_ idiomDTOs: [IdiomDTO]) async throws {
+        try await coreDataManager.performSyncWrite { syncContext in
+            try CoreDataUpsert.upsert(idiomDTOs, into: syncContext, entityType: CDIdiom.self, remoteId: { $0.rid }) {
+                MapDtoToCd.mapToCd($0, $1)
             }
-        }
-    }
-
-    private func findOrCreateCdInContext(context: NSManagedObjectContext, by id: Int) -> CDIdiom {
-        let request: NSFetchRequest<CDIdiom> = CDIdiom.fetchRequest()
-        request.predicate = NSPredicate(format: "rid == %d", id)
-        request.fetchLimit = 1
-        
-        if let existing = try? context.fetch(request).first {
-            return existing
-        } else {
-            let new = CDIdiom(context: context)
-            new.rid = Int32(id)
-            return new
         }
     }
 

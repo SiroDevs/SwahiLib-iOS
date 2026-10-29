@@ -14,11 +14,6 @@ import CoreData
 
 class LibraryDataManager {
     private let coreDataManager: CoreDataManager
-    lazy var bgContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = coreDataManager.viewContext
-        return context
-    }()
 
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreDataManager = coreDataManager
@@ -28,45 +23,27 @@ class LibraryDataManager {
         coreDataManager.viewContext
     }
 
-    /// Deletes everything currently stored for `collectionKey` and inserts
-    /// `items` in its place — mirrors Android's `dao.replaceAll(...)`.
+    // Deletes everything stored for `collectionKey` and inserts `items` in its place, on the shared sync context.
     func replaceAll(_ items: [LibraryDisplayItem], forCollection collectionKey: String) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            bgContext.perform {
-                do {
-                    let deleteRequest: NSFetchRequest<CDLibraryItem> = CDLibraryItem.fetchRequest()
-                    deleteRequest.predicate = NSPredicate(format: "collection == %@", collectionKey)
-                    let existing = try self.bgContext.fetch(deleteRequest)
-                    existing.forEach { self.bgContext.delete($0) }
+        try await coreDataManager.performSyncWrite { syncContext in
+            let existingRequest: NSFetchRequest<CDLibraryItem> = CDLibraryItem.fetchRequest()
+            existingRequest.predicate = NSPredicate(format: "collection == %@", collectionKey)
+            try syncContext.fetch(existingRequest).forEach { syncContext.delete($0) }
 
-                    for item in items {
-                        let cd = CDLibraryItem(context: self.bgContext)
-                        cd.collection = collectionKey
-                        cd.rid = item.id
-                        cd.groupName = item.groupName
-                        cd.primaryText = item.primaryText
-                        cd.secondaryText = item.secondaryText
-                        cd.orderIndex = Int32(item.orderIndex)
-                        cd.detailsJson = (try? JSONEncoder().encode(item.detailFields))
-                            .flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
-                    }
-
-                    try self.bgContext.save()
-
-                    Task { @MainActor in
-                        do {
-                            try self.context.save()
-                            print("✅ \(items.count) \(collectionKey) library items saved")
-                            continuation.resume()
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                } catch {
-                    continuation.resume(throwing: error)
-                }
+            let encoder = JSONEncoder()
+            for item in items {
+                let libraryItem = CDLibraryItem(context: syncContext)
+                libraryItem.collection = collectionKey
+                libraryItem.rid = item.id
+                libraryItem.groupName = item.groupName
+                libraryItem.primaryText = item.primaryText
+                libraryItem.secondaryText = item.secondaryText
+                libraryItem.orderIndex = Int32(item.orderIndex)
+                libraryItem.detailsJson = (try? encoder.encode(item.detailFields))
+                    .flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
             }
         }
+        print("✅ \(items.count) \(collectionKey) library items saved")
     }
 
     func fetchAll(forCollection collectionKey: String) -> [LibraryDisplayItem] {

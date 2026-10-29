@@ -18,15 +18,18 @@ final class SplashViewModel: ObservableObject {
     private(set) var passedGateThisSession = false
     
     private let netUtils: NetworkUtils
+    private let coreDataManager: CoreDataManager
     let prefsRepo: PrefsRepo
     private let subsRepo: SubsRepoProtocol
     
     init(
         netUtils: NetworkUtils = .shared,
+        coreDataManager: CoreDataManager = .shared,
         prefsRepo: PrefsRepo,
         subsRepo: SubsRepoProtocol
     ) {
         self.netUtils = netUtils
+        self.coreDataManager = coreDataManager
         self.prefsRepo = prefsRepo
         self.subsRepo = subsRepo
         self.needsParentalGate = !prefsRepo.shownParentalGate
@@ -40,6 +43,8 @@ final class SplashViewModel: ObservableObject {
     
     func initialize() {
         Task {
+            await loadLocalStore()
+
             do {
                 let isOnline = await netUtils.checkNetworkAvailability()
                 #if !DEBUG
@@ -57,6 +62,15 @@ final class SplashViewModel: ObservableObject {
                     isInitialized = true
                 }
             }
+        }
+    }
+
+    // Loads the Core Data store once at launch so nothing reads it before it is ready.
+    private func loadLocalStore() async {
+        do {
+            try await coreDataManager.ensureLoaded()
+        } catch {
+            print("❌ Core Data failed to load: \(error.localizedDescription)")
         }
     }
 

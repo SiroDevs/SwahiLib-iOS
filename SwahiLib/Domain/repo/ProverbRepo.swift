@@ -31,14 +31,8 @@ class ProverbRepo: ProverbRepoProtocol {
             throw KamusiApiError.fetchFailed(.proverbs)
         }
 
-        let cdProverbs: [CDProverb] = proverbDTOs.map { dto in
-            let cdProverb = CDProverb(context: self.proverbData.bgContext)
-            MapDtoToCd.mapToCd(dto, cdProverb)
-            return cdProverb
-        }
-
-        print("✅ \(cdProverbs.count) proverbs fetched")
-        try await proverbData.saveProverbs(cdProverbs)
+        print("✅ \(proverbDTOs.count) proverbs fetched")
+        try await proverbData.upsertProverbs(proverbDTOs)
     }
 
     func fetchLocalData() -> [Proverb] {

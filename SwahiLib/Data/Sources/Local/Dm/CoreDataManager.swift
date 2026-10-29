@@ -3,15 +3,10 @@
 //  SwahiLib
 //
 //  Created by @sirodevs on 29/04/2025.
-//  Updated to fix a launch-time crash: `loadPersistentStores` is
-//  asynchronous, but nothing previously waited for it to actually finish
-//  before other code started inserting/saving managed objects. On a fresh
-//  install (exactly what App Review tests), ContentSyncManager's
-//  concurrent sync tasks could start hammering Core Data's shared parent
-//  context while the SQLite store was still in the middle of attaching,
-//  causing an EXC_BAD_ACCESS in the store coordinator's internal hash
-//  tables. `ensureLoaded()` gives every caller a single, awaitable,
-//  idempotent point to wait on before touching Core Data at all.
+//
+//  Owns the Core Data stack. The persistent store is loaded once and awaited by
+//  every caller. All sync writes run on a single shared background context, so
+//  they are serialized and never touch managed objects from the wrong queue.
 //
 
 import CoreData
@@ -19,50 +14,45 @@ import CoreData
 class CoreDataManager {
     static let shared = CoreDataManager()
 
-    private init() {}
+    let persistentContainer: NSPersistentContainer
+    private let syncContext: NSManagedObjectContext
 
-    let persistentContainer: NSPersistentContainer = {
-        NSPersistentContainer(name: "SwahiLib")
-    }()
-
-    /// Cached so `ensureLoaded()` only triggers `loadPersistentStores` once,
-    /// no matter how many callers (or how concurrently) they call it.
     private var loadTask: Task<Void, Error>?
+    private let loadTaskLock = NSLock()
 
-    /// Awaits the persistent store finishing loading. Safe to call from
-    /// multiple places/concurrently — every caller shares the same
-    /// underlying load. Any code that inserts, fetches, or saves via
-    /// `viewContext` (or a child context of it) must await this first.
-    @discardableResult
-    func ensureLoaded() async throws -> Void {
-        if let loadTask {
-            return try await loadTask.value
-        }
+    private init() {
+        let container = NSPersistentContainer(name: "SwahiLib")
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
-        let task = Task {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                self.persistentContainer.loadPersistentStores { description, error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                        return
-                    }
+        let backgroundContext = container.newBackgroundContext()
+        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
-                    if let dbPath = description.url?.path {
-                        print("📦 Core Data SQLite DB path:\n\(dbPath)")
-                    } else {
-                        print("⚠️ Could not determine Core Data DB path")
-                    }
-
-                    continuation.resume()
-                }
-            }
-        }
-        loadTask = task
-        return try await task.value
+        persistentContainer = container
+        syncContext = backgroundContext
     }
 
     var viewContext: NSManagedObjectContext {
         persistentContainer.viewContext
+    }
+
+    // Waits for the persistent store to finish loading; safe to call from anywhere, any number of times.
+    func ensureLoaded() async throws {
+        try await sharedLoadTask().value
+    }
+
+    // Runs the work on the shared sync context and saves; the context is reset afterwards to free memory.
+    func performSyncWrite(_ work: @escaping (NSManagedObjectContext) throws -> Void) async throws {
+        try await ensureLoaded()
+        let context = syncContext
+
+        try await context.perform { () throws -> Void in
+            defer { context.reset() }
+            try work(context)
+            if context.hasChanges {
+                try context.save()
+            }
+        }
     }
 
     func saveContext() {
@@ -71,6 +61,32 @@ class CoreDataManager {
                 try viewContext.save()
             } catch {
                 print("Error saving context: \(error)")
+            }
+        }
+    }
+
+    // Creates the single store-loading task under a lock so concurrent callers share it.
+    private func sharedLoadTask() -> Task<Void, Error> {
+        loadTaskLock.lock()
+        defer { loadTaskLock.unlock() }
+
+        if let loadTask { return loadTask }
+
+        let newTask = Task { try await self.loadStores() }
+        loadTask = newTask
+        return newTask
+    }
+
+    private func loadStores() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            persistentContainer.loadPersistentStores { description, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                print("📦 Core Data SQLite DB path:\n\(description.url?.path ?? "unknown")")
+                continuation.resume()
             }
         }
     }
